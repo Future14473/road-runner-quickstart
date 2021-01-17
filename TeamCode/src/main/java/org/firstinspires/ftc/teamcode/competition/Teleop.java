@@ -56,36 +56,36 @@ public class Teleop extends LinearOpMode
         wobble_arm.up();
         waitForStart();
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
 
-        double y = -gamepad1.right_stick_y;
-        double x = gamepad1.right_stick_x;
+            double y = -gamepad1.right_stick_y;
+            double x = gamepad1.right_stick_x;
 
-        // absolute turning
-        double targetDir = -Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x) - Math.PI/2;
-        double magnitude = Math.hypot(gamepad1.left_stick_y,gamepad1.left_stick_x);
-        double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
+            // absolute turning
+            double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
+            double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
 
-        // stop when no one is touching anything
-        MecanumDrive.drive(x/3, y/3,
-                (magnitude > 0.5 && Math.abs(turnPwr) > 0.08)? turnPwr:0);
+            // stop when no one is touching anything
+            MecanumDrive.drive(x / 3, y / 3,
+                    (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? turnPwr : 0);
 
-        double intakeOut = gamepad1.right_trigger;
-        double intakeIn = -gamepad1.left_trigger;
+            double intakeOut = gamepad1.right_trigger;
+            double intakeIn = -gamepad1.left_trigger;
 
-        // make the intake do the correct trigger, + is outward, - is inward
-        intake.setPower(-(intakeIn + intakeOut));
-        taco.setPower((intakeIn + intakeOut));
+            // make the intake do the correct trigger, + is outward, - is inward
+            intake.setPower(-(intakeIn + intakeOut));
+            taco.setPower((intakeIn + intakeOut));
 
-        shooter_roller1.setPower((gamepad1.x?1:0) - (gamepad1.y?1:0));
-        shooter_roller2.setPower((gamepad1.x?1:0) - (gamepad1.y?1:0));
+            shooter_roller1.setPower((gamepad1.x ? 1 : 0) - (gamepad1.y ? 1 : 0));
+            shooter_roller2.setPower((gamepad1.x ? 1 : 0) - (gamepad1.y ? 1 : 0));
 
 //        shooter_roller.setPower(1);
-        // shooter adjuster
-        shooter_adjuster.setPower( (gamepad1.dpad_up?-0.5:0.5) + (gamepad1.dpad_down?0.5:-0.5) );
-        shooter.setPower((gamepad1.dpad_left?-0.795:0) + (gamepad1.dpad_right?0.795:0) );
+            // shooter adjuster
+            shooter_adjuster.setPower((gamepad1.dpad_up ? -0.5 : 0.5) + (gamepad1.dpad_down ? 0.5 : -0.5));
+            shooter.setPower((gamepad1.dpad_left ? -0.795 : 0) + (gamepad1.dpad_right ? 0.795 : 0));
 
-        // shooter gate
+            // shooter gate
 //        gate.setPower(0);
 //        if (gamepad1.x){
 //            gate.setPower(1);
@@ -93,37 +93,37 @@ public class Teleop extends LinearOpMode
 //            gate.setPower(-1);
 //        }
 
-        if (gamepad1.a){
-            wobble_arm.down();
-            telemetry.addData("arm", "down");
-        }
-        if (gamepad1.b){
-            wobble_arm.up();
-            telemetry.addData("release ", "wobble");
-        }
-
-        if (gamepad1.right_bumper && !isGripping){
-            wobble_arm.grab();
-            //only toggle when the servo reaches the position or else it will jitter
-            if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
-                isGripping = true;
+            if (gamepad1.a) {
+                wobble_arm.down();
+                telemetry.addData("arm", "down");
             }
-        }
+            if (gamepad1.b) {
+                wobble_arm.up();
+                telemetry.addData("release ", "wobble");
+            }
 
-        if (gamepad1.right_bumper && isGripping){
+            if (gamepad1.right_bumper && !isGripping) {
+                wobble_arm.grab();
+                //only toggle when the servo reaches the position or else it will jitter
+                if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
+                    isGripping = true;
+                }
+            }
+
+            if (gamepad1.right_bumper && isGripping) {
                 wobble_arm.unGrab();
-            if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
-                isGripping = false;
+                if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
+                    isGripping = false;
+                }
             }
-        }
 
             telemetry.addData("pressed bumbper", true);
+
+
+            telemetry.addData("angler position", wobble_arm.angler.getPosition());
+            telemetry.addData("Wobble_Adjuster_position", wobble_arm.gripper.getPosition());
+            telemetry.update();
         }
-
-
-        telemetry.addData("angler position", wobble_arm.angler.getPosition());
-        telemetry.addData("Wobble_Adjuster_position", wobble_arm.gripper.getPosition());
-        telemetry.update();
     }
 
 

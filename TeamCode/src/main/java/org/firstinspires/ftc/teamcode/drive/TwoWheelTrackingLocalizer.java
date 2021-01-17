@@ -40,13 +40,28 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 0.74; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
+    // parallel movement aka the front facing wheel which is X
+    //  Test 1 : 43.172 in per 90in ,
+    // Test 2: 50.98 in per 90in
+    //Test 3: 45.44
+    //Test 4: 52.15
+//    Test 5:50.42
+//     Avg = 48.43 per 90 in
     public static double PARALLEL_Y = 7.5; // X is the up and down direction
     public static double PARALLEL_X = 3.375; // Y is the strafe direction
+
+    // perepndicular movement aka the horizontal wheel which is Y
+    // Test 1: 100.25 per 90 in
+    // Test 2: 99.27 per 90 in
+    // Test 3: 101.08 per 90 in
+    // Test 4: 98.26 per 90 in
+    // Test 5: 98.8 per 90 in
+    // Avg: 99.532per 90 in
 
     public static double PERPENDICULAR_Y = -7;
     public static double PERPENDICULAR_X = -3.5;
 
-    public static double X_MULTIPLIER = 1; // Multiplier in the X direction
+    public static double X_MULTIPLIER = 90.0/58.43; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 1; // Multiplier in the Y direction
 
     // Parallel/Perpendicular to the forward axis

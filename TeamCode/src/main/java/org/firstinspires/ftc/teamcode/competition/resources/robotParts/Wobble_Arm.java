@@ -4,8 +4,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Wobble_Arm {
-    Servo angler;
-    Servo gripper;
+    public Servo angler;
+    public Servo gripper;
+
+    public double downPos = 0.41;
+    public double upPos = 0.6;
+
+    public double grabPos = 0.4;
+    public double unGrabPos = 0.8;
 
     public Wobble_Arm(HardwareMap hardwareMap){
          angler = hardwareMap.get(Servo.class, "wobble_angler");
@@ -13,17 +19,22 @@ public class Wobble_Arm {
     }
 
     public void down(){
-        angler.setPosition(0.002);
+        angler.setPosition(downPos);
     }
 
-    public void releaseWobble(){
-        //griper.set...
-        //move back up
-        angler.setPosition(0.5);
+    public void up(){
+        angler.setPosition(upPos);
     }
 
     public void grab(){
-        gripper.setPosition(0.1);
+        gripper.setPosition(grabPos);
+    }
+    public void unGrab(){
+        gripper.setPosition(unGrabPos);
     }
 
+    //checks if the servo is done moving to a position
+    public boolean isDone(double position, Servo daServo){
+        return (daServo.getPosition() - position) < 0.1;
+    }
 }

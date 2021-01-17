@@ -49,10 +49,12 @@ public class Teleop extends LinearOpMode
         shooter_adjuster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter_adjuster.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        boolean isGripping = true;
+
         telemetry.addData("Status", "Initialized");
 
+        wobble_arm.up();
         waitForStart();
-
 
         while (opModeIsActive()){
 
@@ -96,24 +98,38 @@ public class Teleop extends LinearOpMode
             telemetry.addData("arm", "down");
         }
         if (gamepad1.b){
-            wobble_arm.releaseWobble();
+            wobble_arm.up();
             telemetry.addData("release ", "wobble");
         }
-        if (gamepad1.right_bumper){
-            telemetry.addData("pressed bumbper", true);
+
+        if (gamepad1.right_bumper && !isGripping){
             wobble_arm.grab();
+            //only toggle when the servo reaches the position or else it will jitter
+            if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
+                isGripping = true;
+            }
+        }
+
+        if (gamepad1.right_bumper && isGripping){
+                wobble_arm.unGrab();
+            if (wobble_arm.isDone(wobble_arm.grabPos, wobble_arm.gripper)) {
+                isGripping = false;
+            }
+        }
+
+            telemetry.addData("pressed bumbper", true);
         }
 
 
-        telemetry.addData("intake power", intakeIn);
-//        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
+        telemetry.addData("angler position", wobble_arm.angler.getPosition());
+        telemetry.addData("Wobble_Adjuster_position", wobble_arm.gripper.getPosition());
         telemetry.update();
     }
 
 
 
 }
-}
+
 
 
 

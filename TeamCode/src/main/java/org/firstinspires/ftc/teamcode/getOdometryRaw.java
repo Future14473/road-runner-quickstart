@@ -13,9 +13,19 @@ public class getOdometryRaw extends LinearOpMode {
 
 
         waitForStart();
-        horizontal = hardwareMap.get(DcMotor.class,"frontLeft");
-        left = hardwareMap.get(DcMotor.class,"taco");
-        right = hardwareMap.get(DcMotor.class,"backLeft"); //broken wire
+        horizontal = hardwareMap.get(DcMotor.class,"taco");
+        left = hardwareMap.get(DcMotor.class,"backLeft");
+        right = hardwareMap.get(DcMotor.class,"intake"); //broken wire
+
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        horizontal.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontal.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         while (opModeIsActive()){
             telemetry.addData("Horizontal Ticks", horizontal.getCurrentPosition());
             telemetry.addData("Left Ticks", left.getCurrentPosition());

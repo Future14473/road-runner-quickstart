@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.util.Encoder;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,19 +49,23 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double X_MULTIPLIER = 12.0 / 12.3; // Multiplier in the X direction //    12/ 4.656
     public static double Y_MULTIPLIER = 12.0 / 12.1; // Multiplier in the Y directionm   12.208
 
+
+    private double lastHeading = 0, heading = 0, headingVelo = 0;
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
     private Encoder parallelEncoder, perpendicularEncoder;
 
+
     private SampleMecanumDrive drive;
+    private BNO055IMU imu;
 
     public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive) {
         super(Arrays.asList(
                 new Pose2d(PARALLEL_X, PARALLEL_Y, 0),
                 new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
         ));
-
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         this.drive = drive;
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "intake"));
@@ -73,11 +79,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
-    @Override
-    public double getHeading() {
-        return drive.getRawExternalHeading();
-    }
-
     @NonNull
     @Override
     public List<Double> getWheelPositions() {
@@ -85,6 +86,20 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                 encoderTicksToInches(parallelEncoder.getCurrentPosition()) * X_MULTIPLIER,
                 encoderTicksToInches(perpendicularEncoder.getCurrentPosition()) * Y_MULTIPLIER
         );
+    }
+
+    @NonNull
+    @Override
+    public double getHeading() {
+        lastHeading = heading;
+        heading = imu.getAngularOrientation().firstAngle;
+        return heading;
+    }
+
+    @NonNull
+    @Override
+    public Double getHeadingVelocity() {
+        return (double) imu.getAngularVelocity().zRotationRate;
     }
 
     @NonNull

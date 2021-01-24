@@ -11,10 +11,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.zArchive.GivesPosition;
 
 
-public class IMU implements GivesPosition {
+public class IMU  {
     BNO055IMU imu;
 
 
@@ -38,7 +37,7 @@ public class IMU implements GivesPosition {
     }
 
 
-    @Override
+
     // AXES SET UP FOR A CERTAIN MOUNTING POSITION
     // LONGEST DIMENSION OF REV HUB ALIGNS WITH X
     // second longest aligns with Y

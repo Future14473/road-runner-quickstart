@@ -109,9 +109,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         //  competing magnetic encoders), change Encoder.getRawVelocity() to Encoder.getCorrectedVelocity() to enable a
         //  compensation method
 
-        return Arrays.asList(
-                encoderTicksToInches(parallelEncoder.getRawVelocity()) * X_MULTIPLIER,
-                encoderTicksToInches(perpendicularEncoder.getRawVelocity()) * Y_MULTIPLIER
-        );
+//        return Arrays.asList(
+//                encoderTicksToInches(parallelEncoder.getRawVelocity()) * X_MULTIPLIER,
+//                encoderTicksToInches(perpendicularEncoder.getRawVelocity()) * Y_MULTIPLIER
+//        );
+        return drive.getWheelVelocities();
     }
 }

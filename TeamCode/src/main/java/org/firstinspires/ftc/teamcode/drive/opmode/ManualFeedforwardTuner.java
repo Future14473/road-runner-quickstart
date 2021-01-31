@@ -67,10 +67,8 @@ public class ManualFeedforwardTuner extends LinearOpMode {
     @Override
     public void runOpMode() {
         if (RUN_USING_ENCODER) {
-//            RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
-//                    "when using the built-in drive motor velocity PID.");
-            RobotLog.addGlobalWarningMessage("You're not supposed to use Feedforward with Drive encoders, but dw" +
-                    "we actually made Two Wheel Tracking Localizer return the drive.getWheelVelocities()");
+            RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
+                    "when using the built-in drive motor velocity PID.");
         }
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());

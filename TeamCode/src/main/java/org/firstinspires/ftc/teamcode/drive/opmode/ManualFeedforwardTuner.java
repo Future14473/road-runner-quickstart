@@ -64,9 +64,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
     }
-
-    private Encoder parallelEncoder, perpendicularEncoder;
-
     @Override
     public void runOpMode() {
         if (RUN_USING_ENCODER) {
@@ -95,8 +92,7 @@ public class ManualFeedforwardTuner extends LinearOpMode {
         double profileStart = clock.seconds();
 
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "intake"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "taco"));
+
         while (!isStopRequested()) {
             telemetry.addData("mode", mode);
 
@@ -130,8 +126,6 @@ public class ManualFeedforwardTuner extends LinearOpMode {
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);
 
-                    telemetry.addData("Parallel Encode Velo", parallelEncoder.getRawVelocity());
-                    telemetry.addData("Perp Encoder Velo", perpendicularEncoder.getRawVelocity());
                     break;
                 case DRIVER_MODE:
                     if (gamepad1.a) {

@@ -72,20 +72,20 @@ public class Teleop extends LinearOpMode
         MecanumDrive.drive(x/3, y/3,
                 (magnitude > 0.5 && Math.abs(turnPwr) > 0.08)? turnPwr:0);
 
-        double intakeOut = gamepad1.right_trigger;
-        double intakeIn = -gamepad1.left_trigger;
+        double intakeOut = gamepad2.right_trigger;
+        double intakeIn = -gamepad2.left_trigger;
 
         // make the intake do the correct trigger, + is outward, - is inward
         intake.setPower(-(intakeIn + intakeOut));
         taco.setPower((intakeIn + intakeOut));
 
-        shooter_roller1.setPower((gamepad1.x?1:0) - (gamepad1.y?1:0));
-        shooter_roller2.setPower((gamepad1.x?1:0) - (gamepad1.y?1:0));
+        shooter_roller1.setPower((gamepad2.x?1:0) - (gamepad2.y?1:0));
+        shooter_roller2.setPower((gamepad2.x?1:0) - (gamepad2.y?1:0));
 
 //        shooter_roller.setPower(1);
         // shooter adjuster
-        shooter_adjuster.setPower( (gamepad1.dpad_up?-0.5:0.5) + (gamepad1.dpad_down?0.5:-0.5) );
-        shooter.setPower((gamepad1.dpad_left?-0.795:0) + (gamepad1.dpad_right?0.795:0) );
+        shooter_adjuster.setPower( (gamepad2.dpad_up?-0.5:0.5) + (gamepad2.dpad_down?0.5:-0.5) );
+        shooter.setPower((gamepad2.dpad_left?-0.795:0) + (gamepad2.dpad_right?0.795:0) );
 
         // shooter gate
 //        gate.setPower(0);

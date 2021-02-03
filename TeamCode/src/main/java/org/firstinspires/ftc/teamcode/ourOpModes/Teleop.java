@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
@@ -42,7 +41,7 @@ public class Teleop extends LinearOpMode
         taco = hardwareMap.get(DcMotor.class, "taco");
 
 
-        wobble_arm = new Wobble_Arm(hardwareMap);
+        wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
 
         shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
@@ -56,7 +55,7 @@ public class Teleop extends LinearOpMode
         telemetry.addData("Status", "Initialized");
 
         //Reset wobble arm to up position
-        wobble_arm.releaseWobble();
+        wobble_arm.automaticReleaseWobble();
         waitForStart();
 
 
@@ -99,20 +98,23 @@ public class Teleop extends LinearOpMode
 
         if (gamepad1.a){
             wobble_arm.down();
-            telemetry.addData("arm", "down");
         }
         if (gamepad1.b){
-            wobble_arm.releaseWobble();
-            telemetry.addData("release ", "wobble");
+            wobble_arm.up();
         }
         if (gamepad1.right_bumper){
-            telemetry.addData("pressed bumbper", true);
             wobble_arm.grab();
+        }
+        if (gamepad1.left_bumper){
+            wobble_arm.unGrab();
         }
 
 
-        telemetry.addData("intake power", intakeIn);
-//        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
+        telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
+        telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
+            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
+
+        //        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
         telemetry.update();
     }
 

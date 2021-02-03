@@ -21,6 +21,7 @@ public class Follower {
         this.drivetrain = drivetrain;
         this.odometry = odometry;
         this.telemetry = telemetry;
+        
         this.opmode = opmode;
     }
 

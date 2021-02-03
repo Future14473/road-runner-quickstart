@@ -55,6 +55,8 @@ public class Teleop extends LinearOpMode
 
         telemetry.addData("Status", "Initialized");
 
+        //Reset wobble arm to up position
+        wobble_arm.releaseWobble();
         waitForStart();
 
 

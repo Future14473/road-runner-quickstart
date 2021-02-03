@@ -13,17 +13,18 @@ public class Wobble_Arm {
     }
 
     public void down(){
-        angler.setPosition(0.002);
+        angler.setPosition(0.15);
     }
 
     public void releaseWobble(){
-        //griper.set...
+        gripper.setPosition(1.5);
         //move back up
         angler.setPosition(0.5);
     }
 
     public void grab(){
-        gripper.setPosition(0.1);
+        gripper.setPosition(0.3);
     }
 
 }
+

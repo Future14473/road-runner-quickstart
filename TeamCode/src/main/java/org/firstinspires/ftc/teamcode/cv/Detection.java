@@ -56,8 +56,6 @@ public class Detection extends OpenCvPipeline {
     Telemetry telemetry;
     Mat output;
 
-    Point objPosition = new Point();
-
     public Detection(Telemetry t){
         this.telemetry = t;
     }
@@ -212,7 +210,7 @@ public class Detection extends OpenCvPipeline {
         //rough filtering
         contours.removeIf(m -> {
             Rect rect = Imgproc.boundingRect(m);
-            return (rect.area() < 700) || (rect.height > rect.width) || (rect.height + rect.y < yP/2);
+            return (rect.area() < 200) || (rect.height > rect.width) || (rect.height + rect.y < yP/2);
         });
 
         //Rings will be sorted into Stacks in rectsData
@@ -335,11 +333,11 @@ public class Detection extends OpenCvPipeline {
         for(Stack stack: rectsData){
             if(stack.count > 0){
                 double Angle = jankAngle(stack.fullStack);
-                Imgproc.rectangle(canvas, stack.fullStack.tl(), stack.fullStack.br(), new Scalar(255, 255, 0), 2);
+                Imgproc.rectangle(canvas, stack.fullStack.tl(), stack.fullStack.br(), new Scalar(255, 255, 0), 1);
                 Imgproc.putText(canvas, "" + stack.count,
-                        new Point(stack.fullStack.x + 10, stack.fullStack.y - 20),
-                        Imgproc.FONT_HERSHEY_SIMPLEX, 0.4, new Scalar(0, 255, 0), 2);
-                //Imgproc.putText(copy, "Angle: " + (int)Angle, new Point(data[1] + data[2]/2, data[4] + 100),
+                        new Point(stack.fullStack.x + 10, stack.fullStack.y - 10),
+                        Imgproc.FONT_HERSHEY_SIMPLEX, 0.4, new Scalar(255, 255, 0), 1);
+                // Imgproc.putText(copy, "Angle: " + (int)Angle, new Point(data[1] + data[2]/2, data[4] + 100),
                 // Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 255, 0), 2);
 
             }

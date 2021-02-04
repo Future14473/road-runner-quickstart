@@ -27,22 +27,27 @@ public class Follower {
 
     public void goTo(PathPoint dest){
         while (!isArrived(dest) && opmode.opModeIsActive()){
-            // go to the point
+            telemetry.addData("Destination is ", dest.toString());
+            telemetry.update();
         }}
 
     boolean isArrived(PathPoint dest) {
+        odometry.update();
+        Pose2d pose2Dposition = odometry.getPoseEstimate();
+        //note the order getY and getX becasue rr uses the official aviation xy coordinate system
+        pose position = new pose(pose2Dposition.getY(),pose2Dposition.getX(),pose2Dposition.getHeading());
 
-        Pose2d position = odometry.getPoseEstimate();
-
-        pose diff = new pose(dest.x - position.getX(), dest.y - position.getY(),
-                RotationUtil.turnLeftOrRight(position.getHeading(), dest.dir, Math.PI * 2));
+        pose diff = new pose(dest.x - position.x, dest.y - position.y,
+                RotationUtil.turnLeftOrRight(position.r, dest.dir, Math.PI * 2));
 
         // to intrinsic
-        point intrinsic = new point(diff.x, diff.y).rotate(-position.getHeading());
-        diff.x = intrinsic.x;
-        diff.y = intrinsic.y;
+        //todo might need to remove this part
+//        point intrinsic = new point(diff.x, diff.y).rotate(-position.r);
+//        diff.x = intrinsic.x;
+//        diff.y = intrinsic.y;
 
         Log.e("diff (intrinsic): ", String.format("%.1f %.1f %.1f", diff.x, diff.y, diff.r));
+        Log.e("Current position", String.format("%.1f %.1f %.1f", position.x, position.y, position.r));
 
         // To consider:
         // 1) speeds below 0.1 cannot overcome static friction of drivetrain
@@ -56,8 +61,9 @@ public class Follower {
 
         // because we're doing big motion, the robot tends to overshoot
         drivetrain.drive(xVel, yVel, rVel);
-
-        telemetry.addData("To Point Amount", diff);
+        telemetry.addData("Current Position Our pose class", position.toString());
+        telemetry.addData("Current position Pose2D class", pose2Dposition.toString());
+        telemetry.addData("To Point Amount", diff.toString());
 
         // return true if reached point
         return (xVel == 0 && yVel == 0 && rVel == 0);

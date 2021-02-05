@@ -55,12 +55,12 @@ public class Follower {
         // 2) because of (1), robot will jerk when it gets near a point
         //    So stop moving when close enough
 
-        double xVel = Math.abs(diff.x) < 2 ? 0 : Math.max(Math.abs(diff.x) / 200, 0.1) * Math.signum(diff.x);
-        double yVel = Math.abs(diff.y) < 2 ? 0 : Math.max(Math.abs(diff.y) / 200, 0.1) * Math.signum(diff.y);
+        double xVel = Math.abs(diff.x) < 2 ? 0 : Math.max(Math.abs(diff.x) / 200, 0.1) * -Math.signum(diff.x);
+        double yVel = Math.abs(diff.y) < 2 ? 0 : Math.max(Math.abs(diff.y) / 200, 0.1) * -Math.signum(diff.y);
         double rVel = Math.abs(diff.r) < 0.05 ? 0 : Math.max(Math.abs(diff.r), 0.1) * Math.signum(diff.r);
 
         // because we're doing big motion, the robot tends to overshoot
-        drivetrain.drive(xVel, yVel, rVel);
+        drivetrain.drive(xVel/3, yVel/3, rVel/3);
         telemetry.addData("Current Position Our pose class", position.toString());
         telemetry.addData("Current position Pose2D class", pose2Dposition.toString());
         telemetry.addData("To Point Amount", diff.toString());

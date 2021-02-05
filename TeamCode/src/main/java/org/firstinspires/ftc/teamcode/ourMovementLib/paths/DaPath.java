@@ -7,6 +7,6 @@ public class DaPath {
 
     //test points
     public static PathPoint forward = new PathPoint(10,0,0);
-    public static PathPoint strafe = new PathPoint(10,10,0);
-    public static PathPoint turn = new PathPoint(0,10,Math.toRadians(90));
+    public static PathPoint strafe = new PathPoint(0,10,0);
+    public static PathPoint turn = new PathPoint(0,0, Math.toRadians(90));
 }

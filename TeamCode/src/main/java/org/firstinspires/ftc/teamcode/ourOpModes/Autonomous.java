@@ -92,20 +92,15 @@ public class Autonomous extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        boolean success = follower.goTo(new PathPoint(0,10,0));
-        telemetry.addData("Waypoint 1", "");
-        telemetry.update();
-        success = follower.goTo(new PathPoint(10,10,0));
-        telemetry.addData("Waypoint 2", "");
-        telemetry.update();
-        success = follower.goTo(new PathPoint(10,0,0));
-        telemetry.addData("Waypoint 3", "");
-        telemetry.update();
-        success = follower.goTo(new PathPoint(0,0,0));
-        telemetry.addData("Waypoint 4", "");
-        telemetry.update();
-        telemetry.addData("success", success);
-        telemetry.update();
+
+        follower.goTo(new PathPoint(0,10,0));
+
+        follower.goTo(new PathPoint(10,10,0));
+
+        follower.goTo(new PathPoint(10,0,0));
+
+        follower.goTo(new PathPoint(0,0,0));
+
         //Timing.delay(1000);
         //follower.austinStop();
 

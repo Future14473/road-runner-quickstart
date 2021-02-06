@@ -33,7 +33,7 @@ public class Follower {
         this.opmode = opmode;
     }
 
-    public boolean goTo(PathPoint dest){
+    public void goTo(double forwardAxisDest, double rightAxisDest, double turnAxisDest){
         // set arrived to true to exit the function
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
@@ -56,9 +56,9 @@ public class Follower {
                 DRIVE(-gamepad.right_stick_y, gamepad.right_stick_x, gamepad.left_stick_x);
             }else{
                 // calculate how far robot needs to go
-                double forwardDistance = dest.y - forwardAxis; // positive means forward
-                double rightDistance = dest.x - rightAxis; // positive means right
-                double turnDistance = RotationUtil.turnLeftOrRight(turnAxis, dest.dir, Math.PI * 2); // positive means turn right
+                double forwardDistance = forwardAxisDest - forwardAxis; // positive means forward
+                double rightDistance = rightAxisDest - rightAxis; // positive means right
+                double turnDistance = RotationUtil.turnLeftOrRight(turnAxis, turnAxisDest, Math.PI * 2); // positive means turn right
 
                 // tell the user how far robot needs to go (round decimals ffs)
                 telemetry.addData("Distance to Go",String.format("Forward: %.2f Right: %.2f", forwardDistance, rightDistance));
@@ -66,43 +66,43 @@ public class Follower {
                 // decide how much power the robot should use to move on the forward axis
                 double forwardPower;
                 // if within one inch, stop. That's close enough
-                if(forwardDistance < 1) {
+                if(Math.abs(forwardDistance) < 1) {
                     forwardPower = 0;
                 }else {
                     // anything within 5 inches means the robot starts slowing
                     forwardPower = forwardDistance / 5;
                     // but too little power means the robot won't move at all
-                    if(forwardPower < 0.1)
+                    if(Math.abs(forwardPower) < 0.1)
                         // if power too low, make it higher
-                        forwardPower = 0.1;
+                        forwardPower = 0.1 * Math.signum(forwardPower);
                 }
 
                 // decide how much power the robot should use to move on the right axis
                 double rightPower;
                 // if within one inch, stop. That's close enough
-                if(forwardDistance < 1) {
+                if(Math.abs(rightDistance) < 1) {
                     rightPower = 0;
                 }else {
                     // anything within 5 inches means the robot starts slowing
                     rightPower = rightDistance / 5;
                     // but too little power means the robot won't move at all
-                    if(rightPower < 0.1)
+                    if(Math.abs(rightPower) < 0.1)
                         // if power too low, make it higher
-                        rightPower = 0.1;
+                        rightPower = 0.1 * Math.signum(rightPower);
                 }
 
                 // decide how much power the robot should use to turn
                 double turnPower;
-                // if within one radian, stop. That's close enough
-                if(forwardDistance < 1) {
+                // if within 0.1 radian, stop. That's close enough
+                if(Math.abs(turnDistance) < 0.1) {
                     turnPower = 0;
                 }else {
                     // anything within 0.7 rad means the robot starts slowing
                     turnPower = turnDistance / 0.7;
                     // but too little power means the robot won't move at all
-                    if(turnPower < 0.01)
+                    if(Math.abs(turnPower) < 0.01)
                         // if power too low, make it higher
-                        turnPower = 0.01;
+                        turnPower = 0.01 * Math.signum(turnPower);
                 }
 
                 // convenient divide for testing
@@ -119,10 +119,6 @@ public class Follower {
             telemetry.update();
         }
 
-        if(1==0)
-            return true;
-        else
-            return false;
     }
     /*
      * For POSITIVE forward parameter: go forward

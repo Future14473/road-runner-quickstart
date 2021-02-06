@@ -87,15 +87,29 @@ public class Autonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         TwoWheelTrackingLocalizer myTwoWheelLoc = new TwoWheelTrackingLocalizer(hardwareMap, drive);
-        Follower follower = new Follower(new Mecanum(hardwareMap), myTwoWheelLoc, Autonomous.this, telemetry);
+        Follower follower = new Follower(drive, myTwoWheelLoc, this, telemetry, gamepad1);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-        follower.austinTest(new PathPoint(0,10,0));
-        Timing.delay(1000);
-        follower.austinStop();
-        while (!isStopRequested()) {
+        boolean success = follower.goTo(new PathPoint(0,10,0));
+        telemetry.addData("Waypoint 1", "");
+        telemetry.update();
+        success = follower.goTo(new PathPoint(10,10,0));
+        telemetry.addData("Waypoint 2", "");
+        telemetry.update();
+        success = follower.goTo(new PathPoint(10,0,0));
+        telemetry.addData("Waypoint 3", "");
+        telemetry.update();
+        success = follower.goTo(new PathPoint(0,0,0));
+        telemetry.addData("Waypoint 4", "");
+        telemetry.update();
+        telemetry.addData("success", success);
+        telemetry.update();
+        //Timing.delay(1000);
+        //follower.austinStop();
+
+        /*while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());
 //            follower.debugGoTo(new PathPoint(0,10,0));
 
@@ -110,6 +124,9 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("x Parallel Encoder", myTwoWheelLoc.parallelEncoder.getCorrectedVelocity());
             telemetry.addData("y Perpendicular Encoder", myTwoWheelLoc.perpendicularEncoder.getCorrectedVelocity());
             telemetry.update();
+
         }
+
+         */
     }
 }

@@ -93,6 +93,9 @@ public class Follower {
         telemetry.update();
         drivetrain.drive(0, diff.y, 0);
     }
+    public void austinStop(){
+        drivetrain.drive(0,0,0);
+    }
 
     boolean debugIsArrived(PathPoint dest) {
         odometry.update();

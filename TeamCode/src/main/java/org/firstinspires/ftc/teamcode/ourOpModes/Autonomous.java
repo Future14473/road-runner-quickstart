@@ -67,6 +67,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourMovementLib.PathPoint;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
 
@@ -91,10 +92,14 @@ public class Autonomous extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         waitForStart();
-
+        follower.austinTest(new PathPoint(0,10,0));
+        Timing.delay(1000);
+        follower.austinStop();
         while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());
-            follower.debugGoTo(new PathPoint(0,10,0));
+//            follower.debugGoTo(new PathPoint(0,10,0));
+
+
             drive.update();
             myTwoWheelLoc.update();
 

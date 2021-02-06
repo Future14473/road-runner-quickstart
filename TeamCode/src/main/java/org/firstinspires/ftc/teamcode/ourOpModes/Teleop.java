@@ -71,12 +71,12 @@ public class Teleop extends LinearOpMode
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
 
             if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0){
-                x*=2;
-                y*=2;
+                x*=4;
+                y*=4;
             }
 
             // stop when no one is touching anything
-            MecanumDrive.drive(x*2/3, y*2/3,
+            MecanumDrive.drive(x*1/3, y*2/3,
                     (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? turnPwr : 0);
 
             double intakeOut = gamepad2.right_trigger;

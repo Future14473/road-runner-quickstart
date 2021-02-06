@@ -41,13 +41,13 @@ public class Follower {
             odometry.update();
             // get new position in Aviation coordinates
             Pose2d position = odometry.getPoseEstimate();
-            // no fucking "x" or "y." Just forwardAxis and rightAxis for fucking clarity
-            double forwardAxis = position.getX();
-            double rightAxis = position.getY();
+            // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
+            double forwardAxisPos = position.getX();
+            double rightAxisPos = position.getY();
             double turnAxis = position.getHeading();
 
             // show current position (round decimals ffs)
-            telemetry.addData("Current Position", String.format("V axis: %.2f H axis: %.2f", forwardAxis, rightAxis));
+            telemetry.addData("Current Position", String.format("V axis: %.2f H axis: %.2f", forwardAxisPos, rightAxisPos));
 
             // A pressed means manual control
             // Otherwise, let the robot move to destination
@@ -56,9 +56,17 @@ public class Follower {
                 DRIVE(-gamepad.right_stick_y, gamepad.right_stick_x, gamepad.left_stick_x);
             }else{
                 // calculate how far robot needs to go
-                double forwardDistance = forwardAxisDest - forwardAxis; // positive means forward
-                double rightDistance = rightAxisDest - rightAxis; // positive means right
+                double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
+                double rightDistance = rightAxisDest - rightAxisPos; // positive means right
                 double turnDistance = RotationUtil.turnLeftOrRight(turnAxis, turnAxisDest, Math.PI * 2); // positive means turn right
+
+                // Careful here! Forward according to the coordinate plane
+                // is NOT forward according to the robot
+                // Rotate the distance to be in the perpective of the robot
+                point robotDirection = new point(rightDistance, forwardDistance);
+                robotDirection.rotate(turnDistance);
+                forwardDistance = robotDirection.y;
+                rightDistance = robotDirection.x;
 
                 // tell the user how far robot needs to go (round decimals ffs)
                 telemetry.addData("Distance to Go",String.format("Forward: %.2f Right: %.2f", forwardDistance, rightDistance));

@@ -26,6 +26,10 @@ public class Follower {
         this.opmode = opmode;
     }
 
+    public Pose2d getPositionOdoTest() {
+        return odometry.getPoseEstimate();
+    }
+
     public void goTo(PathPoint dest){
         while (!isArrived(dest) && opmode.opModeIsActive()){
             telemetry.addData("Destination is ", dest.toString());

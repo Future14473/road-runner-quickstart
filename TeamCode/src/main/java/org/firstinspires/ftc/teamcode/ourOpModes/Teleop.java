@@ -87,17 +87,16 @@ public class Teleop extends LinearOpMode
             // make the intake do the correct trigger, + is outward, - is inward
             intake.setPower(-(intakeIn + intakeOut));
 
-            if(tacoOut && tacoIn)
-            {
-                taco.setPower(0);
-            }
-            else if(tacoOut)
+            if(tacoOut)
             {
                 taco.setPower(1);
             }
             else if(tacoIn)
             {
                 taco.setPower(-1);
+            }
+            else{
+                taco.setPower(0);
             }
 
             shooter_roller1.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));

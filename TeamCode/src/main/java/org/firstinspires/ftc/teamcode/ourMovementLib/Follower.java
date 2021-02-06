@@ -33,6 +33,49 @@ public class Follower {
         this.opmode = opmode;
     }
 
+    public void debug(double forwardAxisDest, double rightAxisDest, double turnAxisDest) {
+
+        while (opmode.opModeIsActive()){
+
+            // make odometry calculate new position
+            odometry.update();
+            // get new position in Aviation coordinates
+            Pose2d position = odometry.getPoseEstimate();
+            // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
+            double forwardAxisPos = position.getX();
+            double rightAxisPos = position.getY();
+            double turnAxis = position.getHeading();
+
+            // show current position (round decimals ffs)
+            telemetry.addData("Current Position", String.format("V axis: %.2f | H axis: %.2f", forwardAxisPos, rightAxisPos));
+
+            // A pressed means manual control
+            // Otherwise, let the robot move to destination
+
+            // calculate how far robot needs to go
+            double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
+            double rightDistance = rightAxisDest - rightAxisPos; // positive means right
+            double turnDistance = RotationUtil.turnLeftOrRight(turnAxis, turnAxisDest, Math.PI * 2); // positive means turn right
+
+            // Careful here! Forward according to the coordinate plane
+            // is NOT forward according to the robot
+            // Rotate the distance to be in the perpective of the robot
+            point robotDirection = new point(rightDistance, forwardDistance);
+            robotDirection.rotate(-turnDistance);
+            forwardDistance = robotDirection.y;
+            rightDistance = robotDirection.x;
+
+            // tell the user how far robot needs to go (round decimals ffs)
+            telemetry.addData("Distance to Go", String.format("Forward: %.2f Right: %.2f", forwardDistance, rightDistance));
+
+            // decide how much power the robot should use to move on the forward axis
+
+            // tell telemetry to send the new data
+            telemetry.update();
+        }
+    }
+
+
     public void goTo(double forwardAxisDest, double rightAxisDest, double turnAxisDest){
         // set arrived to true to exit the function
         boolean arrived = false;
@@ -47,7 +90,7 @@ public class Follower {
             double turnAxis = position.getHeading();
 
             // show current position (round decimals ffs)
-            telemetry.addData("Current Position", String.format("V axis: %.2f H axis: %.2f", forwardAxisPos, rightAxisPos));
+            telemetry.addData("Current Position", String.format("V axis: %.2f | H axis: %.2f", forwardAxisPos, rightAxisPos));
 
             // A pressed means manual control
             // Otherwise, let the robot move to destination
@@ -114,7 +157,7 @@ public class Follower {
                 }
 
                 // convenient divide for testing
-                DRIVE(forwardPower/2, rightPower/2, turnDistance/2);
+                DRIVE(forwardPower/4, rightPower/4, turnDistance/4);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){

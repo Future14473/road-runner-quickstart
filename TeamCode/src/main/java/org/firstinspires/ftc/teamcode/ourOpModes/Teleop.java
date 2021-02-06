@@ -68,11 +68,11 @@ public class Teleop extends LinearOpMode
             // absolute turning
             double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
-            double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading() + headingZero, targetDir, Math.PI * 2);
+            double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
 
             if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0){
-                x*=1.5;
-                y*=1.5;
+                x*=2;
+                y*=2;
             }
 
             // stop when no one is touching anything
@@ -87,17 +87,16 @@ public class Teleop extends LinearOpMode
             // make the intake do the correct trigger, + is outward, - is inward
             intake.setPower(-(intakeIn + intakeOut));
 
-            if(tacoOut && tacoIn)
-            {
-                taco.setPower(0);
-            }
-            else if(tacoOut)
+            if(tacoOut)
             {
                 taco.setPower(1);
             }
             else if(tacoIn)
             {
                 taco.setPower(-1);
+            }
+            else{
+                taco.setPower(0);
             }
 
             shooter_roller1.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));

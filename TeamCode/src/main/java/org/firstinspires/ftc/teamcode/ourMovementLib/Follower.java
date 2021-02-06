@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
 
@@ -86,6 +87,10 @@ public class Follower {
         Pose2d pose2Dposition = odometry.getPoseEstimate();
         position = new pose(pose2Dposition.getY(),pose2Dposition.getX(),pose2Dposition.getHeading());
         pose diff = new pose(dest.x - position.x, dest.y - position.y,0);
+        telemetry.addData("diff", diff.toString());
+        telemetry.addData("Current Position Our pose class", position.toString());
+        telemetry.addData("Current position Pose2D class", pose2Dposition.toString());
+        telemetry.update();
         drivetrain.drive(0, diff.y, 0);
     }
 

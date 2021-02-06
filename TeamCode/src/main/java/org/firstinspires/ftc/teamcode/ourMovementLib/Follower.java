@@ -78,7 +78,16 @@ public class Follower {
         while (!debugIsArrived(dest) && opmode.opModeIsActive()){
             telemetry.addData("Destination is ", dest.toString());
             telemetry.update();
-        }}
+        }
+    }
+
+    public void austinTest(PathPoint dest){
+        odometry.update();
+        Pose2d pose2Dposition = odometry.getPoseEstimate();
+        position = new pose(pose2Dposition.getY(),pose2Dposition.getX(),pose2Dposition.getHeading());
+        pose diff = new pose(dest.x - position.x, dest.y - position.y,0);
+        drivetrain.drive(0, diff.y, 0);
+    }
 
     boolean debugIsArrived(PathPoint dest) {
         odometry.update();

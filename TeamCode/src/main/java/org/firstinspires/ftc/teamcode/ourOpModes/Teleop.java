@@ -76,7 +76,7 @@ public class Teleop extends LinearOpMode
             }
 
             // stop when no one is touching anything
-            MecanumDrive.drive(x*1/3, y*2/3,
+            MecanumDrive.drive(x*1/3, y*1/3,
                     (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? turnPwr : 0);
 
             double intakeOut = gamepad2.right_trigger;

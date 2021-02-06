@@ -85,7 +85,7 @@ public class Follower {
         Pose2d pose2Dposition = odometry.getPoseEstimate();
         //note the order getY and getX becasue rr uses the official aviation xy coordinate system
         position = new pose(pose2Dposition.getY(),pose2Dposition.getX(),pose2Dposition.getHeading());
-//        pose diff = new pose(dest.x - position.x, dest.y - position.y,
+        pose diff = new pose(dest.x - position.x, dest.y - position.y,42000);
 //                RotationUtil.turnLeftOrRight(position.r, dest.dir, Math.PI * 2));
 //
 //        // to intrinsic
@@ -109,6 +109,8 @@ public class Follower {
 //
 //        // because we're doing big motion, the robot tends to overshoot
 //        drivetrain.drive(xVel/3, yVel/3, rVel/3);
+        drivetrain.drive(0, diff.y, 0);
+        telemetry.addData("diff", diff.toString());
         telemetry.addData("Current Position Our pose class", position.toString());
         telemetry.addData("Current position Pose2D class", pose2Dposition.toString());
 //        telemetry.addData("To Point Amount", diff.toString());

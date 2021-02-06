@@ -66,7 +66,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.ourMovementLib.PathPoint;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
+
+
+
 
 /**
  * This is a simple teleop routine for testing localization. Drive the robot around like a normal
@@ -89,7 +94,9 @@ public class Autonomous extends LinearOpMode {
 
         while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());
+            follower.debugGoTo(new PathPoint(0,10,0));
             drive.update();
+            myTwoWheelLoc.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());

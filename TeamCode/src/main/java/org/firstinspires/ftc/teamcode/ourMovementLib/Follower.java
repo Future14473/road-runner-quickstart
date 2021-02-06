@@ -109,7 +109,9 @@ public class Follower {
 //
 //        // because we're doing big motion, the robot tends to overshoot
 //        drivetrain.drive(xVel/3, yVel/3, rVel/3);
-        drivetrain.drive(0, diff.y, 0);
+
+        // todo fix the mecanum turn in place issue
+        drivetrain.drive(0, 0, 0);
         telemetry.addData("diff", diff.toString());
         telemetry.addData("Current Position Our pose class", position.toString());
         telemetry.addData("Current position Pose2D class", pose2Dposition.toString());

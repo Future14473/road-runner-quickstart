@@ -20,6 +20,13 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
+
+    public static double PARALLEL_X = 3.5; // X is the up and down direction
+    public static double PARALLEL_Y = 7.5; // Y is the strafe direction
+
+    public static double PERPENDICULAR_X = -3.5;
+    public static double PERPENDICULAR_Y = -7.5;
+
     public static final double TICKS_PER_REV = 383.6;
     public static final double MAX_RPM = 435;
 

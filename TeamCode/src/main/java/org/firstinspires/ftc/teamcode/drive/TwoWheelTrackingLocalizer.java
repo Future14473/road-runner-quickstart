@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import androidx.annotation.NonNull;
 
+import com.acmerobotics.roadrunner.drive.Drive;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -40,11 +41,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double WHEEL_RADIUS = 0.75; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = 3.5; // X is the up and down direction
-    public static double PARALLEL_Y = 7.5; // Y is the strafe direction
+    public static double PARALLEL_X = DriveConstants.PARALLEL_X; // X is the up and down direction
+    public static double PARALLEL_Y = DriveConstants.PARALLEL_Y; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = -3.5;
-    public static double PERPENDICULAR_Y = -7.5;
+    public static double PERPENDICULAR_X = DriveConstants.PERPENDICULAR_X;
+    public static double PERPENDICULAR_Y = DriveConstants.PERPENDICULAR_Y;
 
     public static double X_MULTIPLIER = 12.0 / 12.1; // Multiplier in the X direction //    12/ 4.656
     public static double Y_MULTIPLIER = 12.0 / 12.1; // Multiplier in the Y direction   12.208

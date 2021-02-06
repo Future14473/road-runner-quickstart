@@ -31,15 +31,23 @@ public class Autonomous extends LinearOpMode {
 
 
         while (opModeIsActive()){
+            odometry.update();
+            telemetry.addData("Current Position X", odometry.getPoseEstimate().getY());
+            telemetry.addData("Current Position Y", odometry.getPoseEstimate().getX());
+            telemetry.addData("Current Position R", odometry.getPoseEstimate().getHeading());
+
             telemetry.update();
             if (gamepad1.x){
-                follower.goTo(DaPath.forward);
+                follower.debugGoTo(DaPath.forward);
             }
             if (gamepad1.y){
                 follower.goTo(DaPath.strafe);
             }
             if (gamepad1.a){
                 follower.goTo(DaPath.turn);
+            }
+            if(gamepad1.b){
+                follower.goTo(DaPath.origin);
             }
         }
     }

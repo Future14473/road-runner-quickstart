@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode.ourMovementLib;
 
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
+import java.nio.file.Path;
+
 import static java.lang.Math.*;
 
 public class PathPoint extends point {
@@ -28,6 +30,10 @@ public class PathPoint extends point {
     public PathPoint(double x, double y, double dir){
         super(x,y);
         this.dir = dir;
+    }
+
+    public String toString(){
+        return String.format("path point %.3f %.3f %.3f", x, y, dir);
     }
 
     public boolean isSame(PathPoint other){

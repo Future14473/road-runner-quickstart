@@ -64,7 +64,7 @@ public class Follower {
                 // is NOT forward according to the robot
                 // Rotate the distance to be in the perpective of the robot
                 point robotDirection = new point(rightDistance, forwardDistance);
-                robotDirection.rotate(turnDistance);
+                robotDirection.rotate(-turnDistance);
                 forwardDistance = robotDirection.y;
                 rightDistance = robotDirection.x;
 

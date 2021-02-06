@@ -93,13 +93,13 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
 
-        follower.goTo(new PathPoint(0,10,0));
+        follower.goTo(0,10,0);
 
-        follower.goTo(new PathPoint(10,10,0));
+        follower.goTo(10,10,0);
 
-        follower.goTo(new PathPoint(10,0,0));
+        follower.goTo(10,0,0);
 
-        follower.goTo(new PathPoint(0,0,0));
+        follower.goTo(0,0,0);
 
         //Timing.delay(1000);
         //follower.austinStop();

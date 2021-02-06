@@ -31,6 +31,7 @@ public class Teleop extends LinearOpMode
     CRServo shooter_roller2;
     Wobble_Arm wobble_arm;
     IMU imu;
+    double headingZero = 0;
 
     public void runOpMode() throws InterruptedException {
 
@@ -61,34 +62,53 @@ public class Teleop extends LinearOpMode
 
         while (opModeIsActive()){
 
-        double y = -gamepad1.right_stick_y;
-        double x = gamepad1.right_stick_x;
+            double y = -gamepad1.right_stick_y;
+            double x = gamepad1.right_stick_x;
 
-        // absolute turning
-        double targetDir = -Math.atan2(gamepad1.left_stick_y,gamepad1.left_stick_x) - Math.PI/2;
-        double magnitude = Math.hypot(gamepad1.left_stick_y,gamepad1.left_stick_x);
-        double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
+            // absolute turning
+            double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
+            double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
+            double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading() + headingZero, targetDir, Math.PI * 2);
 
-        // stop when no one is touching anything
-        MecanumDrive.drive(x, y,
-                (magnitude > 0.5 && Math.abs(turnPwr) > 0.08)? turnPwr:0);
+            if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0){
+                x*=1.5;
+                y*=1.5;
+            }
 
-        double intakeOut = gamepad2.right_trigger;
-        double intakeIn = -gamepad2.left_trigger;
+            // stop when no one is touching anything
+            MecanumDrive.drive(x*2/3, y*2/3,
+                    (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? turnPwr : 0);
 
-        // make the intake do the correct trigger, + is outward, - is inward
-        intake.setPower(-(intakeIn + intakeOut));
-        taco.setPower((intakeIn + intakeOut));
+            double intakeOut = gamepad2.right_trigger;
+            double intakeIn = -gamepad2.left_trigger;
+            boolean tacoIn = gamepad2.left_bumper;
+            boolean tacoOut = gamepad2.right_bumper;
 
-        shooter_roller1.setPower((gamepad2.x?1:0) - (gamepad2.y?1:0));
-        shooter_roller2.setPower((gamepad2.x?1:0) - (gamepad2.y?1:0));
+            // make the intake do the correct trigger, + is outward, - is inward
+            intake.setPower(-(intakeIn + intakeOut));
+
+            if(tacoOut && tacoIn)
+            {
+                taco.setPower(0);
+            }
+            else if(tacoOut)
+            {
+                taco.setPower(1);
+            }
+            else if(tacoIn)
+            {
+                taco.setPower(-1);
+            }
+
+            shooter_roller1.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));
+            shooter_roller2.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));
 
 //        shooter_roller.setPower(1);
-        // shooter adjuster
-        shooter_adjuster.setPower( (gamepad2.dpad_up?-0.5:0.5) + (gamepad2.dpad_down?0.5:-0.5) );
-        shooter.setPower((gamepad2.dpad_left?-0.795:0) + (gamepad2.dpad_right?0.795:0) );
+            // shooter adjuster
+            shooter_adjuster.setPower((gamepad2.dpad_up ? -0.5 : 0.5) + (gamepad2.dpad_down ? 0.5 : -0.5));
+            shooter.setPower((gamepad2.dpad_left ? -0.795 : 0) + (gamepad2.dpad_right ? 0.795 : 0));
 
-        // shooter gate
+            // shooter gate
 //        gate.setPower(0);
 //        if (gamepad1.x){
 //            gate.setPower(1);
@@ -96,31 +116,35 @@ public class Teleop extends LinearOpMode
 //            gate.setPower(-1);
 //        }
 
-        if (gamepad1.a){
-            wobble_arm.down();
-        }
-        if (gamepad1.b){
-            wobble_arm.up();
-        }
-        if (gamepad1.right_bumper){
-            wobble_arm.grab();
-        }
-        if (gamepad1.left_bumper){
-            wobble_arm.unGrab();
-        }
+            if (gamepad1.a) {
+                wobble_arm.down();
+            }
+            if (gamepad1.b) {
+                wobble_arm.up();
+            }
+            if (gamepad1.right_bumper) {
+                wobble_arm.grab();
+            }
+            if (gamepad1.left_bumper) {
+                wobble_arm.unGrab();
+            }
+
+            if(gamepad1.dpad_up)
+            {
+                headingZero = imu.getHeading();
+            }
 
 
-        telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-        telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
+            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
+            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
             telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
-        //        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
-        telemetry.update();
+            //        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
+            telemetry.update();
+        }
+
+
     }
-
-
-
-}
 }
 
 

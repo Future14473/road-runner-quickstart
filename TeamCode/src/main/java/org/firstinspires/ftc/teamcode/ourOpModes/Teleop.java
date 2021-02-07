@@ -85,12 +85,7 @@ public class Teleop extends LinearOpMode
             boolean tacoOut = gamepad2.right_bumper;
 
             // make the intake do the correct trigger, + is outward, - is inward
-//            intake.setPower(-(intakeIn + intakeOut));
-            if (intakeIn != 0){
-                intake.setPower(-1);
-            } else if (intakeOut != 0){
-                intake.setPower(1);
-            }
+            intake.setPower(-(intakeIn + intakeOut));
 
             if(tacoOut)
             {

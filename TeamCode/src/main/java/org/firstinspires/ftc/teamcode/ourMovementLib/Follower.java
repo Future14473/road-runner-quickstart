@@ -33,6 +33,7 @@ public class Follower {
         this.opmode = opmode;
     }
 
+    /*
     public void debug(double forwardAxisDest, double rightAxisDest, double turnAxisDest) {
 
         while (opmode.opModeIsActive()){
@@ -74,7 +75,7 @@ public class Follower {
             telemetry.update();
         }
     }
-
+*/
 
     public void goTo(double forwardAxisDest, double rightAxisDest, double turnAxisDest){
         // set arrived to true to exit the function
@@ -86,84 +87,61 @@ public class Follower {
             Pose2d position = odometry.getPoseEstimate();
             // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
             double forwardAxisPos = position.getX();
-            double rightAxisPos = position.getY();
-            double turnAxis = position.getHeading();
+            double rightAxisPos = -position.getY(); //TODO Encoder configuration is flipped.
+            // X axis should be positive rightward, but is not. I'll fix it here, lest risk
+            // breaking the config
+            double turnAxisPos = position.getHeading();
+
+            //destination
+            telemetry.addData("Destination", String.format("V: %.1f H: %.1f R: %.2f", forwardAxisDest, rightAxisDest, turnAxisDest));
 
             // show current position (round decimals ffs)
-            telemetry.addData("Current Position", String.format("V axis: %.2f | H axis: %.2f", forwardAxisPos, rightAxisPos));
+            telemetry.addData("Current Position", String.format("V: %.1f H: %.1f R: %.2f", forwardAxisPos, rightAxisPos, turnAxisPos));
+
+            // calculate how far robot needs to go
+            double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
+            double rightDistance = rightAxisDest - rightAxisPos; // positive means right
+            double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
+
+            // Careful here! Forward according to the coordinate plane
+            // is NOT forward according to the robot
+            // Rotate the distance to be in the perspective of the robot
+            point robotDirection = new point(rightDistance, forwardDistance);
+            robotDirection = robotDirection.rotate(turnDistance);
+            forwardDistance = robotDirection.y;
+            rightDistance = robotDirection.x;
+
+            // tell the user how far robot needs to go (round decimals ffs)
+            telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.2f", forwardDistance, rightDistance, turnDistance));
+
+            // decide how much power the robot should use to move on the forward axis
+            double forwardPower = convertDistanceToPower(forwardDistance);
+            // decide how much power the robot should use to move on the right axis
+            double rightPower = convertDistanceToPower(rightDistance);
+            // decide how much power the robot should use to turn
+            double turnPower = convertAnglesToPower(turnDistance);
+
+            // The drivetrain behaves poorly when multiple axes require change
+            // So move in the axis that has most
+            if(forwardPower > rightPower)
+                rightPower = 0;
+            else
+                forwardPower = 0;
+
+            //telemetry.addData("Power",String.format("V: %.1f H: %.1f R: %.2f", forwardPower, rightPower, -turnPower));
 
             // A pressed means manual control
             // Otherwise, let the robot move to destination
             if (gamepad.a){
                 // the y stick is negative when you push up, so invert it
-                DRIVE(-gamepad.right_stick_y, gamepad.right_stick_x, gamepad.left_stick_x);
+                DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                // calculate how far robot needs to go
-                double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
-                double rightDistance = rightAxisDest - rightAxisPos; // positive means right
-                double turnDistance = RotationUtil.turnLeftOrRight(turnAxis, turnAxisDest, Math.PI * 2); // positive means turn right
-
-                // Careful here! Forward according to the coordinate plane
-                // is NOT forward according to the robot
-                // Rotate the distance to be in the perpective of the robot
-                point robotDirection = new point(rightDistance, forwardDistance);
-                robotDirection.rotate(-turnDistance);
-                forwardDistance = robotDirection.y;
-                rightDistance = robotDirection.x;
-
-                // tell the user how far robot needs to go (round decimals ffs)
-                telemetry.addData("Distance to Go",String.format("Forward: %.2f Right: %.2f", forwardDistance, rightDistance));
-
-                // decide how much power the robot should use to move on the forward axis
-                double forwardPower;
-                // if within one inch, stop. That's close enough
-                if(Math.abs(forwardDistance) < 1) {
-                    forwardPower = 0;
-                }else {
-                    // anything within 5 inches means the robot starts slowing
-                    forwardPower = forwardDistance / 5;
-                    // but too little power means the robot won't move at all
-                    if(Math.abs(forwardPower) < 0.1)
-                        // if power too low, make it higher
-                        forwardPower = 0.1 * Math.signum(forwardPower);
-                }
-
-                // decide how much power the robot should use to move on the right axis
-                double rightPower;
-                // if within one inch, stop. That's close enough
-                if(Math.abs(rightDistance) < 1) {
-                    rightPower = 0;
-                }else {
-                    // anything within 5 inches means the robot starts slowing
-                    rightPower = rightDistance / 5;
-                    // but too little power means the robot won't move at all
-                    if(Math.abs(rightPower) < 0.1)
-                        // if power too low, make it higher
-                        rightPower = 0.1 * Math.signum(rightPower);
-                }
-
-                // decide how much power the robot should use to turn
-                double turnPower;
-                // if within 0.1 radian, stop. That's close enough
-                if(Math.abs(turnDistance) < 0.1) {
-                    turnPower = 0;
-                }else {
-                    // anything within 0.7 rad means the robot starts slowing
-                    turnPower = turnDistance / 0.7;
-                    // but too little power means the robot won't move at all
-                    if(Math.abs(turnPower) < 0.01)
-                        // if power too low, make it higher
-                        turnPower = 0.01 * Math.signum(turnPower);
-                }
-
-                // convenient divide for testing
-                DRIVE(forwardPower/4, rightPower/4, turnDistance/4);
+                DRIVE(forwardPower, rightPower, -turnPower);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){
                     arrived = true;
                 }
-
             }
 
             // tell telemetry to send the new data
@@ -181,13 +159,43 @@ public class Follower {
                 new Pose2d(
                         forward,
                         -sideways,
-                        -rotate
+                        -rotate * 2
                 )
         );
     }
 
+    double convertDistanceToPower(double distance){
+        // if within one inch, stop. That's close enough
+        if(Math.abs(distance) < 1)
+            return 0;
 
-        /*
+        double power;
+        // anything within 7 inches means the robot starts slowing
+        power = distance / 7;
+        // but too little power means the robot won't move at all
+        if(Math.abs(power) < 0.1)
+            // if power too low, make it higher
+            power = 0.1 * Math.signum(power);
+        return power;
+    }
+
+    double convertAnglesToPower(double angle){
+        // if within 0.1 radian, stop. That's close enough
+        if(Math.abs(angle) < 0.1)
+           return  0;
+
+        double power;
+        // anything within 0.05 rad means the robot starts slowing
+        power = angle / 0.7;
+        // but too little power means the robot won't move at all
+//        if(Math.abs(power) < 0.4)
+//            // if power too low, make it higher
+//            power = 0.4 * Math.signum(power);
+
+        return power;
+    }
+
+    /*
     boolean isArrived(PathPoint dest) {
         odometry.update();
         Pose2d pose2Dposition = odometry.getPoseEstimate();

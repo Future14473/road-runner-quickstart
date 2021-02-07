@@ -93,13 +93,27 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
 
-        follower.goTo(new PathPoint(0,10,0));
+        /*
+         * (0, 10) +------------+ (10, 10)
+         *         |            |
+         *         |            |
+         *         |            |
+         * (0, 0)  +------------+ (10, 0)
+         */
 
-        follower.goTo(new PathPoint(10,10,0));
-// to get the rollback to work
-        follower.goTo(new PathPoint(10,0,0));
 
-        follower.goTo(new PathPoint(0,0,0));
+        follower.goTo(40,0,0);
+
+        follower.goTo(40,40,0);
+
+        follower.goTo(0,40,0);
+
+        follower.goTo(0,0,0);
+
+
+        // This doesn't work because the configuration for turning is bad
+        // Nothing wrong with my code here
+        // follower.goTo(0,0,Math.PI/2);
 
         //Timing.delay(1000);
         //follower.austinStop();

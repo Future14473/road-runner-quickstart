@@ -108,8 +108,9 @@ public class Follower {
             // Rotate the distance to be in the perspective of the robot
             point robotDirection = new point(rightDistance, forwardDistance);
             robotDirection = robotDirection.rotate(turnDistance);
-            forwardDistance = robotDirection.y;
-            rightDistance = robotDirection.x;
+            // None of this rotation until the drivetrain gets weighted
+            //forwardDistance = robotDirection.y;
+            //rightDistance = robotDirection.x;
 
             // tell the user how far robot needs to go (round decimals ffs)
             telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.2f", forwardDistance, rightDistance, turnDistance));
@@ -123,12 +124,17 @@ public class Follower {
 
             // The drivetrain behaves poorly when multiple axes require change
             // So move in the axis that has most
-            if(forwardPower > rightPower)
+            if(Math.abs(forwardPower) > Math.abs(rightPower))
                 rightPower = 0;
             else
                 forwardPower = 0;
 
-            //telemetry.addData("Power",String.format("V: %.1f H: %.1f R: %.2f", forwardPower, rightPower, -turnPower));
+//            if(Math.abs(rightPower) > Math.abs(forwardPower) + Math.abs(rightPower)) {
+//                forwardPower = 0;
+//                rightPower = 0;
+//            }
+
+            telemetry.addData("Power",String.format("V: %.1f H: %.1f R: %.2f", forwardPower, rightPower, -turnPower));
 
             // A pressed means manual control
             // Otherwise, let the robot move to destination
@@ -173,9 +179,9 @@ public class Follower {
         // anything within 7 inches means the robot starts slowing
         power = distance / 7;
         // but too little power means the robot won't move at all
-        if(Math.abs(power) < 0.1)
+        if(Math.abs(power) < 0.5)
             // if power too low, make it higher
-            power = 0.1 * Math.signum(power);
+            power = 0.5 * Math.signum(power);
         return power;
     }
 

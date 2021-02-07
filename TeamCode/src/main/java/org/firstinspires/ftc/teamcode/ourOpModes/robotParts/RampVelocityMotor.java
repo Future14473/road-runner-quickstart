@@ -14,7 +14,7 @@ public class RampVelocityMotor {
     }
 
     public void setVelocity(double vel){
-        myVelocity += (vel - myVelocity)/2;
+        myVelocity += (vel - myVelocity)/1.3;
         self.setVelocity(myVelocity);
     }
 }

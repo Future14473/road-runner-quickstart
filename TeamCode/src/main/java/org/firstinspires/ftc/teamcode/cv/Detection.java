@@ -66,6 +66,7 @@ public class Detection extends OpenCvPipeline {
         output = markRings(input, find_rings(formatted));
         stack = CountRings(find_rings(formatted));
         telemetry.addData("Ring Count", stack);
+        telemetry.addData("angle", angle);
         telemetry.update();
         formatted.release();
         return output;

@@ -105,11 +105,11 @@ public class Autonomous extends LinearOpMode {
          */
 
 
-        follower.goTo(40,0,0);
+        follower.goTo(24,0,0);
 
-        follower.goTo(40,40,0);
+        follower.goTo(24,24,0);
 
-        follower.goTo(0,40,0);
+        follower.goTo(0,24,0);
 
         follower.goTo(0,0,0);
 

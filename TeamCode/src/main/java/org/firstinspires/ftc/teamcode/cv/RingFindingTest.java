@@ -49,9 +49,9 @@ public class RingFindingTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            if(!gamepad1.a && detector.angle > 0.1) {
-
-                double turnPwr = RotationUtil.turnLeftOrRight(0, detector.angle, Math.PI * 2);
+            double targetHeading = imu.getHeading() + detector.angle;
+            while(!gamepad1.a && Math.abs(targetHeading - imu.getHeading()) > 0.1) {
+                double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetHeading, Math.PI * 2);
                 MecanumDrive.drive(0, 0,
                         (Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
             }

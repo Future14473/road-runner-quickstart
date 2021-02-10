@@ -10,7 +10,7 @@ public class VuforiaOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Vuforia vuforia = new Vuforia(hardwareMap, telemetry);
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
 
         waitForStart();
 

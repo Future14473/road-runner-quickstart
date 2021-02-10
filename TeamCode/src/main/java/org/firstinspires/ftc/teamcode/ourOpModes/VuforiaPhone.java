@@ -86,7 +86,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-public class Vuforia {
+public class VuforiaPhone {
 
     // IMPORTANT:  For Phone Camera, set 1) the camera source and 2) the orientation, based on how your phone is mounted:
     // 1) Camera Source.  Valid choices are:  BACK (behind screen) or FRONT (selfie side)
@@ -126,7 +126,7 @@ public class Vuforia {
     List<VuforiaTrackable> allTrackables;
     Telemetry telemetry;
 
-    public  Vuforia(HardwareMap hardwareMap, Telemetry telemetry) {
+    public VuforiaPhone(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.

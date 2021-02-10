@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
@@ -26,7 +27,7 @@ public class Teleop extends LinearOpMode
     DcMotor intake;
     DcMotor taco;
     DcMotor shooter_adjuster;
-    DcMotor shooter;
+    DcMotorEx shooter;
     CRServo shooter_roller1;
     CRServo shooter_roller2;
     Wobble_Arm wobble_arm;
@@ -48,7 +49,7 @@ public class Teleop extends LinearOpMode
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
         shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter = hardwareMap.get(DcMotor.class, "shooter");
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         shooter_adjuster = hardwareMap.get(DcMotor.class, "shooter_adjuster");
         shooter_adjuster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooter_adjuster.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -105,7 +106,17 @@ public class Teleop extends LinearOpMode
 //        shooter_roller.setPower(1);
             // shooter adjuster
             shooter_adjuster.setPower((gamepad2.dpad_up ? -0.5 : 0.5) + (gamepad2.dpad_down ? 0.5 : -0.5));
-            shooter.setPower((gamepad2.dpad_left ? -0.795 : 0) + (gamepad2.dpad_right ? 0.795 : 0));
+            // shooter.setPower((gamepad2.dpad_left ? -0.795 : 0) + (gamepad2.dpad_right ? 0.795 : 0));
+            //shooter.setVelocity((gamepad2.dpad_left ? -0.7 : 0) + (gamepad2.dpad_right ? 0.7 : 0));
+            if(shooter.getVelocity() < 1810)
+            {
+                shooter.setVelocity((gamepad2.dpad_left ? -1 : 0) + (gamepad2.dpad_right ? 1 : 0));
+            }
+            else
+            {
+                shooter.setVelocity(0);
+            }
+            telemetry.addData("Shooter Velocity", shooter.getVelocity());
 
             // shooter gate
 //        gate.setPower(0);

@@ -140,18 +140,6 @@ public class Follower {
             // decide how much power the robot should use to turn
             double turnPower = convertAnglesToPower(turnDistance);
 
-            // The drivetrain behaves poorly when multiple axes require change
-            // So move in the axis that has most
-            if(Math.abs(forwardPower) > Math.abs(rightPower))
-                rightPower = 0;
-            else
-                forwardPower = 0;
-
-//            if(Math.abs(rightPower) > Math.abs(forwardPower) + Math.abs(rightPower)) {
-//                forwardPower = 0;
-//                rightPower = 0;
-//            }
-
             telemetry.addData("Power",String.format("V: %.1f H: %.1f R: %.2f", forwardPower, rightPower, -turnPower));
 
             // A pressed means manual control

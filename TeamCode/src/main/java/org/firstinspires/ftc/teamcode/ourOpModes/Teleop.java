@@ -110,7 +110,7 @@ public class Teleop extends LinearOpMode
             //shooter.setVelocity((gamepad2.dpad_left ? -0.7 : 0) + (gamepad2.dpad_right ? 0.7 : 0));
             if(shooter.getVelocity() < 1810)
             {
-                shooter.setVelocity((gamepad2.dpad_left ? -1 : 0) + (gamepad2.dpad_right ? 1 : 0));
+                shooter.setVelocity((gamepad2.dpad_left ? -100 : 0) + (gamepad2.dpad_right ? 100 : 0));
             }
             else
             {

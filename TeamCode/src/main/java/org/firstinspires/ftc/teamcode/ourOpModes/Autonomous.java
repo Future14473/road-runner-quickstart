@@ -85,9 +85,10 @@ import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
 public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         TwoWheelTrackingLocalizer myTwoWheelLoc = new TwoWheelTrackingLocalizer(hardwareMap, drive);
-        Follower follower = new Follower(drive, myTwoWheelLoc, this, telemetry, gamepad1);
+        Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -95,6 +96,7 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        vuforia.beingTracking();
 
         /*
          * (0, 10) +------------+ (10, 10)
@@ -104,14 +106,10 @@ public class Autonomous extends LinearOpMode {
          * (0, 0)  +------------+ (10, 0)
          */
 
-
-        follower.goTo(24,0,0);
-
-        follower.goTo(24,24,0);
-
-        follower.goTo(0,24,0);
-
-        follower.goTo(0,0,0);
+        //TODO check if these ring counts really correspond to the first second and third squares
+        follower.goTo(12.3,42.5,0); //0 ring square
+        follower.goTo(35, 25, 0); //1 ring square
+        follower.goTo(55, 48, 0); //4 ring square
 
 
         // This doesn't work because the configuration for turning is bad

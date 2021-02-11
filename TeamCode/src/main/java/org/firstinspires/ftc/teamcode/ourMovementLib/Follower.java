@@ -94,7 +94,7 @@ public class Follower {
             // get new position in Aviation coordinates
             OpenGLMatrix location = vuforia.getLocation();
             double forwardAxisPos, rightAxisPos, turnAxisPos;
-            while(location == null){
+            while(location == null && opmode.opModeIsActive()){
                 // Activate Panic Mode
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
                 location = vuforia.getLocation();
@@ -160,7 +160,7 @@ public class Follower {
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                DRIVE(forwardPower, rightPower, -turnPower);
+                DRIVE(forwardPower * 0.1, rightPower * 0.1, -turnPower);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){
@@ -195,12 +195,12 @@ public class Follower {
 
         double power;
         // anything within 7 inches means the robot starts slowing
-        power = distance / 7;
+        power = distance / 7; //needs to be slower, too jerky now
         // but too little power means the robot won't move at all
         if(Math.abs(power) < 0.5)
             // if power too low, make it higher
             power = 0.5 * Math.signum(power);
-        return power;
+        return power; //it is over shoting like crazy rn --Kyle so i multiply by constant
     }
 
     double convertAnglesToPower(double angle){

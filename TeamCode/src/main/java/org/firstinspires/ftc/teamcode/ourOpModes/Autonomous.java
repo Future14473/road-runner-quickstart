@@ -106,8 +106,11 @@ public class Autonomous extends LinearOpMode {
          * (0, 0)  +------------+ (10, 0)
          */
 
+        //TODO power shots
+        follower.goTo(0, 8.25,0);
+
         //TODO check if these ring counts really correspond to the first second and third squares
-        follower.goTo(12.3,42.5,0); //0 ring square
+//        follower.goTo(12.3,42.5,0); //0 ring square
 //        follower.goTo(35, 25, 0); //1 ring square
 //        follower.goTo(55, 48, 0); //4 ring square
 

@@ -8,25 +8,35 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+
 public class Follower {
     private final SampleMecanumDrive drivetrain;
-    private final TwoWheelTrackingLocalizer odometry;
+    private final VuforiaPhone vuforia;
     private final Telemetry telemetry;
     private final LinearOpMode opmode;
     private final Gamepad gamepad;
+    private static final float mmPerInch = 25.4f;
+
 
     public pose position = new pose(0,0,0);
 
-    public Follower(SampleMecanumDrive drivetrain, TwoWheelTrackingLocalizer odometry, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad){
+    public Follower(SampleMecanumDrive drivetrain, VuforiaPhone vuforia, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad){
         this.drivetrain = drivetrain;
-        this.odometry = odometry;
+        this.vuforia = vuforia;
         this.telemetry = telemetry;
         this.gamepad = gamepad;
         
@@ -81,16 +91,24 @@ public class Follower {
         // set arrived to true to exit the function
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
-            // make odometry calculate new position
-            odometry.update();
             // get new position in Aviation coordinates
-            Pose2d position = odometry.getPoseEstimate();
+            OpenGLMatrix location = vuforia.getLocation();
+            double forwardAxisPos, rightAxisPos, turnAxisPos;
+            while(location == null){
+                // Activate Panic Mode
+                DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
+                location = vuforia.getLocation();
+            }
+            VectorF translation = location.getTranslation();
+            Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
             // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
-            double forwardAxisPos = position.getX();
-            double rightAxisPos = -position.getY(); //TODO Encoder configuration is flipped.
+            forwardAxisPos = translation.get(0) / mmPerInch;
+            rightAxisPos = translation.get(1) / mmPerInch; //TODO Encoder configuration is flipped
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
             // breaking the config
-            double turnAxisPos = position.getHeading();
+            turnAxisPos = Math.toRadians(rotation.thirdAngle);
+
+
 
             //destination
             telemetry.addData("Destination", String.format("V: %.1f H: %.1f R: %.2f", forwardAxisDest, rightAxisDest, turnAxisDest));
@@ -100,7 +118,7 @@ public class Follower {
 
             // calculate how far robot needs to go
             double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
-            double rightDistance = rightAxisDest - rightAxisPos; // positive means right
+            double rightDistance = -(rightAxisDest - rightAxisPos); // positive means right
             double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
 
             // Careful here! Forward according to the coordinate plane

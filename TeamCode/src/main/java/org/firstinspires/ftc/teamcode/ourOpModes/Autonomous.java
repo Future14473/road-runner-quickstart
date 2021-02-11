@@ -108,8 +108,8 @@ public class Autonomous extends LinearOpMode {
 
         //TODO check if these ring counts really correspond to the first second and third squares
         follower.goTo(12.3,42.5,0); //0 ring square
-        follower.goTo(35, 25, 0); //1 ring square
-        follower.goTo(55, 48, 0); //4 ring square
+//        follower.goTo(35, 25, 0); //1 ring square
+//        follower.goTo(55, 48, 0); //4 ring square
 
 
         // This doesn't work because the configuration for turning is bad

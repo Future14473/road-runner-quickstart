@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
 
 
@@ -67,7 +66,7 @@ public class Teleop extends LinearOpMode
 
         waitForStart();
 
-        vuforiaPhone.beingTracking();
+        vuforiaPhone.beginTracking();
 
         while (opModeIsActive()){
 

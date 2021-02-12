@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
@@ -148,7 +149,7 @@ public class Follower {
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                DRIVE(forwardPower * 0.1, rightPower * 0.1, -turnPower);
+                DRIVE(forwardPower, rightPower, -turnPower * 0.4);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){
@@ -166,7 +167,7 @@ public class Follower {
      * For POSITIVE sideways parameter: go right
      * For POSITIVE rotate parameter: turn right
      */
-    void DRIVE(double forward, double sideways, double rotate) {
+    public void DRIVE(double forward, double sideways, double rotate) {
         drivetrain.setWeightedDrivePower(
                 new Pose2d(
                         forward,
@@ -183,28 +184,44 @@ public class Follower {
 
         double power;
         // anything within 7 inches means the robot starts slowing
-        power = distance / 7; //needs to be slower, too jerky now
+        power = distance / 14; //needs to be slower, too jerky now
         // but too little power means the robot won't move at all
-        if(Math.abs(power) < 0.5)
+        if(Math.abs(power) < 0.1)
             // if power too low, make it higher
-            power = 0.5 * Math.signum(power);
+            power = 0.1 * Math.signum(power);
+
+        if(Math.abs(power) > 0.6)
+            // if power too high, make it lower
+            power = 0.6 * Math.signum(power);
+
         return power; //it is over shoting like crazy rn --Kyle so i multiply by constant
     }
 
     double convertAnglesToPower(double angle){
         // if within 0.1 radian, stop. That's close enough
-        if(Math.abs(angle) < 0.1)
+        if(Math.abs(angle) < 0.04)
            return  0;
 
         double power;
         // anything within 0.05 rad means the robot starts slowing
-        power = angle / 0.7;
+        power = angle / 0.5;
         // but too little power means the robot won't move at all
 //        if(Math.abs(power) < 0.4)
 //            // if power too low, make it higher
 //            power = 0.4 * Math.signum(power);
 
         return power;
+    }
+
+    // radians
+    public void DRIVE_MAINTAIN_HEADING(double forward_power, double right_power, double turnAxisDest, double miliseconds, IMU imu){
+        long start_time = System.currentTimeMillis();
+        while (System.currentTimeMillis() - start_time < miliseconds && !opmode.isStopRequested()) {
+            double turnAxisPos = imu.getHeading();
+            double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
+            double turnPower = convertAnglesToPower(turnDistance);
+            DRIVE(forward_power, right_power, -turnPower);
+        }
     }
 
     /*

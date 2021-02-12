@@ -67,6 +67,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourMovementLib.PathPoint;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
@@ -95,8 +96,13 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
 
+        IMU imu = new IMU(hardwareMap, telemetry);
+
         waitForStart();
+
         vuforia.beingTracking();
+
+        // Start
 
         /*
          * (0, 10) +------------+ (10, 10)
@@ -106,8 +112,42 @@ public class Autonomous extends LinearOpMode {
          * (0, 0)  +------------+ (10, 0)
          */
 
+
+        /*
+         * Start robot lik this
+         *        WALL
+         * -----------------------
+         *      |           |
+         *      |   HERE    |
+         *      |           |
+         */
+
+
+        // A BLOCK
+        //follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
+
+        // vumark lock on position
+        //follower.goTo(3, 39.8, 0);
+
+        // C box
+        //follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 1700, imu);
+
+
         //TODO power shots
-        follower.goTo(0, 8.25,0);
+        while (!isStopRequested()) {
+            // powershot location
+            // follower.goTo(-4, 22, -0.31);
+
+            //high goal
+            follower.goTo(4.5, 28.5, -0.07);
+
+            // B box location
+            //follower.goTo(40.8, 24.0, 0.34);
+
+            // A box
+            //follower.goTo(20.2, 44.3, 0.26);
+
+        }
 
         //TODO check if these ring counts really correspond to the first second and third squares
 //        follower.goTo(12.3,42.5,0); //0 ring square

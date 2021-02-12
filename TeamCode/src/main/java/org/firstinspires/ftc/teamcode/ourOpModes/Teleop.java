@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
@@ -23,7 +25,7 @@ import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
 public class Teleop extends LinearOpMode
 {
     // Declare OpMode members.
-    Mecanum MecanumDrive;
+    //Mecanum MecanumDrive;
     DcMotor intake;
     DcMotor taco;
     DcMotor shooter_adjuster;
@@ -38,7 +40,7 @@ public class Teleop extends LinearOpMode
 
         imu = new IMU(hardwareMap, telemetry);
 
-        MecanumDrive = new Mecanum(hardwareMap);
+        //MecanumDrive = new Mecanum(hardwareMap);
         intake = hardwareMap.get(DcMotor.class, "intake");
         taco = hardwareMap.get(DcMotor.class, "taco");
 
@@ -58,8 +60,14 @@ public class Teleop extends LinearOpMode
 
         //Reset wobble arm to up position
         wobble_arm.automaticReleaseWobble();
+        VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1);
+
         waitForStart();
 
+        vuforiaPhone.beingTracking();
 
         while (opModeIsActive()){
 
@@ -76,9 +84,15 @@ public class Teleop extends LinearOpMode
                 y*= 1.0/3;
             }
 
+            if(gamepad2.right_stick_button){
+                // high goal
+                follower.goTo(-4, 22, -0.31);
+            }
+
             // stop when no one is touching anything
-            MecanumDrive.drive(x, y,
-                    (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
+            //MecanumDrive.drive(x, y,
+                    //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
+            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
 
             double intakeOut = gamepad2.right_trigger;
             double intakeIn = -gamepad2.left_trigger;
@@ -108,7 +122,7 @@ public class Teleop extends LinearOpMode
             shooter_adjuster.setPower((gamepad2.dpad_up ? -0.5 : 0.5) + (gamepad2.dpad_down ? 0.5 : -0.5));
             // shooter.setPower((gamepad2.dpad_left ? -0.795 : 0) + (gamepad2.dpad_right ? 0.795 : 0));
             //shooter.setVelocity((gamepad2.dpad_left ? -0.7 : 0) + (gamepad2.dpad_right ? 0.7 : 0));
-            if(shooter.getVelocity() < 1810)
+            if(shooter.getVelocity() < 1710)
             {
                 shooter.setVelocity((gamepad2.dpad_left ? -100 : 0) + (gamepad2.dpad_right ? 100 : 0));
             }

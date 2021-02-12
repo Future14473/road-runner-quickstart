@@ -21,7 +21,7 @@ public class VuforiaOpMode extends LinearOpMode {
 
         waitForStart();
 
-        vuforia.beingTracking();
+        vuforia.beginTracking();
 
         while (!isStopRequested()){
             OpenGLMatrix location = vuforia.getLocation();

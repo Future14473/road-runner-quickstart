@@ -62,7 +62,7 @@ public class Teleop extends LinearOpMode
         VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1);
+        Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1, imu);
 
         waitForStart();
 

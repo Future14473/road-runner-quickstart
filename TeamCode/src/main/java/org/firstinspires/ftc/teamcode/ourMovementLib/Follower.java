@@ -31,15 +31,18 @@ public class Follower {
     private final LinearOpMode opmode;
     private final Gamepad gamepad;
     private static final float mmPerInch = 25.4f;
+    private final IMU imu;
 
 
     public pose position = new pose(0,0,0);
 
-    public Follower(SampleMecanumDrive drivetrain, VuforiaPhone vuforia, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad){
+    public Follower(SampleMecanumDrive drivetrain, VuforiaPhone vuforia, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad, IMU imu){
         this.drivetrain = drivetrain;
         this.vuforia = vuforia;
         this.telemetry = telemetry;
         this.gamepad = gamepad;
+
+         this.imu = imu;
         
         this.opmode = opmode;
     }
@@ -107,7 +110,9 @@ public class Follower {
             rightAxisPos = translation.get(1) / mmPerInch; //TODO Encoder configuration is flipped
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
             // breaking the config
-            turnAxisPos = Math.toRadians(rotation.thirdAngle);
+
+            // Getting angle inconsistency that are really impacting the shooter accuracy
+            turnAxisPos =  imu.getHeading(); //Math.toRadians(rotation.thirdAngle);
 
 
 

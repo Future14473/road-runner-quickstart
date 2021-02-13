@@ -190,7 +190,7 @@ public class Autonomous extends LinearOpMode {
 
 
 
-        /*if(detector.stack == 0) {
+        if(detector.stack == 0) {
             // A BLOCK
             telemetry.addData("Shooting", "A Block");
             telemetry.update();
@@ -202,18 +202,19 @@ public class Autonomous extends LinearOpMode {
             // B BLOCK
             telemetry.addData("Shooting", "B Block");
             telemetry.update();
-            follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.goTo(35, 18, 0.42);
+            follower.DRIVE_MAINTAIN_HEADING(0.5, 0,0, 2000, imu);
+            //follower.goTo(3, 39.8, 0); // vumark lock on position
+            //follower.goTo(35, 18, 0.42);
             follower.goToHeading(0);
         }
-        else{*/
+        else{
             // C BLOCK
             telemetry.addData("Shooting", "C Block");
             telemetry.update();
             follower.goTo(3, 45, 0); // vumark lock on position
             follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2950, imu);
             follower.goToHeading(-0.3);
-        //}
+        }
 
         // PLACE WOBBLE
         wobble_arm.down();
@@ -227,7 +228,7 @@ public class Autonomous extends LinearOpMode {
             follower.DRIVE_MAINTAIN_HEADING(-0.4, 0, 0, 2950, imu);
         }
         if(detector.stack == 1){
-            follower.DRIVE_MAINTAIN_HEADING(-0.4, -0.0, 0, 700, imu);
+            follower.DRIVE_MAINTAIN_HEADING(-0.5, -0.0, 0, 1100, imu);
         }
 
         follower.goTo(10, 39.8, 0); // vumark lock on position

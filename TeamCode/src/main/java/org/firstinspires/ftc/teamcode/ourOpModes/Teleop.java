@@ -91,7 +91,7 @@ public class Teleop extends LinearOpMode
             // stop when no one is touching anything
             //MecanumDrive.drive(x, y,
                     //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
-            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
+            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
 
             double intakeOut = gamepad2.right_trigger;
             double intakeIn = -gamepad2.left_trigger;
@@ -103,11 +103,11 @@ public class Teleop extends LinearOpMode
 
             if(tacoOut)
             {
-                taco.setPower(1);
+                taco.setPower(0.5);
             }
             else if(tacoIn)
             {
-                taco.setPower(-1);
+                taco.setPower(-0.5);
             }
             else{
                 taco.setPower(0);

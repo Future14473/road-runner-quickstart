@@ -112,7 +112,8 @@ public class Follower {
             // breaking the config
 
             // Getting angle inconsistency that are really impacting the shooter accuracy
-            turnAxisPos =  imu.getHeading(); //Math.toRadians(rotation.thirdAngle);
+            //turnAxisPos =  imu.getHeading();
+            turnAxisPos = Math.toRadians(rotation.thirdAngle);
 
 
 
@@ -196,7 +197,7 @@ public class Follower {
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                DRIVE(0,0, -turnPower * 0.4);
+                DRIVE(0,0, -turnPower);
 
                 // if all the powers are 0 then we've arrived
                 if(turnPower == 0){
@@ -250,11 +251,11 @@ public class Follower {
 
         double power;
         // anything within 0.05 rad means the robot starts slowing
-        power = angle / 0.5;
+        power = angle / 1.8;
         // but too little power means the robot won't move at all
-//        if(Math.abs(power) < 0.4)
-//            // if power too low, make it higher
-//            power = 0.4 * Math.signum(power);
+        if(Math.abs(power) < 0.2)
+            // if power too low, make it higher
+            power = 0.2 * Math.signum(power);
 
         return power;
     }

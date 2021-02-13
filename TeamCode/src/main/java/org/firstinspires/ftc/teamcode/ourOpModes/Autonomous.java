@@ -73,6 +73,7 @@ import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -87,7 +88,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  */
 @TeleOp(group = "drive")
 public class Autonomous extends LinearOpMode {
-    DcMotorEx shooter, taco, intake;
+    DcMotorEx shooter, taco;
+    DcMotor intake;
     CRServo shooter_roller1, shooter_roller2;
     Wobble_Arm wobble_arm;
     Timing timer = new Timing(this);
@@ -114,20 +116,21 @@ public class Autonomous extends LinearOpMode {
         VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         taco = hardwareMap.get(DcMotorEx.class, "taco");
-        intake = hardwareMap.get(DcMotorEx.class, "intake");
+        intake = hardwareMap.get(DcMotor.class, "intake");
 
         shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
         shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
         wobble_arm = new Wobble_Arm(hardwareMap, Autonomous.this);
 
+        //intake.setPower(1.0);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // TwoWheelTrackingLocalizer myTwoWheelLoc = new TwoWheelTrackingLocalizer(hardwareMap, drive);
 
-
+        //regulate_shooter_vel();
 
         IMU imu = new IMU(hardwareMap, telemetry);
 
@@ -161,7 +164,8 @@ public class Autonomous extends LinearOpMode {
         vuforia.beginTracking();
 
         follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-//        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
+        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
+
 
 //Great High Goal Position
 //        follower.goTo(-4, 32, 0);
@@ -170,8 +174,17 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Going to ", "High Goal");
         telemetry.update();
 
-        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
+        follower.goTo(-4, 6.9, 0);
         shoot1();
+        follower.goTo(-8, -1, 0);
+        shoot2();
+        follower.goTo(-4, 2, 0);
+        shoot3();
+
+        shooter_roller1.setPower(0);
+        shooter_roller2.setPower(0);
+
+        shooter.setVelocity(0);
 
         if(detector.stack == 0) {
             // A BLOCK
@@ -197,12 +210,20 @@ public class Autonomous extends LinearOpMode {
             follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2950, imu);
             follower.goToHeading(-0.3);
         }
+
         // PLACE WOBBLE
         wobble_arm.down();
         timer.safeDelay(500);
         wobble_arm.safeReleaseWobble();
         follower.goToHeading(0);
-        OpenGLMatrix location = vuforia.getLocation();
+
+        if(detector.stack != 1 && detector.stack!= 0){
+            follower.DRIVE_MAINTAIN_HEADING(-0.4, 0, 0, 2950, imu);
+        }
+
+        follower.goTo(10, 39.8, 0); // vumark lock on position
+
+        //OpenGLMatrix location = vuforia.getLocation();
 //        while(location == null){
 //            // Search for left image
 //            location = vuforia.getLocation();
@@ -232,9 +253,24 @@ public class Autonomous extends LinearOpMode {
         3rd ring: Second Roller and Taco, place between intake and taco entrance
     * */
 
+    volatile int shooter_vel = 0;
+    void regulate_shooter_vel(){
+        new Thread(()-> {
+            while (!isStopRequested()) {
+               // telemetry.addData("shooter vel", shooter.getVelocity());
+                if (Math.abs(shooter.getVelocity()) < shooter_vel) {
+                    shooter.setPower(-0.7);
+                }else{
+                    shooter.setPower(-0.7);
+                }
+            }
+        }).start();
+    }
+
+
     void shoot1() { // shoot 1st ring
         // spin shooter up
-        shooter.setVelocity(-100);
+        shooter.setPower(-0.8);
         // wait 3 secs
         timer.safeDelay(3000);
         //for first ring only spin roller
@@ -242,18 +278,14 @@ public class Autonomous extends LinearOpMode {
         shooter_roller2.setPower(1);
 
         timer.safeDelay(3050);
-        shooter.setVelocity(0);
+        shooter.setPower(-0);
         shooter_roller1.setPower(0);
         shooter_roller2.setPower(0);
     }
     void shoot2() { //shoot 2nd ring
         // spin shooter up
         //THIS ONLY WORKS IN A LOOP, IT'S THE SAME AS shooter.setVelocity(...) without the if statement
-        if (shooter.getVelocity() < 1600) {
-            shooter.setVelocity(-100);
-        } else {
-            shooter.setVelocity(0);
-        }
+        shooter.setPower(-0.75);
         // wait 3 secs
         timer.safeDelay(3000);
         // for 2nd ring only spin roller and taco
@@ -263,25 +295,23 @@ public class Autonomous extends LinearOpMode {
         taco.setPower(1);
 
         timer.safeDelay(4050);
+        shooter.setPower(-0);
     }
 
     void shoot3() { //shoot 3rd ring
         // spin shooter up
-        if (shooter.getVelocity() < 1600) {
-            shooter.setVelocity(-100);
-        } else {
-            shooter.setVelocity(0);
-        }
+        shooter.setPower(-0.8);
         // wait 3 secs
         timer.safeDelay(3000);
         // for 2nd ring only spin roller and taco
 
         shooter_roller1.setPower(1);
         shooter_roller2.setPower(1);
-        intake.setPower(1);
-        taco.setPower(1);
+        intake.setPower(-1.0);
+        taco.setPower(0.5);
 
         timer.safeDelay(4050);
+        shooter.setPower(-0);
     }
 
     //TODO check if these ring counts really correspond to the first second and third squares

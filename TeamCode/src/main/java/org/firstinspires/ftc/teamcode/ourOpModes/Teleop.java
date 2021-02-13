@@ -72,7 +72,7 @@ public class Teleop extends LinearOpMode
 
             double y = -gamepad1.right_stick_y;
             double x = gamepad1.right_stick_x;
-A
+
             // absolute turning
             double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);

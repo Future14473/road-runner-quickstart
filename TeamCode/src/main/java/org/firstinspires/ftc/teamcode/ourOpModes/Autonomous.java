@@ -151,6 +151,8 @@ public class Autonomous extends LinearOpMode {
          */
 
         waitForStart();
+        shooter.setPower(-1);
+
 
         webcam.stopStreaming();
 
@@ -163,21 +165,21 @@ public class Autonomous extends LinearOpMode {
 
         vuforia.beginTracking();
 
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        //follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
+        follower.DRIVE_MAINTAIN_HEADING(0.9, -0, 0, 1100, imu);
+        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
 
 
 //Great High Goal Position
 //        follower.goTo(-4, 32, 0);
-        follower.goTo(-4, 22, 0);
+        follower.goTo(-4, 26, 0);
 
         telemetry.addData("Going to ", "High Goal");
         telemetry.update();
 
         //follower.goTo(-4, 6.9, 0);
-        shoot1();
+        //shoot1();
         //follower.goTo(-8, -1, 0);
-        shoot2();
+        //shoot2();
         //follower.goTo(-4, 2, 0);
         shoot3();
 
@@ -199,7 +201,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.addData("Shooting", "B Block");
             telemetry.update();
             follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.goTo(35, 27, 0.42);
+            follower.goTo(35, 18, 0.42);
             follower.goToHeading(0);
         }
         else{
@@ -273,7 +275,7 @@ public class Autonomous extends LinearOpMode {
 
     void shoot1() { // shoot 1st ring
         // spin shooter up
-        shooter.setPower(-0.8);
+        shooter.setPower(-0.92);
         // wait 3 secs
         timer.safeDelay(3000);
         //for first ring only spin roller
@@ -288,7 +290,7 @@ public class Autonomous extends LinearOpMode {
     void shoot2() { //shoot 2nd ring
         // spin shooter up
         //THIS ONLY WORKS IN A LOOP, IT'S THE SAME AS shooter.setVelocity(...) without the if statement
-        shooter.setPower(-0.75);
+        shooter.setPower(-0.92);
         // wait 3 secs
         timer.safeDelay(3000);
         // for 2nd ring only spin roller and taco
@@ -303,17 +305,17 @@ public class Autonomous extends LinearOpMode {
 
     void shoot3() { //shoot 3rd ring
         // spin shooter up
-        shooter.setPower(-0.8);
         // wait 3 secs
-        timer.safeDelay(3000);
         // for 2nd ring only spin roller and taco
 
         shooter_roller1.setPower(1);
         shooter_roller2.setPower(1);
-        intake.setPower(-1.0);
-        taco.setPower(0.5);
 
-        timer.safeDelay(4050);
+        taco.setPower(0.3);
+        timer.safeDelay(2000);
+        intake.setPower(-0.5);
+
+        timer.safeDelay(6050);
         shooter.setPower(-0);
     }
 

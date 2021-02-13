@@ -66,6 +66,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.teamcode.cv.Detection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
@@ -169,44 +170,45 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Going to ", "High Goal");
         telemetry.update();
 
-//        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
-//        shoot1();
+        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
+        shoot1();
 
         if(detector.stack == 0) {
             // A BLOCK
             telemetry.addData("Shooting", "A Block");
             telemetry.update();
             follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.goTo(19.2, 46, 0.26);
-            // PLACE WOBBLE
-            wobble_arm.down();
-            timer.safeDelay(500);
-            wobble_arm.safeReleaseWobble();
+            follower.goTo(17.2, 46, 0.3);
+            follower.goToHeading(0);
         }
         else if(detector.stack == 1){
             // B BLOCK
             telemetry.addData("Shooting", "B Block");
             telemetry.update();
             follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.goTo(39, 26, 0.34);
-            //follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 100, imu);
-            // PLACE WOBBLE
-            wobble_arm.down();
-            timer.safeDelay(500);
-            wobble_arm.safeReleaseWobble();
+            follower.goTo(35, 27, 0.42);
+            follower.goToHeading(-0.3);
         }
         else{
             // C BLOCK
             telemetry.addData("Shooting", "C Block");
             telemetry.update();
-            follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2850, imu);
-            follower.DRIVE_MAINTAIN_HEADING(0, 0, -0.05, 50, imu);
-            // PLACE WOBBLE
-            wobble_arm.down();
-            timer.safeDelay(500);
-            wobble_arm.safeReleaseWobble();
+            follower.goTo(3, 45, 0); // vumark lock on position
+            follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2950, imu);
+            follower.goToHeading(-0.3);
         }
+        // PLACE WOBBLE
+        wobble_arm.down();
+        timer.safeDelay(500);
+        wobble_arm.safeReleaseWobble();
+        follower.goToHeading(0);
+        OpenGLMatrix location = vuforia.getLocation();
+//        while(location == null){
+//            // Search for left image
+//            location = vuforia.getLocation();
+//            follower.DRIVE(-0.4, 0, 0);
+//        }
+
 
         /*
 
@@ -232,11 +234,7 @@ public class Autonomous extends LinearOpMode {
 
     void shoot1() { // shoot 1st ring
         // spin shooter up
-        if (shooter.getVelocity() < 1500) {
-            shooter.setVelocity(-100);
-        } else {
-            shooter.setVelocity(0);
-        }
+        shooter.setVelocity(-100);
         // wait 3 secs
         timer.safeDelay(3000);
         //for first ring only spin roller
@@ -244,9 +242,13 @@ public class Autonomous extends LinearOpMode {
         shooter_roller2.setPower(1);
 
         timer.safeDelay(3050);
+        shooter.setVelocity(0);
+        shooter_roller1.setPower(0);
+        shooter_roller2.setPower(0);
     }
     void shoot2() { //shoot 2nd ring
         // spin shooter up
+        //THIS ONLY WORKS IN A LOOP, IT'S THE SAME AS shooter.setVelocity(...) without the if statement
         if (shooter.getVelocity() < 1600) {
             shooter.setVelocity(-100);
         } else {

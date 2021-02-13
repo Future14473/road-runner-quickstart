@@ -166,6 +166,48 @@ public class Follower {
             telemetry.update();
         }
     }
+
+    public void goToHeading(double turnAxisDest){
+        boolean arrived = false;
+        while (!arrived && opmode.opModeIsActive()){
+            // get new position in Aviation coordinates
+            OpenGLMatrix location = vuforia.getLocation();
+            // Getting angle inconsistency that are really impacting the shooter accuracy
+            double turnAxisPos =  imu.getHeading(); //Math.toRadians(rotation.thirdAngle);
+
+            telemetry.addData("Current Position", String.format("R: %.2f", turnAxisPos));
+
+
+            // calculate how far robot needs to go
+            double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
+
+            telemetry.addData("Distance to Go",String.format("R: %.2f", turnDistance));
+
+
+            // decide how much power the robot should use to turn
+            double turnPower = convertAnglesToPower(turnDistance);
+
+            telemetry.addData("Power",String.format("R: %.2f", -turnPower));
+
+
+            // A pressed means manual control
+            // Otherwise, let the robot move to destination
+            if (gamepad.a){
+                // the y stick is negative when you push up, so invert it
+                DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
+            }else{
+                DRIVE(0,0, -turnPower * 0.4);
+
+                // if all the powers are 0 then we've arrived
+                if(turnPower == 0){
+                    arrived = true;
+                }
+            }
+
+            // tell telemetry to send the new data
+            telemetry.update();
+        }
+    }
     /*
      * For POSITIVE forward parameter: go forward
      * For POSITIVE sideways parameter: go right
@@ -190,9 +232,9 @@ public class Follower {
         // anything within 7 inches means the robot starts slowing
         power = distance / 14; //needs to be slower, too jerky now
         // but too little power means the robot won't move at all
-        if(Math.abs(power) < 0.1)
+        if(Math.abs(power) < 0.15)
             // if power too low, make it higher
-            power = 0.1 * Math.signum(power);
+            power = 0.15 * Math.signum(power);
 
         if(Math.abs(power) > 0.6)
             // if power too high, make it lower
@@ -203,7 +245,7 @@ public class Follower {
 
     double convertAnglesToPower(double angle){
         // if within 0.1 radian, stop. That's close enough
-        if(Math.abs(angle) < 0.04)
+        if(Math.abs(angle) <= 0.04)
            return  0;
 
         double power;

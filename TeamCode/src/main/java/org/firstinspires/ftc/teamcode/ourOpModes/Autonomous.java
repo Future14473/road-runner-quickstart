@@ -60,12 +60,22 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.teamcode.cv.Detection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
+import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 /**
@@ -77,18 +87,52 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
  */
 @TeleOp(group = "drive")
 public class Autonomous extends LinearOpMode {
+    DcMotorEx shooter, taco, intake;
+    CRServo shooter_roller1, shooter_roller2;
+    Wobble_Arm wobble_arm;
+    Timing timer = new Timing(this);
+
     @Override
     public void runOpMode() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
+                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        Detection detector = new Detection(telemetry);
+
+
+        webcam.setPipeline(detector);
+
+        //Opening and Streaming from Camera
+
+        webcam.openCameraDeviceAsync(() -> {
+            webcam.startStreaming(352, 288, OpenCvCameraRotation.UPRIGHT);
+        });
+
+
         VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
+        shooter = hardwareMap.get(DcMotorEx.class, "shooter");
+        taco = hardwareMap.get(DcMotorEx.class, "taco");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
+
+        shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
+        shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
+        shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
+        wobble_arm = new Wobble_Arm(hardwareMap, Autonomous.this);
+
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // TwoWheelTrackingLocalizer myTwoWheelLoc = new TwoWheelTrackingLocalizer(hardwareMap, drive);
 
-        Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1);
+
 
         IMU imu = new IMU(hardwareMap, telemetry);
+
+        Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1, imu);
+
 
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
@@ -105,39 +149,72 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
 
-        // AUSTIN DO RING DETECTION HERE
-        // Remember to turn off cv
+        webcam.stopStreaming();
 
         // GRAB WOBBLE
+        wobble_arm.grab();
+        timer.safeDelay(200);
+        wobble_arm.up();
 
         // Start Vuforia
+
         vuforia.beginTracking();
 
-
-        // A BLOCK
         follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.goTo(-4, 22, -0.31); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
-        follower.goTo(3, 39.8, 0); // vumark lock on position
-        follower.goTo(20.2, 44.3, 0.26);
-        // PLACE WOBBLE
+//        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
 
-        // B BLOCK
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.goTo(-4, 22, -0.31); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
-        follower.goTo(3, 39.8, 0); // vumark lock on position
-        follower.goTo(40.8, 24.0, 0.34);
-        // PLACE WOBBLE
+//Great High Goal Position
+//        follower.goTo(-4, 32, 0);
+        //follower.goTo(-4, 22, 0); <-- I like this one better (Kyle)
 
-        // C box
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.goTo(-4, 22, -0.31); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
-        follower.goTo(3, 39.8, 0); // vumark lock on position
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 1700, imu);
-        // PLACE WOBBLE
+        telemetry.addData("Going to ", "High Goal");
+        telemetry.update();
 
+        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
+        shoot1();
+
+        if(detector.stack == 0) {
+            // A BLOCK
+            telemetry.addData("Shooting", "A Block");
+            telemetry.update();
+            follower.goTo(3, 39.8, 0); // vumark lock on position
+            follower.goTo(17.2, 46, 0.3);
+            follower.goToHeading(0);
+        }
+        else if(detector.stack == 1){
+            // B BLOCK
+            telemetry.addData("Shooting", "B Block");
+            telemetry.update();
+            follower.goTo(3, 39.8, 0); // vumark lock on position
+            follower.goTo(35, 27, 0.42);
+            follower.goToHeading(-0.3);
+        }
+        else{
+            // C BLOCK
+            telemetry.addData("Shooting", "C Block");
+            telemetry.update();
+            follower.goTo(3, 45, 0); // vumark lock on position
+            follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2950, imu);
+            follower.goToHeading(-0.3);
+        }
+        // PLACE WOBBLE
+        wobble_arm.down();
+        timer.safeDelay(500);
+        wobble_arm.safeReleaseWobble();
+        follower.goToHeading(0);
+        OpenGLMatrix location = vuforia.getLocation();
+//        while(location == null){
+//            // Search for left image
+//            location = vuforia.getLocation();
+//            follower.DRIVE(-0.4, 0, 0);
+//        }
+
+
+        /*
+
+
+
+*/
         // Finally, park, or something
 
         // Powershot location
@@ -147,26 +224,78 @@ public class Autonomous extends LinearOpMode {
         // follower.goTo(4.5, 28.5, -0.07);
     }
 
-    void shoot(){
+    /*
+    Notes for shooting, shoot 2 and 3 are not tested yet
+    The idea is to separate the 3 rings into 3 different sections:
+        1st ring: Second Roller only, place on the shooter entrance but not touching the fly wheel
+        2nd ring: Second Roller and Taco, place between the taco and second roller
+        3rd ring: Second Roller and Taco, place between intake and taco entrance
+    * */
+
+    void shoot1() { // shoot 1st ring
         // spin shooter up
+        shooter.setVelocity(-100);
         // wait 3 secs
-        // spin taco and transfer
-        // wait 3 secs for ring movement
-        // wait another 3 secs for shoot
+        timer.safeDelay(3000);
+        //for first ring only spin roller
+        shooter_roller1.setPower(1);
+        shooter_roller2.setPower(1);
+
+        timer.safeDelay(3050);
+        shooter.setVelocity(0);
+        shooter_roller1.setPower(0);
+        shooter_roller2.setPower(0);
+    }
+    void shoot2() { //shoot 2nd ring
+        // spin shooter up
+        //THIS ONLY WORKS IN A LOOP, IT'S THE SAME AS shooter.setVelocity(...) without the if statement
+        if (shooter.getVelocity() < 1600) {
+            shooter.setVelocity(-100);
+        } else {
+            shooter.setVelocity(0);
+        }
+        // wait 3 secs
+        timer.safeDelay(3000);
+        // for 2nd ring only spin roller and taco
+
+        shooter_roller1.setPower(1);
+        shooter_roller2.setPower(1);
+        taco.setPower(1);
+
+        timer.safeDelay(4050);
     }
 
-        //TODO check if these ring counts really correspond to the first second and third squares
+    void shoot3() { //shoot 3rd ring
+        // spin shooter up
+        if (shooter.getVelocity() < 1600) {
+            shooter.setVelocity(-100);
+        } else {
+            shooter.setVelocity(0);
+        }
+        // wait 3 secs
+        timer.safeDelay(3000);
+        // for 2nd ring only spin roller and taco
+
+        shooter_roller1.setPower(1);
+        shooter_roller2.setPower(1);
+        intake.setPower(1);
+        taco.setPower(1);
+
+        timer.safeDelay(4050);
+    }
+
+    //TODO check if these ring counts really correspond to the first second and third squares
 //        follower.goTo(12.3,42.5,0); //0 ring square
 //        follower.goTo(35, 25, 0); //1 ring square
 //        follower.goTo(55, 48, 0); //4 ring square
 
 
-        // This doesn't work because the configuration for turning is bad
-        // Nothing wrong with my code here
-        // follower.goTo(0,0,Math.PI/2);
+    // This doesn't work because the configuration for turning is bad
+    // Nothing wrong with my code here
+    // follower.goTo(0,0,Math.PI/2);
 
-        //Timing.delay(1000);
-        //follower.austinStop();
+    //Timing.delay(1000);
+    //follower.austinStop();
 
         /*while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());

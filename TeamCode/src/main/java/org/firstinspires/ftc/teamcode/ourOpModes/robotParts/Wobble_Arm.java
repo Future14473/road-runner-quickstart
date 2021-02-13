@@ -31,6 +31,12 @@ public class Wobble_Arm {
         up();
     }
 
+    public void safeReleaseWobble(){
+        unGrab();
+        timer.safeDelay(400);
+        up();
+    }
+
 
 
     public void unGrab(){

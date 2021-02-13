@@ -19,7 +19,7 @@ public class Detection extends OpenCvPipeline {
 
     // Variables for rings
     public static final double DISKR = 0.2;
-    public static final double DMAXR = DISKR * 2;
+    public static final double DMAXR = DISKR * 2.2;
     public static final double DMINR = DISKR * 0.4;
     public static final double AREADIFF = 0.5;
 
@@ -38,6 +38,9 @@ public class Detection extends OpenCvPipeline {
     public static final double realX0 = 35;
     public static final double slope = 0.46;
 
+    //Tracking the ringCounts over time
+    int[] ringCounts = {0, 0, 0};
+
     ArrayList<double[]> wobbles = new ArrayList<>();
     int wobbleIterations = 10;
 
@@ -49,7 +52,7 @@ public class Detection extends OpenCvPipeline {
     Mat canvas = new Mat();
     int value = 0;
     int saturation = 0;
-    int stack;
+    public int stack;
 
     double angle = 0;
 
@@ -64,7 +67,8 @@ public class Detection extends OpenCvPipeline {
     public Mat processFrame(Mat input){
         picSetup(input);
         output = markRings(input, find_rings(formatted));
-        stack = CountRings(find_rings(formatted));
+        CountRings(find_rings(formatted));
+        stack = finalRings();
         telemetry.addData("Ring Count", stack);
         telemetry.addData("angle", angle);
         telemetry.update();
@@ -211,7 +215,7 @@ public class Detection extends OpenCvPipeline {
         //rough filtering
         contours.removeIf(m -> {
             Rect rect = Imgproc.boundingRect(m);
-            return (rect.area() < 200) || (rect.height > rect.width) || (rect.height + rect.y < yP/2);
+            return (rect.area() < 200) || (rect.height > rect.width) || (rect.height + rect.y < yP*3/5);
         });
 
         //Rings will be sorted into Stacks in rectsData
@@ -349,15 +353,29 @@ public class Detection extends OpenCvPipeline {
 
     public int CountRings(ArrayList<Stack> rectsData){
         if(rectsData.isEmpty()){
+            ringCounts[0]++;
             return 0;
         }
         int maxCount = Collections.max(rectsData).count;
         if(maxCount == 1){
+            ringCounts[1]++;
             return 1;
         }
         else{
+            ringCounts[2]++;
             return 4;
         }
+    }
+
+    //Finds the maximum index of ringCounts
+    public int finalRings(){
+        int index = 0;
+        for(int i = 0; i<3; i++){
+            if(ringCounts[i] > ringCounts[index]){
+                index = i;
+            }
+        }
+        return index;
     }
 
 

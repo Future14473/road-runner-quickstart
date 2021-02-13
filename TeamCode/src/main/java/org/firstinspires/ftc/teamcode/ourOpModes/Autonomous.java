@@ -188,12 +188,14 @@ public class Autonomous extends LinearOpMode {
 
         shooter.setVelocity(0);
 
-        if(detector.stack == 0) {
+
+
+        /*if(detector.stack == 0) {
             // A BLOCK
             telemetry.addData("Shooting", "A Block");
             telemetry.update();
             follower.goTo(3, 39.8, 0); // vumark lock on position
-            follower.goTo(17.2, 46, 0.3);
+            follower.goTo(13.2, 46, 0.3);
             follower.goToHeading(0);
         }
         else if(detector.stack == 1){
@@ -204,14 +206,14 @@ public class Autonomous extends LinearOpMode {
             follower.goTo(35, 18, 0.42);
             follower.goToHeading(0);
         }
-        else{
+        else{*/
             // C BLOCK
             telemetry.addData("Shooting", "C Block");
             telemetry.update();
             follower.goTo(3, 45, 0); // vumark lock on position
             follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2950, imu);
             follower.goToHeading(-0.3);
-        }
+        //}
 
         // PLACE WOBBLE
         wobble_arm.down();
@@ -219,11 +221,13 @@ public class Autonomous extends LinearOpMode {
         wobble_arm.safeReleaseWobble();
         follower.goToHeading(0);
 
+
+
         if(detector.stack != 1 && detector.stack!= 0){
             follower.DRIVE_MAINTAIN_HEADING(-0.4, 0, 0, 2950, imu);
         }
         if(detector.stack == 1){
-            follower.DRIVE_MAINTAIN_HEADING(-0.2, -0.2, 0, 600, imu);
+            follower.DRIVE_MAINTAIN_HEADING(-0.4, -0.0, 0, 700, imu);
         }
 
         follower.goTo(10, 39.8, 0); // vumark lock on position
@@ -313,6 +317,8 @@ public class Autonomous extends LinearOpMode {
 
         taco.setPower(0.3);
         timer.safeDelay(2000);
+        taco.setPower(0.6);
+
         intake.setPower(-0.5);
 
         timer.safeDelay(6050);

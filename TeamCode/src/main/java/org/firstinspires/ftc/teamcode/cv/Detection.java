@@ -38,6 +38,9 @@ public class Detection extends OpenCvPipeline {
     public static final double realX0 = 35;
     public static final double slope = 0.46;
 
+    //Tracking the ringCounts over time
+    int[] ringCounts = {0, 0, 0};
+
     ArrayList<double[]> wobbles = new ArrayList<>();
     int wobbleIterations = 10;
 
@@ -64,7 +67,8 @@ public class Detection extends OpenCvPipeline {
     public Mat processFrame(Mat input){
         picSetup(input);
         output = markRings(input, find_rings(formatted));
-        stack = CountRings(find_rings(formatted));
+        CountRings(find_rings(formatted));
+        stack = finalRings();
         telemetry.addData("Ring Count", stack);
         telemetry.addData("angle", angle);
         telemetry.update();
@@ -349,15 +353,29 @@ public class Detection extends OpenCvPipeline {
 
     public int CountRings(ArrayList<Stack> rectsData){
         if(rectsData.isEmpty()){
+            ringCounts[0]++;
             return 0;
         }
         int maxCount = Collections.max(rectsData).count;
         if(maxCount == 1){
+            ringCounts[1]++;
             return 1;
         }
         else{
+            ringCounts[2]++;
             return 4;
         }
+    }
+
+    //Finds the maximum index of ringCounts
+    public int finalRings(){
+        int index = 0;
+        for(int i = 0; i<3; i++){
+            if(ringCounts[i] > ringCounts[index]){
+                index = i;
+            }
+        }
+        return index;
     }
 
 

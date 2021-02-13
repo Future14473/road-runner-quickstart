@@ -62,10 +62,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.cv.Detection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 /**
@@ -90,6 +95,20 @@ public class Autonomous extends LinearOpMode {
 
         IMU imu = new IMU(hardwareMap, telemetry);
 
+        //Setting up CV Camera
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
+                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        Detection detector = new Detection(telemetry);
+
+        webcam.setPipeline(detector);
+
+        //Beginning Detection during INIT phase
+        webcam.openCameraDeviceAsync(() -> {
+            webcam.startStreaming(352, 288, OpenCvCameraRotation.UPRIGHT);
+            
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
 
@@ -104,9 +123,7 @@ public class Autonomous extends LinearOpMode {
          */
 
         waitForStart();
-
-        // AUSTIN DO RING DETECTION HERE
-        // Remember to turn off cv
+        webcam.stopStreaming();
 
         // GRAB WOBBLE
 

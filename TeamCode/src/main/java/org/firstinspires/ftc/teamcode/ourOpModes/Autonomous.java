@@ -86,7 +86,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@TeleOp(group = "drive")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(group = "drive")
 public class Autonomous extends LinearOpMode {
     DcMotorEx shooter, taco;
     DcMotor intake;
@@ -164,21 +164,21 @@ public class Autonomous extends LinearOpMode {
         vuforia.beginTracking();
 
         follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
+        //follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
 
 
 //Great High Goal Position
 //        follower.goTo(-4, 32, 0);
-        //follower.goTo(-4, 22, 0); <-- I like this one better (Kyle)
+        follower.goTo(-4, 22, 0);
 
         telemetry.addData("Going to ", "High Goal");
         telemetry.update();
 
-        follower.goTo(-4, 6.9, 0);
+        //follower.goTo(-4, 6.9, 0);
         shoot1();
-        follower.goTo(-8, -1, 0);
+        //follower.goTo(-8, -1, 0);
         shoot2();
-        follower.goTo(-4, 2, 0);
+        //follower.goTo(-4, 2, 0);
         shoot3();
 
         shooter_roller1.setPower(0);
@@ -200,7 +200,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
             follower.goTo(3, 39.8, 0); // vumark lock on position
             follower.goTo(35, 27, 0.42);
-            follower.goToHeading(-0.3);
+            follower.goToHeading(0);
         }
         else{
             // C BLOCK
@@ -219,6 +219,9 @@ public class Autonomous extends LinearOpMode {
 
         if(detector.stack != 1 && detector.stack!= 0){
             follower.DRIVE_MAINTAIN_HEADING(-0.4, 0, 0, 2950, imu);
+        }
+        if(detector.stack == 1){
+            follower.DRIVE_MAINTAIN_HEADING(-0.2, -0.2, 0, 600, imu);
         }
 
         follower.goTo(10, 39.8, 0); // vumark lock on position

@@ -66,7 +66,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
@@ -143,7 +142,7 @@ public class Autonomous extends LinearOpMode {
         telemetry.update();
 
         follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
+        shoot1();
 //        telemetry.addData("Shooting", "A Block");telemetry.update();
 //        follower.goTo(3, 39.8, 0); // vumark lock on position
 //        follower.goTo(20.2, 44.3, 0.26);
@@ -175,24 +174,64 @@ public class Autonomous extends LinearOpMode {
         // follower.goTo(4.5, 28.5, -0.07);
     }
 
-    void shoot() {
+    /*
+    Notes for shooting, shoot 2 and 3 are not tested yet
+    The idea is to separate the 3 rings into 3 different sections:
+        1st ring: Second Roller only, place on the shooter entrance but not touching the fly wheel
+        2nd ring: Second Roller and Taco, place between the taco and second roller
+        3rd ring: Second Roller and Taco, place between intake and taco entrance
+    * */
+
+    void shoot1() { // shoot 1st ring
         // spin shooter up
-        if (shooter.getVelocity() < 1710) {
+        if (shooter.getVelocity() < 1600) {
             shooter.setVelocity(-100);
         } else {
             shooter.setVelocity(0);
         }
         // wait 3 secs
         timer.safeDelay(3000);
-        // spin taco and transfer
-        taco.setPower(1);
+        //for first ring only spin roller
+        shooter_roller1.setPower(1);
+        shooter_roller2.setPower(1);
+
+        timer.safeDelay(3050);
+    }
+    void shoot2() { //shoot 2nd ring
+        // spin shooter up
+        if (shooter.getVelocity() < 1600) {
+            shooter.setVelocity(-100);
+        } else {
+            shooter.setVelocity(0);
+        }
+        // wait 3 secs
+        timer.safeDelay(3000);
+        // for 2nd ring only spin roller and taco
+
         shooter_roller1.setPower(1);
         shooter_roller2.setPower(1);
         taco.setPower(1);
 
         timer.safeDelay(4050);
-        // wait 3 secs for ring movement
-        // wait another 3 secs for shoot
+    }
+
+    void shoot3() { //shoot 3rd ring
+        // spin shooter up
+        if (shooter.getVelocity() < 1600) {
+            shooter.setVelocity(-100);
+        } else {
+            shooter.setVelocity(0);
+        }
+        // wait 3 secs
+        timer.safeDelay(3000);
+        // for 2nd ring only spin roller and taco
+
+        shooter_roller1.setPower(1);
+        shooter_roller2.setPower(1);
+        intake.setPower(1);
+        taco.setPower(1);
+
+        timer.safeDelay(4050);
     }
 
     //TODO check if these ring counts really correspond to the first second and third squares

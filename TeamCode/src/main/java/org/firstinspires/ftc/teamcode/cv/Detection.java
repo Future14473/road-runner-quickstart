@@ -19,7 +19,7 @@ public class Detection extends OpenCvPipeline {
 
     // Variables for rings
     public static final double DISKR = 0.2;
-    public static final double DMAXR = DISKR * 2;
+    public static final double DMAXR = DISKR * 2.2;
     public static final double DMINR = DISKR * 0.4;
     public static final double AREADIFF = 0.5;
 
@@ -52,7 +52,7 @@ public class Detection extends OpenCvPipeline {
     Mat canvas = new Mat();
     int value = 0;
     int saturation = 0;
-    int stack;
+    public int stack;
 
     double angle = 0;
 
@@ -215,7 +215,7 @@ public class Detection extends OpenCvPipeline {
         //rough filtering
         contours.removeIf(m -> {
             Rect rect = Imgproc.boundingRect(m);
-            return (rect.area() < 200) || (rect.height > rect.width) || (rect.height + rect.y < yP/2);
+            return (rect.area() < 200) || (rect.height > rect.width) || (rect.height + rect.y < yP*3/5);
         });
 
         //Rings will be sorted into Stacks in rectsData

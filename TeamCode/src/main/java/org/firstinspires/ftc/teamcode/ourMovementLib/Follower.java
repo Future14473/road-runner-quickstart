@@ -165,7 +165,6 @@ public class Follower {
             // tell telemetry to send the new data
             telemetry.update();
         }
-
     }
     /*
      * For POSITIVE forward parameter: go forward

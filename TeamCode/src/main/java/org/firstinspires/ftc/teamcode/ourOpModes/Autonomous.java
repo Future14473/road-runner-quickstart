@@ -65,10 +65,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.cv.Detection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
+import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 /**
@@ -82,10 +88,28 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 public class Autonomous extends LinearOpMode {
     DcMotorEx shooter, taco, intake;
     CRServo shooter_roller1, shooter_roller2;
+    Wobble_Arm wobble_arm;
     Timing timer = new Timing(this);
 
     @Override
     public void runOpMode() {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
+                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        Detection detector = new Detection(telemetry);
+
+
+        webcam.setPipeline(detector);
+
+        //Opening and Streaming from Camera
+
+        webcam.openCameraDeviceAsync(() -> {
+            webcam.startStreaming(352, 288, OpenCvCameraRotation.UPRIGHT);
+        });
+
+
         VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         taco = hardwareMap.get(DcMotorEx.class, "taco");
@@ -94,6 +118,8 @@ public class Autonomous extends LinearOpMode {
         shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
         shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
+        wobble_arm = new Wobble_Arm(hardwareMap, Autonomous.this);
+
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -105,6 +131,7 @@ public class Autonomous extends LinearOpMode {
         IMU imu = new IMU(hardwareMap, telemetry);
 
         Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1, imu);
+
 
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
@@ -121,18 +148,19 @@ public class Autonomous extends LinearOpMode {
 
         waitForStart();
 
-        // AUSTIN DO RING DETECTION HERE
-        // Remember to turn off cv
+        webcam.stopStreaming();
 
         // GRAB WOBBLE
+        wobble_arm.grab();
+        timer.safeDelay(200);
+        wobble_arm.up();
 
         // Start Vuforia
 
         vuforia.beginTracking();
 
-        // A BLOCK
         follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
+//        follower.DRIVE_MAINTAIN_HEADING(0, -0.4, 0, 500, imu);
 
 //Great High Goal Position
 //        follower.goTo(-4, 32, 0);
@@ -141,29 +169,49 @@ public class Autonomous extends LinearOpMode {
         telemetry.addData("Going to ", "High Goal");
         telemetry.update();
 
-        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot1();
-//        telemetry.addData("Shooting", "A Block");telemetry.update();
-//        follower.goTo(3, 39.8, 0); // vumark lock on position
-//        follower.goTo(20.2, 44.3, 0.26);
-        // PLACE WOBBLE
+//        follower.goTo(-4, 8.9, 0); // Goto powershot or high goal spot. IDK see which one more reliable
+//        shoot1();
+
+        if(detector.stack == 0) {
+            // A BLOCK
+            telemetry.addData("Shooting", "A Block");
+            telemetry.update();
+            follower.goTo(3, 39.8, 0); // vumark lock on position
+            follower.goTo(19.2, 46, 0.26);
+            // PLACE WOBBLE
+            wobble_arm.down();
+            timer.safeDelay(500);
+            wobble_arm.safeReleaseWobble();
+        }
+        else if(detector.stack == 1){
+            // B BLOCK
+            telemetry.addData("Shooting", "B Block");
+            telemetry.update();
+            follower.goTo(3, 39.8, 0); // vumark lock on position
+            follower.goTo(39, 26, 0.34);
+            //follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 100, imu);
+            // PLACE WOBBLE
+            wobble_arm.down();
+            timer.safeDelay(500);
+            wobble_arm.safeReleaseWobble();
+        }
+        else{
+            // C BLOCK
+            telemetry.addData("Shooting", "C Block");
+            telemetry.update();
+            follower.goTo(3, 39.8, 0); // vumark lock on position
+            follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 2850, imu);
+            follower.DRIVE_MAINTAIN_HEADING(0, 0, -0.05, 50, imu);
+            // PLACE WOBBLE
+            wobble_arm.down();
+            timer.safeDelay(500);
+            wobble_arm.safeReleaseWobble();
+        }
 
         /*
-        // B BLOCK
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.goTo(-4, 22, -0.31); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
-        follower.goTo(3, 39.8, 0); // vumark lock on position
-        follower.goTo(40.8, 24.0, 0.34);
-        // PLACE WOBBLE
 
-        // C box
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 3000, imu);
-        follower.goTo(-4, 22, -0.31); // Goto powershot or high goal spot. IDK see which one more reliable
-        shoot();
-        follower.goTo(3, 39.8, 0); // vumark lock on position
-        follower.DRIVE_MAINTAIN_HEADING(0.4, 0, 0, 1700, imu);
-        // PLACE WOBBLE
+
+
 */
         // Finally, park, or something
 
@@ -184,7 +232,7 @@ public class Autonomous extends LinearOpMode {
 
     void shoot1() { // shoot 1st ring
         // spin shooter up
-        if (shooter.getVelocity() < 1600) {
+        if (shooter.getVelocity() < 1500) {
             shooter.setVelocity(-100);
         } else {
             shooter.setVelocity(0);

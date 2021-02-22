@@ -21,12 +21,14 @@ public class Detection extends OpenCvPipeline {
     public static final double DISKR = 0.2;
     public static final double DMAXR = DISKR * 2.2;
     public static final double DMINR = DISKR * 0.4;
-    public static final double AREADIFF = 0.5;
+    public static final double AREADIFF = 0.8; //TODO, precent detection of red goal poles
+    public static final double ringW = 12.7; //in cm
 
     // Variables for wobble goal
     public static final double STICKR = 9;
     public static final double SMAXR = STICKR * 1.2;
     public static final double SMINR = STICKR * 0.5;
+    public static final double wobbleW = 20.32;
 
     // Variables for camera view -> Distance
     public static final double x0 = 20;
@@ -41,9 +43,7 @@ public class Detection extends OpenCvPipeline {
     //Tracking the ringCounts over time
     int[] ringCounts = {0, 0, 0};
 
-    ArrayList<double[]> wobbles = new ArrayList<>();
-    int wobbleIterations = 10;
-
+    //Reusable Mats
     Mat recolored = new Mat();
     Mat formatted = new Mat();
     Mat threshold = new Mat();
@@ -54,7 +54,9 @@ public class Detection extends OpenCvPipeline {
     int saturation = 0;
     public int stack;
 
+    //Location of tracked object
     double angle = 0;
+    double distance = 0;
 
     Telemetry telemetry;
     Mat output;
@@ -66,12 +68,15 @@ public class Detection extends OpenCvPipeline {
     @Override
     public Mat processFrame(Mat input){
         picSetup(input);
+        stack = finalRings();
+//        output = markWobble(input, find_wobble(formatted, "blue"));
         output = markRings(input, find_rings(formatted));
         CountRings(find_rings(formatted));
-        stack = finalRings();
-        telemetry.addData("Ring Count", stack);
-        telemetry.addData("angle", angle);
+
+        telemetry.addData("angle", Math.toDegrees(angle));
+        telemetry.addData("distance", distance);
         telemetry.update();
+
         formatted.release();
         return output;
     }
@@ -114,24 +119,24 @@ public class Detection extends OpenCvPipeline {
         // and using linear regression to go from median values to target
         value = Math.max((int)(-0.65*medVal + 165.42), 0);
         saturation = Math.max((int)(1.19*medSat + 38.78), 0);
+
     }
 
     public Mat find_yellows(Mat input){
         Mat copy = copyHSV(input);
-        Core.inRange(copy, new Scalar(7, saturation, value), new Scalar(30, 255, 255), threshold);
+        Core.inRange(copy, new Scalar(8, saturation, value), new Scalar(20, 255, 255), threshold);
         copy.release();
         return threshold;
     }
-
     public Mat find_blues(Mat input){
         Mat copy = copyHSV(input);
-        Core.inRange(copy, new Scalar(110, saturation, value), new Scalar(125, 255, 255), threshold);
+        Core.inRange(copy, new Scalar(110, saturation + 60, value - 60), new Scalar(135, 255, 255), threshold);
         copy.release();
         return threshold;
     }
     public Mat find_reds(Mat input){
         Mat copy = copyHSV(input);
-        Core.inRange(copy, new Scalar(0, saturation, value), new Scalar(11, 255, 255), threshold);
+        Core.inRange(copy, new Scalar(0, saturation, value - 70), new Scalar(11, 255, 255), threshold);
         copy.release();
         return threshold;
     }
@@ -204,7 +209,6 @@ public class Detection extends OpenCvPipeline {
         return output;
     }
 
-
     public ArrayList<Stack> find_rings(Mat input){
 
         threshold = find_yellows(input);
@@ -259,7 +263,13 @@ public class Detection extends OpenCvPipeline {
         }
 
         if(!rectsData.isEmpty()){
-            angle = jankAngle(Stack.closestStack(rectsData));
+            Rect temp = Stack.closestStack(rectsData);
+            distance = findDistance(temp, ringW);
+            angle = findAngle(temp);
+        }
+        else{
+            angle = 0;
+            distance = 0;
         }
 
         threshold.release();
@@ -271,7 +281,7 @@ public class Detection extends OpenCvPipeline {
         int newX = rect.x;
         int newY = (int)Math.max(rect.y - (rect.height*0.1), 0);
         int newW = rect.width;
-        int newH = (int)Math.min((rect.height * 0.95) + newY, input.height()) - newY;
+        int newH = (int)Math.min((rect.height * 0.8) + newY, input.height()) - newY;
         submat = new Mat(input.clone(), new Rect(newX, newY, newW, newH));
 
         List<MatOfPoint> contours = new ArrayList<>();
@@ -281,13 +291,14 @@ public class Detection extends OpenCvPipeline {
         contours.removeIf(m -> {
             double height2 = Math.pow(Imgproc.boundingRect(m).height, 2);
             double area = contourArea(m);
-            return ((area < 700) || (area < height2/SMAXR) || (area > height2/SMINR));
+            return ((area < 100) || (area < height2/SMAXR) || (area > height2/SMINR));
         });
 
         return (contours.size() > 0);
     }
 
     public Rect find_wobble(Mat input, String side){
+
         List<MatOfPoint> contours = new ArrayList<>();
 
         // Choosing to use red or blue thresholding
@@ -301,8 +312,8 @@ public class Detection extends OpenCvPipeline {
             System.out.println("ERROR: Not a valid side.");
         }
 
-        Mat kernel = Imgproc.getStructuringElement(CV_SHAPE_ELLIPSE, new Size(5, 5));
-        Mat kernelE = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((int)(input.width()/62.5), 1));
+        Mat kernel = Imgproc.getStructuringElement(CV_SHAPE_ELLIPSE, new Size(3, 3));
+        Mat kernelE = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
 
         // Dilating and eroding to produce smoother results with less noise
         Imgproc.dilate(threshold, threshold, kernel);
@@ -313,23 +324,32 @@ public class Detection extends OpenCvPipeline {
         contours.removeIf(m -> {
             Rect rect = Imgproc.boundingRect(m);
             double r = (double) rect.height/rect.width;
-            return ((rect.area() < 500) || (rect.width > rect.height)) || !wobble_stick(threshold, m);
+            return ((rect.area() < 100) || (rect.width > rect.height)) || !wobble_stick(threshold, m);
         });
 
         MatOfPoint max = new MatOfPoint();
-        double area = -1;
+        double height = -1;
         for(int i = 0; i<contours.size();i++){
             MatOfPoint contour = contours.get(i);
-            if(contourArea(contour) > area){
-                area = contourArea(contour);
+            Rect rect = Imgproc.boundingRect(contour);
+            if(rect.height + rect.y > height){
+                height = rect.height + rect.y;
                 max = contour;
             }
         }
         Rect maxRect = Imgproc.boundingRect(max);
         Rect finalRect = new Rect(maxRect.x, maxRect.y, maxRect.width, (int)Math.round(maxRect.height*(28.0/24)));
-        addWobble(finalRect);
         kernel.release();
         kernelE.release();
+
+        if(height != -1){
+            distance = findDistance(finalRect, wobbleW);
+            angle = findAngle(finalRect);
+        }
+        else{
+            angle = 0;
+            distance = 0;
+        }
         return finalRect;
     }
 
@@ -337,7 +357,7 @@ public class Detection extends OpenCvPipeline {
         canvas = input.clone();
         for(Stack stack: rectsData){
             if(stack.count > 0){
-                double Angle = jankAngle(stack.fullStack);
+                double Angle = findAngle(stack.fullStack);
                 Imgproc.rectangle(canvas, stack.fullStack.tl(), stack.fullStack.br(), new Scalar(255, 255, 0), 1);
                 Imgproc.putText(canvas, "" + stack.count,
                         new Point(stack.fullStack.x + 10, stack.fullStack.y - 10),
@@ -382,110 +402,29 @@ public class Detection extends OpenCvPipeline {
     public Mat markWobble(Mat input, Rect rect){
         //labeling found wobble
         canvas = input.clone();
-        double Angle = find_Angle(rect);
+        double Angle = findAngle(rect);
         Imgproc.rectangle(canvas, rect.tl(), rect.br(), new Scalar(0, 255, 255), 2);
         Imgproc.putText(canvas, "Wobble Goal", new Point(rect.x, rect.y -100), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(255, 255, 0), 2);
         Imgproc.putText(canvas, "Angle: " + (int)Angle, new Point(rect.x, rect.y -50 ), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(0, 0, 255), 2);
         return canvas;
     }
 
-    public double jankAngle(Rect target){
+    public double findAngle(Rect target){
         double dx = (target.x + target.width/2.0) - xP/2.0;
-        return Math.toRadians(dx/(double)xP*70);
-    }
-
-
-    //ANYTHING BEYOND THIS POINT IS NOT USED
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public Point bestWobble(){
-        if(wobbles.isEmpty()){
-            return new Point(0, 0);
+        double camAngle =  Math.toRadians(dx/(double)xP*52);
+        double botAngle = Math.atan((Math.tan(camAngle)*distance)/(distance + 8.5));
+        if(Math.abs(botAngle - camAngle) > camAngle * 0.2 && camAngle > 0.25){
+            telemetry.addData("USEDCAMANGLE!!!", "");
+            telemetry.update();
+            return camAngle;
         }
-        int maxWobblesI = 0;
-        double maxWobbles = 0;
-        for(int i = 0; i<wobbles.size(); i++){
-            double[] wobble = wobbles.get(i);
-            if(wobble[0] > maxWobbles){
-                maxWobbles = wobble[0];
-                maxWobblesI = i;
-            }
-        }
-
-        double[] maxWobbleFinal = wobbles.get(maxWobblesI);
-        wobbles.clear();
-        telemetry.addData("Best Wobble: ", new Point(maxWobbleFinal[1], maxWobbleFinal[2]));
-        telemetry.update();
-
-        return new Point(maxWobbleFinal[1], maxWobbleFinal[2]);
-    }
-
-    public void addWobble(Rect rect){
-        Point rel = find_Point(rect);
-        boolean match = false;
-        for(int i = 0; i<wobbles.size(); i++){
-            double[] wobble = wobbles.get(i);
-            double dist = Math.hypot(rel.x - wobble[1], rel.y - wobble[2]);
-            if(dist < 150){
-                wobble[1] = (wobble[0] * wobble[1] + rel.x)/(wobble[0] + 1);
-                wobble[2] = (wobble[0] * wobble[2] + rel.y)/(wobble[0] + 1);
-                wobble[0]++;
-                match = true;
-                break;
-            }
-        }
-        if(!match){
-            double[] added = {1, rel.x, rel.y};
-            wobbles.add(added);
+        else{
+            return botAngle;
         }
     }
 
-    public Point bestRing(ArrayList<double[]> rectsData){
-        return new Point();
-    }
-
-    public double find_Angle(Rect obj){
-        double centerX = obj.x + (double)obj.width/2;
-        double centerY = obj.y + obj.height;
-        double y = pix2Y(centerY);
-        double x = pix2RealX(centerX, centerY);
-        double angle = Math.atan(y/x) - Math.PI/2;
-        if(y/x < 0){
-            angle += Math.PI;
-        }
-        return Math.toDegrees(angle);
-    }
-
-    public double pix2Y(double pixY){
-        double angle = (yP - pixY)/yP * viewAngle;
-        return z0 * Math.tan(theta0 + angle) + x0;
-    }
-
-    public double pix2RealX(double pixX, double pixY){
-        double y = pix2Y(pixY);
-        double fullX = realX0 + y*slope;
-        return (pixX - xP/2.0)/(xP) * fullX;
-    }
-
-    public Point find_Point(Rect obj){
-        double centerX = obj.x + (double)obj.width/2;
-        double centerY = obj.y + obj.height;
-        double y = pix2Y(centerY);
-        double x = pix2RealX(centerX, centerY);
-        return new Point(x, y);
+    public double findDistance(Rect target, double objWidth){
+        return (xP*objWidth/target.width - 8)/0.92/2.54;
     }
 
 }

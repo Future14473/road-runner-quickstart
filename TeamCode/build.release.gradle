@@ -1,14 +1,12 @@
 dependencies {
     implementation project(':FtcRobotController')
-    implementation (name: 'RobotCore-release', ext: 'aar')
-    implementation (name: 'Hardware-release', ext: 'aar')
-    implementation (name: 'FtcCommon-release', ext: 'aar')
-    implementation (name: 'WirelessP2p-release', ext: 'aar')
-    implementation (name: 'tfod-release', ext: 'aar')
-    implementation (name: 'tensorflow-lite-0.0.0-nightly', ext: 'aar')
+    implementation 'org.firstinspires.ftc:RobotCore:6.1.1'
+    implementation 'org.firstinspires.ftc:Hardware:6.1.1'
+    implementation 'org.firstinspires.ftc:FtcCommon:6.1.1'
+    implementation (name: 'tfod-release', ext:'aar')
+    implementation (name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
 
-    implementation 'com.acmerobotics.roadrunner:core:0.4.2'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.3.0'
+    implementation 'org.apache.commons:commons-math3:3.6.1'
 
-    implementation 'org.openftc:rev-extensions-2:1.1'
+    implementation 'com.acmerobotics.roadrunner:core:0.5.3'
 }

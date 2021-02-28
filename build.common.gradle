@@ -23,7 +23,7 @@ def useProguard = false
 
 android {
 
-    compileSdkVersion 23
+    compileSdkVersion 29
 
     signingConfigs {
         debug {
@@ -39,9 +39,10 @@ android {
     }
 
     defaultConfig {
+        signingConfig signingConfigs.debug
         applicationId 'com.qualcomm.ftcrobotcontroller'
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 24
+        targetSdkVersion 28
         multiDexEnabled !useProguard
 
         /**
@@ -122,5 +123,6 @@ repositories {
     flatDir {
         dirs rootProject.file('libs')
     }
+    jcenter()
 }
 apply from: 'build.release.gradle'

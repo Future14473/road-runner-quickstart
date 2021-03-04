@@ -206,6 +206,7 @@ public class Autonomous extends LinearOpMode {
             //follower.goTo(3, 39.8, 0); // vumark lock on position
             //follower.goTo(35, 18, 0.42);
             follower.goToHeading(0);
+            
         }
         else{
             // C BLOCK

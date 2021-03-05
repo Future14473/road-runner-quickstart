@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ourOpModes;
+package org.firstinspires.ftc.teamcode.ourOpModes.unit_tests;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -19,7 +19,8 @@ public class TestMecanumDrive extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested()) {
-           drive.drive(10,10,0);
+            telemetry.addData("Running", "mecanum driving only");
+           drive.drive(gamepad1.right_stick_x, -gamepad1.right_stick_y, gamepad1.left_stick_x);
         }
     }
 }

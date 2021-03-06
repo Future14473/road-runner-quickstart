@@ -276,12 +276,12 @@ public class Detection extends OpenCvPipeline {
         return rectsData;
     }
 
-    public Boolean wobble_stick(Mat input, MatOfPoint contour){
+    public Rect wobble_stick(Mat input, MatOfPoint contour){
         Rect rect = Imgproc.boundingRect(contour);
         int newX = rect.x;
         int newY = (int)Math.max(rect.y - (rect.height*0.1), 0);
         int newW = rect.width;
-        int newH = (int)Math.min((rect.height * 0.8) + newY, input.height()) - newY;
+        int newH = (int)Math.min((rect.height * 0.95) + newY, input.height()) - newY;
         submat = new Mat(input.clone(), new Rect(newX, newY, newW, newH));
 
         List<MatOfPoint> contours = new ArrayList<>();
@@ -294,7 +294,23 @@ public class Detection extends OpenCvPipeline {
             return ((area < 100) || (area < height2/SMAXR) || (area > height2/SMINR));
         });
 
-        return (contours.size() > 0);
+        MatOfPoint max = new MatOfPoint();
+        double area = -1;
+        for(MatOfPoint maxFind: contours){
+            if(contourArea(maxFind) > area){
+                area = contourArea(maxFind);
+                max = maxFind;
+            }
+        }
+        Rect maxRect = Imgproc.boundingRect(max);
+        Rect finalRect = new Rect(newX + maxRect.x, newY + maxRect.y, maxRect.width, maxRect.height);
+
+        if(area != -1){
+            return finalRect;
+        }
+        else{
+            return null;
+        }
     }
 
     public Rect find_wobble(Mat input, String side){
@@ -320,37 +336,22 @@ public class Detection extends OpenCvPipeline {
         Imgproc.erode(threshold, threshold, kernelE);
         Imgproc.findContours(threshold, contours, new Mat(), Imgproc.CHAIN_APPROX_NONE, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        // rough filtering
-        contours.removeIf(m -> {
-            Rect rect = Imgproc.boundingRect(m);
-            double r = (double) rect.height/rect.width;
-            return ((rect.area() < 100) || (rect.width > rect.height)) || !wobble_stick(threshold, m);
-        });
-
-        MatOfPoint max = new MatOfPoint();
-        double height = -1;
-        for(int i = 0; i<contours.size();i++){
-            MatOfPoint contour = contours.get(i);
+        Rect closest = new Rect();
+        int maxHeight = -1;
+        for(MatOfPoint contour: contours){
             Rect rect = Imgproc.boundingRect(contour);
-            if(rect.height + rect.y > height){
-                height = rect.height + rect.y;
-                max = contour;
+            if((rect.area() > 200) && (rect.width < rect.height)){
+                Rect temp = wobble_stick(threshold, contour);
+                if(temp != null) {
+                    if (temp.height + temp.y > maxHeight) {
+                        closest = temp;
+                        maxHeight = temp.height + temp.y;
+                    }
+                }
             }
         }
-        Rect maxRect = Imgproc.boundingRect(max);
-        Rect finalRect = new Rect(maxRect.x, maxRect.y, maxRect.width, (int)Math.round(maxRect.height*(28.0/24)));
-        kernel.release();
-        kernelE.release();
 
-        if(height != -1){
-            distance = findDistance(finalRect, wobbleW);
-            angle = findAngle(finalRect);
-        }
-        else{
-            angle = 0;
-            distance = 0;
-        }
-        return finalRect;
+        return closest;
     }
 
     public Mat markRings(Mat input, ArrayList<Stack> rectsData){

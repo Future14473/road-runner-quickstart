@@ -13,7 +13,7 @@ public class TacoTest extends LinearOpMode {
         DcMotor taco = hardwareMap.get(DcMotor.class, "taco");
 
         telemetry.addData("Hold Down Gamepad 1 right stick y ", "to move");
-
+        telemetry.update();
         waitForStart();
 
         while (!isStopRequested()) {

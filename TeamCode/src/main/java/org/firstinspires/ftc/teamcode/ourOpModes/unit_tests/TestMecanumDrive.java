@@ -16,10 +16,13 @@ public class TestMecanumDrive extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Mecanum drive =  new Mecanum(hardwareMap);
+        telemetry.addData("Rotation is Gamepad 1 x joystick, ", "Translation is Gamepad 1 x and y joystick");
+        telemetry.update();
         waitForStart();
 
         while (!isStopRequested()) {
             telemetry.addData("Running", "mecanum driving only");
+            telemetry.update();
            drive.drive(gamepad1.right_stick_x, -gamepad1.right_stick_y, gamepad1.left_stick_x);
         }
     }

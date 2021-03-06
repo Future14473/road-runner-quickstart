@@ -23,6 +23,7 @@ public class ShooterTest extends LinearOpMode {
 
         telemetry.addData("Hold Down Gamepad 1 D-pad left and right ", "to move shooter");
         telemetry.addData("Hold Down Gamepad 1 A or B", "to move rollers");
+        telemetry.update();
         waitForStart();
 
         while (!isStopRequested()) {

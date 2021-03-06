@@ -28,7 +28,7 @@ public class AllCoreMechanismsTest extends LinearOpMode {
 
         telemetry.addData("Hold Down Gamepad 1 left stick y ", "to move intake");
         telemetry.addData("Hold Down Gamepad 1 right stick y ", "to move taco");
-
+        telemetry.update();
         waitForStart();
 
         while (!isStopRequested()) {

@@ -14,7 +14,7 @@ public class IntakeTest extends LinearOpMode {
 
         telemetry.addData("Hold Down Gamepad 1 right stick y ", "to move");
 
-
+        telemetry.update();
         waitForStart();
 
         while (!isStopRequested()) {

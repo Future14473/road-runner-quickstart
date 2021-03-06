@@ -69,7 +69,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @TeleOp(group = "drive")
-//@Disabled
+@Disabled
 public class WebCamVuTest extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark Sample";

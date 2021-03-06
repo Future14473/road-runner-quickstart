@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import android.app.Activity;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -22,7 +23,7 @@ import java.util.Arrays;
 
 
 @TeleOp(name="BT Debug", group="Teleop")
-//@Disabled
+@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
 public class BluetoothDebug extends LinearOpMode
 {

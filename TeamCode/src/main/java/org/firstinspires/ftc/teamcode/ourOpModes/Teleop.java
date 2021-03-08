@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -35,8 +36,10 @@ public class Teleop extends LinearOpMode
     IMU imu;
     double headingZero = 0;
 
-    public void runOpMode() throws InterruptedException {
+    private SampleMecanumDrive drivetrain;
 
+    public void runOpMode() throws InterruptedException {
+        drivetrain = new SampleMecanumDrive(hardwareMap);
         imu = new IMU(hardwareMap, telemetry);
 
         //MecanumDrive = new Mecanum(hardwareMap);
@@ -91,7 +94,8 @@ public class Teleop extends LinearOpMode
             // stop when no one is touching anything
             //MecanumDrive.drive(x, y,
                     //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
-            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
+            //follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
+            DRIVE(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
 
             double intakeOut = gamepad2.right_trigger;
             double intakeIn = -gamepad2.left_trigger;
@@ -167,6 +171,16 @@ public class Teleop extends LinearOpMode
         }
 
 
+    }
+
+    public void DRIVE(double forward, double sideways, double rotate) {
+        drivetrain.setWeightedDrivePower(
+                new Pose2d(
+                        forward,
+                        -sideways,
+                        -rotate * 2
+                )
+        );
     }
 }
 

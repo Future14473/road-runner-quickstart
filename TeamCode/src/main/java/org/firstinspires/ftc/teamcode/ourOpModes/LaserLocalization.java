@@ -22,21 +22,37 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 @TeleOp(name = "Sensor: MR range sensor", group = "Sensor")
 public class LaserLocalization extends LinearOpMode {
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
+    ModernRoboticsI2cRangeSensor rangeSensorBack;
+    ModernRoboticsI2cRangeSensor rangeSensorLeft;
+    ModernRoboticsI2cRangeSensor rangeSensorRight;
+    ModernRoboticsI2cRangeSensor rangeSensorFront;
+
+
+
 
     @Override public void runOpMode() {
 
         // get a reference to our compass
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range_back");
+        rangeSensorLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range_left");
+        rangeSensorRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range_right");
+        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range_front");
+
+
 
         // wait for the start button to be pressed
         waitForStart();
 
         while (opModeIsActive()) {
-            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-            telemetry.addData("raw optical", rangeSensor.rawOptical());
-            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+//            telemetry.addData("raw ultrasonic", rangeSensorBack.rawUltrasonic());
+//            telemetry.addData("raw optical", rangeSensorBack.rawOptical());
+//            telemetry.addData("cm optical", "%.2f cm", rangeSensorBack.cmOptical());
+            telemetry.addData("cm Back", "%.2f cm", rangeSensorBack.getDistance(DistanceUnit.CM));
+            telemetry.addData("cm Left", "%.2f cm", rangeSensorLeft.getDistance(DistanceUnit.CM));
+            telemetry.addData("cm Right", "%.2f cm", rangeSensorRight.getDistance(DistanceUnit.CM));
+            telemetry.addData("cm Front", "%.2f cm", rangeSensorFront.getDistance(DistanceUnit.CM));
+
+
             telemetry.update();
         }
     }

@@ -86,7 +86,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(group = "drive")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Auto", group = "drive")
 public class Autonomous extends LinearOpMode {
     DcMotorEx shooter, taco;
     DcMotor intake;

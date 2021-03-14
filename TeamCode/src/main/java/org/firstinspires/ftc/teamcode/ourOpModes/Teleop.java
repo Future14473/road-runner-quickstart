@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -36,10 +35,8 @@ public class Teleop extends LinearOpMode
     IMU imu;
     double headingZero = 0;
 
-    private SampleMecanumDrive drivetrain;
-
     public void runOpMode() throws InterruptedException {
-        drivetrain = new SampleMecanumDrive(hardwareMap);
+
         imu = new IMU(hardwareMap, telemetry);
 
         //MecanumDrive = new Mecanum(hardwareMap);
@@ -83,7 +80,7 @@ public class Teleop extends LinearOpMode
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;
-                y*= 1.0/3;
+//                y*= 1.0/3;
             }
 
             if(gamepad2.right_stick_button){
@@ -93,9 +90,10 @@ public class Teleop extends LinearOpMode
 
             // stop when no one is touching anything
             //MecanumDrive.drive(x, y,
-                    //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
-            //follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
-            DRIVE(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+            //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
+            telemetry.addData("the forward speed is ", String.valueOf(y));
+            telemetry.addData("the strafe speed is ", String.valueOf(x));
+            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
 
             double intakeOut = gamepad2.right_trigger;
             double intakeIn = -gamepad2.left_trigger;
@@ -172,17 +170,5 @@ public class Teleop extends LinearOpMode
 
 
     }
-
-    public void DRIVE(double forward, double sideways, double rotate) {
-        drivetrain.setWeightedDrivePower(
-                new Pose2d(
-                        forward,
-                        -sideways,
-                        -rotate * 2
-                )
-        );
-    }
 }
-
-
 

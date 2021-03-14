@@ -218,7 +218,7 @@ public class Follower {
         drivetrain.setWeightedDrivePower(
                 new Pose2d(
                         forward,
-                        -sideways,
+                        sideways, // note the drivetrain wheels are reversed so sideways is positive right
                         -rotate * 2
                 )
         );

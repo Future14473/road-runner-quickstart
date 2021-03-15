@@ -75,6 +75,7 @@ public class Detection extends OpenCvPipeline {
 
         telemetry.addData("angle", Math.toDegrees(angle));
         telemetry.addData("distance", distance);
+        telemetry.addData("ring count", stack);
         telemetry.update();
 
         formatted.release();

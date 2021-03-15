@@ -152,7 +152,7 @@ public class Autonomous extends LinearOpMode {
          */
 
         waitForStart();
-        shooter.setPower(-1);
+        shooter.setPower(-0.87);
 
 
         webcam.stopStreaming();
@@ -326,6 +326,7 @@ public class Autonomous extends LinearOpMode {
 
         timer.safeDelay(6050);
         shooter.setPower(-0);
+        intake.setPower(0);
     }
 
 

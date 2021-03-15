@@ -136,6 +136,7 @@ public class Autonomous extends LinearOpMode {
 
         Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1, imu);
 
+        wobble_arm.autonomousInit();
 
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
@@ -281,7 +282,7 @@ public class Autonomous extends LinearOpMode {
 
     void shoot1() { // shoot 1st ring
         // spin shooter up
-        shooter.setPower(-0.92);
+        shooter.setPower(-0.8);
         // wait 3 secs
         timer.safeDelay(3000);
         //for first ring only spin roller
@@ -296,7 +297,7 @@ public class Autonomous extends LinearOpMode {
     void shoot2() { //shoot 2nd ring
         // spin shooter up
         //THIS ONLY WORKS IN A LOOP, IT'S THE SAME AS shooter.setVelocity(...) without the if statement
-        shooter.setPower(-0.92);
+        shooter.setPower(-0.8);
         // wait 3 secs
         timer.safeDelay(3000);
         // for 2nd ring only spin roller and taco
@@ -321,7 +322,7 @@ public class Autonomous extends LinearOpMode {
         timer.safeDelay(2000);
         taco.setPower(0.6);
 
-        intake.setPower(-0.5);
+        intake.setPower(0.5);
 
         timer.safeDelay(6050);
         shooter.setPower(-0);

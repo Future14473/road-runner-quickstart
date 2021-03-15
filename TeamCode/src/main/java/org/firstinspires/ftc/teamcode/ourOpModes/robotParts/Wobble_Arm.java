@@ -18,15 +18,21 @@ public class Wobble_Arm {
          timer = new Timing(opMode);
     }
 
-    public void down(){
+    public void up(){
         angler.setPosition(0.44);
     }
 
-    public void up(){angler.setPosition(0.06);}
+    public void down(){angler.setPosition(0.06);}
 
 
     public void automaticReleaseWobble(){
         unGrab();
+        timer.safeDelay(200);
+        up();
+    }
+
+    public void autonomousInit(){
+        grab();
         timer.safeDelay(200);
         up();
     }

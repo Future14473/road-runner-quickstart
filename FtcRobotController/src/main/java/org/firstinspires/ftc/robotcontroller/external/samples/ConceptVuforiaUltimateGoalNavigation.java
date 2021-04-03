@@ -97,12 +97,20 @@ public class ConceptVuforiaUltimateGoalNavigation extends LinearOpMode {
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false  ;
 
+    /*
+     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * web site at https://developer.vuforia.com/license-manager.
+     *
+     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * random data. As an example, here is a example of a fragment of a valid key:
+     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * and paste it in to your code on the next line, between the double quotes.
+     */
     private static final String VUFORIA_KEY =
-            "AZBucJv/////AAABmS1HLxudp06FtvHEcplAgzMDBD5hZJTgmbmRRNw3a5sMahUVYeOMv7vtcCVaJ+ZQLwrS" +
-                    "1h/0Fdff6vRIgHL37MM68mKI+fZ65OGeS+y2VnnLypejXhEP0QpNrL3GoIr/Sid5HrOqc1H0wQQho" +
-                    "gTqBsNptuddJQcQOINzZNHMrrs5zoBZQBTyWWCG+FCJ+P2/3wV7UCeTQ5PZOgpW12GCV2QcWdsmn8" +
-                    "8ItDLWTXl9zdBxUDlIQtq3zjbV12tBlI8vH1Bn4+qUvpEdrRBMhaEzPvoBHZdwDiABtxThuDH/Drc4" +
-                    "A7zMjvMkFqp6ejgTphRuQdWhTKtsVNJyFg5WReY/HE3YcamHenFH8DSSYzvhenwt";
+            " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -222,8 +230,6 @@ public class ConceptVuforiaUltimateGoalNavigation extends LinearOpMode {
         if (PHONE_IS_PORTRAIT) {
             phoneXRotate = 90 ;
         }
-        // cause it's on the side
-        phoneZRotate = 90;
 
         // Next, translate the camera lens to where it is on the robot.
         // In this example, it is centered (left to right), but forward of the middle of the robot, and above ground level.

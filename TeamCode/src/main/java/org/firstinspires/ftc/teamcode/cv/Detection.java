@@ -145,7 +145,8 @@ public class Detection extends OpenCvPipeline {
     /*
     Sets the entire row of pixels to black if
     a lot of the pixels in the row are black
-     */
+    */
+
     public Mat extendEdge(Mat input){
         int rowCount = 0;
         double[] blackpix = {0.0};
@@ -169,7 +170,9 @@ public class Detection extends OpenCvPipeline {
     Takes in roughly filtered contours and reprocesses
     them to sort out the rings and seperate ring stacks
     into individual rings
-     */
+    */
+
+
     public ArrayList<Rect> find_subcontours(Mat input){
         subthreshold = find_yellows(input);
 

@@ -13,16 +13,16 @@ public class Wobble_Arm {
     public Boolean isGrabbing = false; //todo make not public
 
     public Wobble_Arm(HardwareMap hardwareMap, LinearOpMode opMode){
-         angler = hardwareMap.get(Servo.class, "wobble_angler");
-         gripper = hardwareMap.get(Servo.class, "wobble_gripper");
-         timer = new Timing(opMode);
+        angler = hardwareMap.get(Servo.class, "wobble_angler");
+        gripper = hardwareMap.get(Servo.class, "wobble_gripper");
+        timer = new Timing(opMode);
     }
 
     public void up(){
-        angler.setPosition(0.44);
+        angler.setPosition(0.06);
     }
 
-    public void down(){angler.setPosition(0.06);}
+    public void down(){angler.setPosition(0.44);}
 
 
     public void automaticReleaseWobble(){
@@ -58,4 +58,5 @@ public class Wobble_Arm {
 
 
 }
+
 

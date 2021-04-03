@@ -62,7 +62,7 @@ public class RingFindingTest extends LinearOpMode {
         shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
         shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
-        wobble_arm = new Wobble_Arm(hardwareMap, RingFindingTest.this);
+        wobble_arm = new Wobble_Arm(hardwareMap, org.firstinspires.ftc.teamcode.cv.RingFindingTest.this);
 
         //intake.setPower(1.0);
 

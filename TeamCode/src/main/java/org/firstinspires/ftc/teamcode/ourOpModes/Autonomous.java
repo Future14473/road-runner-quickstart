@@ -59,23 +59,33 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.teamcode.cv.Detection;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
+/**
+ * This is a simple teleop routine for testing localization. Drive the robot around like a normal
+ * teleop routine and make sure the robot's estimated pose matches the robot's actual pose (slight
+ * errors are not out of the ordinary, especially with sudden drive motions). The goal of this
+ * exercise is to ascertain whether the localizer has been configured properly (note: the pure
+ * encoder localizer heading may be significantly off if the track width has not been tuned).
+ */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Auto", group = "drive")
 public class Autonomous extends LinearOpMode {
     DcMotorEx shooter, taco;
@@ -87,7 +97,7 @@ public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
-                getIdentifier("cameraMonitorViewIdn", "id", hardwareMap.appContext.getPackageName());
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
                 createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
@@ -130,6 +140,7 @@ public class Autonomous extends LinearOpMode {
 
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
+
 
         /*
          * Start robot like this. Make sure heading is aligned.
@@ -232,11 +243,11 @@ public class Autonomous extends LinearOpMode {
 //        }
 
 
+        /*
 
 
 
-
-
+*/
         // Finally, park, or something
 
         // Powershot location
@@ -252,8 +263,7 @@ public class Autonomous extends LinearOpMode {
         1st ring: Second Roller only, place on the shooter entrance but not touching the fly wheel
         2nd ring: Second Roller and Taco, place between the taco and second roller
         3rd ring: Second Roller and Taco, place between intake and taco entrance
-    */
-
+    * */
 
     volatile int shooter_vel = 0;
     void regulate_shooter_vel(){
@@ -328,9 +338,7 @@ public class Autonomous extends LinearOpMode {
     //Timing.delay(1000);
     //follower.austinStop();
 
-
-    /*
-    while (!isStopRequested()) {
+        /*while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());
 //            follower.debugGoTo(new PathPoint(0,10,0));
 
@@ -347,5 +355,7 @@ public class Autonomous extends LinearOpMode {
             telemetry.update();
 
         }
-     */
+
+         */
+
 }

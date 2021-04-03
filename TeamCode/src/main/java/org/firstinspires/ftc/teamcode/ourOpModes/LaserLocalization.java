@@ -28,6 +28,8 @@ public class LaserLocalization extends LinearOpMode {
     ModernRoboticsI2cRangeSensor rangeSensorFront;
 
 
+
+
     @Override public void runOpMode() {
 
         // get a reference to our compass

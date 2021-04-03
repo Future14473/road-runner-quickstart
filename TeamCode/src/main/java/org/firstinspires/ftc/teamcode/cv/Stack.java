@@ -60,9 +60,9 @@ public class Stack implements Comparable<Stack>{
         }
     }
 
-    //Returns the stack that's closest in terms of the y pixel value
-
-
+    /*
+    Returns the stack that's closest in terms of the y pixel value
+     */
     public static Rect closestStack(ArrayList<Stack> list){
         int maxY = 0;
         int index = 0;

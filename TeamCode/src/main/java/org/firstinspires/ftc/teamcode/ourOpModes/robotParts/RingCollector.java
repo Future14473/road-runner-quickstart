@@ -17,5 +17,10 @@ public class RingCollector {
         intake.setPower(-1);
         taco.setPower(-1);
     }
+
+    public void sleep(){
+        intake.setPower(0);
+        taco.setPower(0);
+    }
 }
 

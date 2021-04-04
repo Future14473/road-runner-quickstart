@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -13,6 +12,7 @@ import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
+import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
 
 
@@ -25,11 +25,8 @@ public class Teleop extends LinearOpMode
 {
     // Declare OpMode members.
     //Mecanum MecanumDrive;
-    DcMotor intake;
-    DcMotor taco;
+    ShooterFlicker flicker;
     DcMotorEx shooter;
-    CRServo shooter_roller1;
-    CRServo shooter_roller2;
     Wobble_Arm wobble_arm;
     IMU imu;
     double headingZero = 0;
@@ -43,6 +40,7 @@ public class Teleop extends LinearOpMode
 
 
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
+        flicker = new ShooterFlicker(hardwareMap, this, telemetry);
 
 
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
@@ -51,14 +49,14 @@ public class Teleop extends LinearOpMode
 
         //Reset wobble arm to up position
         wobble_arm.automaticReleaseWobble();
+        flicker.flickIn();
         VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1, imu);
+        vuforiaPhone.beginTracking();
 
         waitForStart();
-
-        vuforiaPhone.beginTracking();
 
         while (opModeIsActive()){
 
@@ -87,13 +85,16 @@ public class Teleop extends LinearOpMode
             {
                 shooter.setVelocity(200); //todo check if this actually works
             }
-            telemetry.addData("Shooter Velocity", shooter.getVelocity());
+//            telemetry.addData("Shooter Velocity", shooter.getVelocity());
 
-            if (gamepad2.left_trigger != 0){
-                ringCollector.collect();
-            }
-            if (gamepad2.right_trigger != 0){
-                ringCollector.out();
+            if (gamepad2.left_trigger != 0){ ringCollector.collect(); }
+
+
+            if (gamepad2.right_trigger != 0){ ringCollector.out(); }
+
+
+            if (gamepad2.left_bumper){
+                flicker.autoFlick();
             }
 
             if (gamepad1.a) {
@@ -114,10 +115,12 @@ public class Teleop extends LinearOpMode
                 headingZero = imu.getHeading();
             }
 
-
-            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
-            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
+//            telemetry.addData("Flicker Position", flicker.getPosition());
+//            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
+//            telemetry.addData("Is Flick Out", (MathStuff.isEqual(flicker.getPosition(), flicker.flickOut)));
+//            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
+//            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
+//            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
             telemetry.update();
         }

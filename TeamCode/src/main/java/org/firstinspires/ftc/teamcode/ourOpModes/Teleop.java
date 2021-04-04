@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
+import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
+import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
 
 
@@ -25,12 +25,8 @@ public class Teleop extends LinearOpMode
 {
     // Declare OpMode members.
     //Mecanum MecanumDrive;
-    DcMotor intake;
-    DcMotor taco;
-    DcMotor shooter_adjuster;
+    ShooterFlicker flicker;
     DcMotorEx shooter;
-    CRServo shooter_roller1;
-    CRServo shooter_roller2;
     Wobble_Arm wobble_arm;
     IMU imu;
     double headingZero = 0;
@@ -40,33 +36,26 @@ public class Teleop extends LinearOpMode
         imu = new IMU(hardwareMap, telemetry);
 
         //MecanumDrive = new Mecanum(hardwareMap);
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        taco = hardwareMap.get(DcMotor.class, "taco");
-
+        RingCollector ringCollector = new RingCollector(hardwareMap);
 
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
+        flicker = new ShooterFlicker(hardwareMap, this, telemetry);
 
-        shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
-        shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
-        shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
-        shooter_adjuster = hardwareMap.get(DcMotor.class, "shooter_adjuster");
-        shooter_adjuster.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooter_adjuster.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status", "Initialized");
 
         //Reset wobble arm to up position
         wobble_arm.automaticReleaseWobble();
+        flicker.flickIn();
         VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1, imu);
+        vuforiaPhone.beginTracking();
 
         waitForStart();
-
-        vuforiaPhone.beginTracking();
 
         while (opModeIsActive()){
 
@@ -88,58 +77,24 @@ public class Teleop extends LinearOpMode
                 follower.goTo(-4, 22, -0.31);
             }
 
-            // stop when no one is touching anything
-            //MecanumDrive.drive(x, y,
-            //(magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? 2 * turnPwr : 0);
-            telemetry.addData("the forward speed is ", String.valueOf(y));
-            telemetry.addData("the strafe speed is ", String.valueOf(x));
             follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
 
-            double intakeOut = gamepad2.right_trigger;
-            double intakeIn = -gamepad2.left_trigger;
-            boolean tacoIn = gamepad2.left_bumper;
-            boolean tacoOut = gamepad2.right_bumper;
-
-            // make the intake do the correct trigger, + is outward, - is inward
-            intake.setPower(-(intakeIn + intakeOut));
-
-            if(tacoOut)
-            {
-                taco.setPower(0.5);
-            }
-            else if(tacoIn)
-            {
-                taco.setPower(-0.5);
-            }
-            else{
-                taco.setPower(0);
-            }
-
-            shooter_roller1.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));
-            shooter_roller2.setPower((gamepad2.x ? 1 : 0) - (gamepad2.y ? 1 : 0));
-
-//        shooter_roller.setPower(1);
-            // shooter adjuster
-            shooter_adjuster.setPower((gamepad2.dpad_up ? -0.5 : 0.5) + (gamepad2.dpad_down ? 0.5 : -0.5));
-            // shooter.setPower((gamepad2.dpad_left ? -0.795 : 0) + (gamepad2.dpad_right ? 0.795 : 0));
-            //shooter.setVelocity((gamepad2.dpad_left ? -0.7 : 0) + (gamepad2.dpad_right ? 0.7 : 0));
+            // keep the velocity at 1710 at all times
             if(shooter.getVelocity() < 1710)
             {
-                shooter.setVelocity((gamepad2.dpad_left ? -100 : 0) + (gamepad2.dpad_right ? 100 : 0));
+                shooter.setVelocity(200); //todo check if this actually works
             }
-            else
-            {
-                shooter.setVelocity(0);
-            }
-            telemetry.addData("Shooter Velocity", shooter.getVelocity());
+//            telemetry.addData("Shooter Velocity", shooter.getVelocity());
 
-            // shooter gate
-//        gate.setPower(0);
-//        if (gamepad1.x){
-//            gate.setPower(1);
-//        } else if (gamepad1.y){
-//            gate.setPower(-1);
-//        }
+            if (gamepad2.left_trigger != 0){ ringCollector.collect(); }
+
+
+            if (gamepad2.right_trigger != 0){ ringCollector.out(); }
+
+
+            if (gamepad2.left_bumper){
+                flicker.autoFlick();
+            }
 
             if (gamepad1.a) {
                 wobble_arm.down();
@@ -159,16 +114,18 @@ public class Teleop extends LinearOpMode
                 headingZero = imu.getHeading();
             }
 
+//            telemetry.addData("Flicker Position", flicker.getPosition());
+//            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
+//            telemetry.addData("Is Flick Out", (MathStuff.isEqual(flicker.getPosition(), flicker.flickOut)));
+//            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
+//            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
+//            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
-            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
-            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
-
-            //        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
             telemetry.update();
         }
 
 
     }
 }
+
 

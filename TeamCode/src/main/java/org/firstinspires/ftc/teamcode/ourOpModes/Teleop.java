@@ -30,7 +30,6 @@ public class Teleop extends LinearOpMode
 
     IMU imu;
     double headingZero = 0;
-    double shooterVel = 1400;
 
     public void runOpMode() throws InterruptedException {
 
@@ -78,6 +77,7 @@ public class Teleop extends LinearOpMode
             if(gamepad2.dpad_right){
                 shooter.setPowerShotSpeed();
             }
+            shooter.setSpeed(shooter.getTargetVelocity());
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;

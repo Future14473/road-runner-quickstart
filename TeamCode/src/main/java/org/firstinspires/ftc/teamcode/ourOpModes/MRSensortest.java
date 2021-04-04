@@ -7,13 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
+import org.firstinspires.ftc.teamcode.LaserLocalization.CalibrateIMUwithLaser;
 import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
 import org.firstinspires.ftc.teamcode.LaserLocalization.point;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 @TeleOp(name = "Localization test", group = "Sensor")
@@ -40,7 +38,7 @@ public class MRSensortest extends LinearOpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
 
-        imu_calibration_procedure(-1, imu);
+        CalibrateIMUwithLaser.calibrate(-1, imu, range_front, range_back, telemetry, drive);
 
         // wait for the start button to be pressed
         waitForStart();
@@ -48,7 +46,7 @@ public class MRSensortest extends LinearOpMode {
         new Follower(drive, null, this, telemetry, gamepad1, imu).goToHeading(0);
 
         while (opModeIsActive()) {
-            //0.91 is experimentally determined deviation
+            //0.915 is experimentally determined deviation
             double left = range_left.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
             double right = range_right.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
             double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
@@ -73,60 +71,6 @@ public class MRSensortest extends LinearOpMode {
         }
     }
 
-    /**
-     * Uses the Lasers to calibrate the imu so that 0 is forward
-     * Start the robot near the center of the field, about 30 degs from forward
-     * @param start_ang -1 means left of "forward" direction. 1 means right of forward
-     */
-    void imu_calibration_procedure(int start_ang, IMU imu){
-        List<Double> lengths_record = new ArrayList<>();
-        double least_length = Double.MAX_VALUE;
-        double angle_at_least_length = Double.NaN;
-
-        DRIVE(0, 0, -Math.signum(start_ang) * 0.4);
-
-        int increasing_trend = 0;
-        while (increasing_trend < 13){
-            double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
-            double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 8.85 / 12.0;
-
-            // new minumum
-            if(front + back < least_length){
-                least_length = front + back;
-                angle_at_least_length = imu.getHeading();
-            }
-
-            double former_average = average(lengths_record);
-
-            lengths_record.add(front + back);
-            if(lengths_record.size() > 20)
-                lengths_record.remove(0);
-
-            double new_average = average(lengths_record);
-
-            if(new_average > former_average + 0.001)
-                increasing_trend ++;
-
-            telemetry.addData("IMU calibration: current min", least_length);
-            telemetry.addData("IMU calibration: current avg", new_average);
-            telemetry.addData("IMU calibration: increasing cnt", increasing_trend);
-            telemetry.update();
-        }
-        DRIVE(0, 0, 0);
-
-        if(least_length < 11.8 || least_length > 12.2)
-            imu_calibration_procedure(1, imu);
-        else
-            imu.setPreviousHeadingTo(angle_at_least_length, 0);
-    }
-
-    double average(List<Double> l){
-        double average = 0;
-        for(double val : l)
-            average += val * 1.0/l.size();
-        return average;
-    }
-
     /*
      * For POSITIVE forward parameter: go forward
      * For POSITIVE sideways parameter: go right
@@ -141,6 +85,7 @@ public class MRSensortest extends LinearOpMode {
                 )
         );
     }
+
 
 }
 

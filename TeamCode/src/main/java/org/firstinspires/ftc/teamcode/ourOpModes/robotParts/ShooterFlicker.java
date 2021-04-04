@@ -59,7 +59,7 @@ public class ShooterFlicker {
 //        }
 //    }
 
-    int waitTime = 300;
+    int waitTime = 200;
 
     public void autoFlick() {
         for (int i = 0; i < 6; i++) {

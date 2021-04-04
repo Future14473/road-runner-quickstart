@@ -77,6 +77,14 @@ public class Teleop extends LinearOpMode
             if(gamepad2.dpad_right){
                 shooter.setPowerShotSpeed();
             }
+
+            if(gamepad2.dpad_up){
+                shooter.increaseSpeed();
+            }
+            else if(gamepad2.dpad_down){
+                shooter.decreaseSpeed();
+            }
+
             shooter.setSpeed(shooter.getTargetVelocity());
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
@@ -133,6 +141,7 @@ public class Teleop extends LinearOpMode
 //            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
             telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
+            telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             telemetry.update();
         }
 

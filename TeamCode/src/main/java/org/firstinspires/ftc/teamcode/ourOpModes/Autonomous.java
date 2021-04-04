@@ -10,7 +10,7 @@
 //import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
 //import org.firstinspires.ftc.teamcode.ourMovementLib.paths.DaPath;
 //import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
-//import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Mecanum;
+//import org.firstinspires.ftc.teamcode.robotParts.Mecanum;
 //
 //@TeleOp(name="Auto", group="Teleop")
 //public class Autonomous extends LinearOpMode {
@@ -65,12 +65,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.cv.Detection;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
+import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Follower.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -87,7 +87,7 @@ public class Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
-                getIdentifier("cameraMonitorViewIdn", "id", hardwareMap.appContext.getPackageName());
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
                 createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 

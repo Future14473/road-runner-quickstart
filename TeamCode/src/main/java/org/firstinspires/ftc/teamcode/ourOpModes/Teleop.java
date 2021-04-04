@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Follower.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.ShooterFlicker;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
+import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 
 
 
@@ -41,7 +41,6 @@ public class Teleop extends LinearOpMode
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         flicker = new ShooterFlicker(hardwareMap, this, telemetry);
 
-
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
 
         telemetry.addData("Status", "Initialized");
@@ -49,11 +48,14 @@ public class Teleop extends LinearOpMode
         //Reset wobble arm to up position
         wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
+
         VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
+        vuforiaPhone.beginTracking();
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1, imu);
-        vuforiaPhone.beginTracking();
 
         waitForStart();
 

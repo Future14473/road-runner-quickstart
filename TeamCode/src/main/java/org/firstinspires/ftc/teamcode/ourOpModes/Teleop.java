@@ -132,7 +132,7 @@ public class Teleop extends LinearOpMode
 //            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
 //            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
-            telemetry.addData("Shooter Velocity", shooter.getVelocity());
+            telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             telemetry.update();
         }
 

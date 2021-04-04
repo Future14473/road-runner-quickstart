@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
-import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorMath;
-import org.firstinspires.ftc.teamcode.LaserLocalization.intersection;
+import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
+import org.firstinspires.ftc.teamcode.LaserLocalization.point;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 
@@ -54,26 +54,23 @@ public class MRSensortest extends LinearOpMode {
             double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
             double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 9 / 12.0;
 
-            List<intersection> results = DistanceSensorMath.distanceToPosition(left, right, front, back);
+            DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, imu.getHeading());
 
-            if(results.size() > 0)
-                telemetry.addData("position", String.format("%.2f %.2f", results.get(0).a.x, results.get(0).a.y));
+            if(position != null)
+                if(position instanceof point)
+                    telemetry.addData("position", String.format("%.2f %.2f", ((point) position).x, ((point) position).y));
+                else if(position instanceof DistanceSensorAlt.line)
+                    telemetry.addData("position", "is a line");
             else
                 telemetry.addData("position", "undetermined");
 
-            telemetry.addData("length", front + back);
-            telemetry.addData("heading rad", Math.toDegrees(imu.getHeading()));
+            telemetry.addData("laser length f+b", front + back);
+            telemetry.addData("heading in deg", Math.toDegrees(imu.getHeading()));
 
             telemetry.update();
 
             DRIVE(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x * 0.6);
         }
-    }
-
-    // param: the sum of the front and back distance sensors
-    // return: the angle of the robot in rads, where 0 is forward
-    double length_to_angle(double length){
-        return Math.PI/2 + Math.atan(12.0 / Math.sqrt(length*length - 12*12));
     }
 
     /**
@@ -90,8 +87,8 @@ public class MRSensortest extends LinearOpMode {
 
         int increasing_trend = 0;
         while (increasing_trend < 13){
-            double front = range_left.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
-            double back = range_right.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
+            double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
+            double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 8.85 / 12.0;
 
             // new minumum
             if(front + back < least_length){
@@ -117,7 +114,7 @@ public class MRSensortest extends LinearOpMode {
         }
         DRIVE(0, 0, 0);
 
-        if(least_length < 7.8 || least_length > 8.2)
+        if(least_length < 11.8 || least_length > 12.2)
             imu_calibration_procedure(1, imu);
         else
             imu.setPreviousHeadingTo(angle_at_least_length, 0);

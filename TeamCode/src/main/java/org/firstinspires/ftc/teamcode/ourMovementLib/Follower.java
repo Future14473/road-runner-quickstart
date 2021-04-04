@@ -46,18 +46,17 @@ public class Follower {
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
             // get new position in Aviation coordinates
-
-            VectorF translation = location.getTranslation();
-            Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
+            odometry.update();
+            Pose2d currPos = odometry.getPoseEstimate();
             // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
-            forwardAxisPos = translation.get(0) / mmPerInch;
-            rightAxisPos = translation.get(1) / mmPerInch; //TODO Encoder configuration is flipped
+            double forwardAxisPos = currPos.getX();
+            double rightAxisPos = currPos.getY();
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
             // breaking the config
 
             // Getting angle inconsistency that are really impacting the shooter accuracy
             //turnAxisPos =  imu.getHeading();
-            turnAxisPos = Math.toRadians(rotation.thirdAngle);
+            double turnAxisPos = currPos.getHeading();
 
 
 
@@ -116,9 +115,10 @@ public class Follower {
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
             // get new position in Aviation coordinates
-            OpenGLMatrix location = vuforia.getLocation();
+            odometry.update();
+            Pose2d currPos = odometry.getPoseEstimate();
             // Getting angle inconsistency that are really impacting the shooter accuracy
-            double turnAxisPos =  imu.getHeading(); //Math.toRadians(rotation.thirdAngle);
+            double turnAxisPos =  currPos.getHeading(); //Math.toRadians(rotation.thirdAngle);
 
             telemetry.addData("Current Position", String.format("R: %.2f", turnAxisPos));
 

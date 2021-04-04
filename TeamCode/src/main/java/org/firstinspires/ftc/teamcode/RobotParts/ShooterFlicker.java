@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.MathStuff;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
 public class ShooterFlicker {
@@ -38,34 +37,42 @@ public class ShooterFlicker {
     }
 
     // try to add a overcomplicated wait block
-    private void waitTillIn() {
-        while (!(MathStuff.isEqual(flicker.getPosition(), flickIn))
-                && opMode.opModeIsActive()) {
-            telemetry.addData("Stuck in ", "wait till in");
-            telemetry.update();
-            Log.e("Stuck in ", "wait till in");
-        }
+//    private void waitTillIn() {
+//        while (!(MathStuff.isEqual(flicker.getPosition(), flickIn))
+//                && opMode.opModeIsActive()) {
+//            telemetry.addData("Stuck in ", "wait till in");
+//            telemetry.update();
+//            Log.e("Stuck in ", "wait till in");
+//        }
+//
+//    }
+//
+//    private void waitTillOut() {
+//        while (!(MathStuff.isEqual(flicker.getPosition(), flickOut))
+//                && opMode.opModeIsActive()) {
+//            telemetry.addData("Stuck in ", "wait till out");
+//            telemetry.update();
+//            Log.e("Stuck in ", "wait till out");
+//        }
+//    }
 
-    }
-
-    private void waitTillOut() {
-        while (!(MathStuff.isEqual(flicker.getPosition(), flickOut))
-                && opMode.opModeIsActive()) {
-            telemetry.addData("Stuck in ", "wait till out");
-            telemetry.update();
-            Log.e("Stuck in ", "wait till out");
-        }
-    }
+    int waitTime = 300;
 
     public void autoFlick() {
         for (int i = 0; i < 6; i++) {
             flickOut();
-            timer.safeDelay(200);
+            timer.safeDelay(waitTime);
             flickIn();
-            timer.safeDelay(200);
+            timer.safeDelay(waitTime);
         }
-
-
     }
+
+    public void singleFlick(){
+        flickOut();
+        timer.safeDelay(waitTime);
+        flickIn();
+        timer.safeDelay(100);
+    }
+
 }
 

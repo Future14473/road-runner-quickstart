@@ -74,7 +74,7 @@ public class ShooterFlicker {
         flickOut();
         timer.safeDelay(waitTime);
         flickIn();
-        timer.safeDelay(waitTime);
+        timer.safeDelay(100);
     }
 
 }

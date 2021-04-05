@@ -28,6 +28,7 @@ public class Shooter {
         tarVelocity = powerShotSpeed;
     }
 
+    //for faster tuning
     public void increaseSpeed(){
         tarVelocity += 10;
     }

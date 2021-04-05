@@ -25,11 +25,12 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 
 public class Follower {
     private final SampleMecanumDrive drivetrain;
-    private final StandardTrackingWheelLocalizer odometry;
+    public final StandardTrackingWheelLocalizer odometry;
     private final Telemetry telemetry;
     private final LinearOpMode opmode;
     private final Gamepad gamepad;
     private static final float mmPerInch = 25.4f;
+    private final IMU imu;
 
 
 
@@ -39,6 +40,7 @@ public class Follower {
         this.gamepad = gamepad;
         this.odometry = odometry;
         this.opmode = opmode;
+        this.imu = imu;
     }
 
     public void goTo(double forwardAxisDest, double rightAxisDest, double turnAxisDest){
@@ -49,13 +51,17 @@ public class Follower {
             odometry.update();
             Pose2d currPos = odometry.getPoseEstimate();
             double forwardAxisPos = currPos.getX();
-            double rightAxisPos = currPos.getY();
+            double rightAxisPos = -currPos.getY();
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
             // breaking the config
 
             // Getting angle inconsistency that are really impacting the shooter accuracy
             //turnAxisPos =  imu.getHeading();
             double turnAxisPos = currPos.getHeading();
+            if (turnAxisPos > 3.14){
+                turnAxisPos = turnAxisPos - 6.28;
+            }
+            turnAxisPos *= -1;
 
 
 
@@ -67,7 +73,7 @@ public class Follower {
 
             // calculate how far robot needs to go
             double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
-            double rightDistance = -(rightAxisDest - rightAxisPos); // positive means right
+            double rightDistance = rightAxisDest - rightAxisPos; // positive means right
             double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
 
             // Careful here! Forward according to the coordinate plane
@@ -80,7 +86,7 @@ public class Follower {
             //rightDistance = robotDirection.x;
 
             // tell the user how far robot needs to go (round decimals ffs)
-            telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.2f", forwardDistance, rightDistance, turnDistance));
+            telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.1f", forwardDistance, rightDistance, Math.toDegrees(turnDistance)));
 
             // decide how much power the robot should use to move on the forward axis
             double forwardPower = convertDistanceToPower(forwardDistance);
@@ -97,7 +103,7 @@ public class Follower {
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                DRIVE(forwardPower, rightPower, -turnPower * 0.4);
+                DRIVE(forwardPower, rightPower, turnPower * 0.4);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){
@@ -169,7 +175,7 @@ public class Follower {
 
     double convertDistanceToPower(double distance){
         // if within one inch, stop. That's close enough
-        if(Math.abs(distance) < 0.1)
+        if(Math.abs(distance) < 1)
             return 0;
 
         double power;
@@ -189,16 +195,16 @@ public class Follower {
 
     double convertAnglesToPower(double angle){
         // if within 0.1 radian, stop. That's close enough
-        if(Math.abs(angle) <= 0.04)
+        if(Math.abs(angle) <= 0.03)
            return  0;
 
         double power;
         // anything within 0.05 rad means the robot starts slowing
-        power = angle / 1.8;
+        power = angle / 1.65;
         // but too little power means the robot won't move at all
-        if(Math.abs(power) < 0.2)
+        if(Math.abs(power) < 0.27)
             // if power too low, make it higher
-            power = 0.2 * Math.signum(power);
+            power = 0.27 * Math.signum(power);
 
         return power;
     }

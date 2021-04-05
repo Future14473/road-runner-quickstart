@@ -7,14 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.Follower.Follower;
+import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
+import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Shooter;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.ShooterFlicker;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
 
 
 
@@ -102,11 +102,7 @@ public class Teleop extends LinearOpMode
 
 
 
-            if (gamepad2.left_trigger != 0){ ringCollector.collect(); }
-
-
-            if (gamepad2.right_trigger != 0){ ringCollector.out(); }
-
+            ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
             if (gamepad2.left_bumper){
                 flicker.autoFlick();

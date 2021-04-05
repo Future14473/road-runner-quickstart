@@ -16,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 public class IMU  {
     BNO055IMU imu;
 
+    // added to raw heading in case we need to reset the zero point
+    public double headingOffset = 0;
 
     public IMU (HardwareMap hardwareMap, Telemetry telemetry){
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -29,7 +31,7 @@ public class IMU  {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
         imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        // imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
         telemetry.addData("IMU", "startup done");
         telemetry.update();
@@ -37,11 +39,10 @@ public class IMU  {
     }
 
 
-
     // AXES SET UP FOR A CERTAIN MOUNTING POSITION
     // LONGEST DIMENSION OF REV HUB ALIGNS WITH X
     // second longest aligns with Y
-    // thickness (thrid longest) aligns with Z
+    // thickness (third longest) aligns with Z
 
     // Z is forward
     // X is side to side
@@ -51,7 +52,7 @@ public class IMU  {
         if (p != null) {
             return new pose(p.x, p.z, getHeading());
         }
-        return new pose(420,420,420);
+        return null;
     }
 
     public pose getAccel() {
@@ -59,12 +60,16 @@ public class IMU  {
         if (a != null) {
             return new pose(a.xAccel, a.yAccel, a.zAccel);
         }
-        return new pose(420,420,420);
+        return null;
     }
 
     public double getHeading(){
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-        return angles.firstAngle;
+        return angles.firstAngle + headingOffset;
+    }
+
+    public void setPreviousHeadingTo(double oldHeading, double newHeading){
+        headingOffset += newHeading - oldHeading;
     }
 
 }

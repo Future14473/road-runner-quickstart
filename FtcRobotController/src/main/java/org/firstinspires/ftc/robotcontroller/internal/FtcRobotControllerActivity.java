@@ -330,7 +330,9 @@ public class FtcRobotControllerActivity extends Activity
     if (permissionsValidated) {
       ClassManager.getInstance().setOnBotJavaClassHelper(new OnBotJavaHelperImpl());
       ClassManagerFactory.registerFilters();
-      ClassManagerFactory.processAllClasses();
+      //TODO Makes our wireless debug crash on install sometimes . . .
+       ClassManagerFactory.processAllClasses();
+      // -Xuyang
     }
 
     cfgFileMgr = new RobotConfigFileManager(this);

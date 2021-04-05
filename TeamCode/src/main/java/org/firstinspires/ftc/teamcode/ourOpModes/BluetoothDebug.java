@@ -12,11 +12,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothClient;
 import org.firstinspires.ftc.teamcode.Bluetooth.Interpreter;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.Follower.Follower;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.Wobble_Arm;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 
 import java.util.Arrays;
 
@@ -73,7 +72,6 @@ public class BluetoothDebug extends LinearOpMode
                         Arrays.asList(response.split(" "))));
 
 
-
         imu = new IMU(hardwareMap, telemetry);
 
         //MecanumDrive = new Mecanum(hardwareMap);
@@ -105,7 +103,6 @@ public class BluetoothDebug extends LinearOpMode
 
 
         bluetoothClient.startHostSession();
-
         new Thread(() -> interpreter.begin()).start();
 
         //vuforiaPhone.beginTracking();

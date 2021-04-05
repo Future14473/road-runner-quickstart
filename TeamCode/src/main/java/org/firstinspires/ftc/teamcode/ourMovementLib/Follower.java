@@ -48,7 +48,6 @@ public class Follower {
             // get new position in Aviation coordinates
             odometry.update();
             Pose2d currPos = odometry.getPoseEstimate();
-            // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
             double forwardAxisPos = currPos.getX();
             double rightAxisPos = currPos.getY();
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
@@ -170,12 +169,12 @@ public class Follower {
 
     double convertDistanceToPower(double distance){
         // if within one inch, stop. That's close enough
-        if(Math.abs(distance) < 1)
+        if(Math.abs(distance) < 0.1)
             return 0;
 
         double power;
         // anything within 7 inches means the robot starts slowing
-        power = distance / 14; //needs to be slower, too jerky now
+        power = distance / 7; //needs to be slower, too jerky now
         // but too little power means the robot won't move at all
         if(Math.abs(power) < 0.15)
             // if power too low, make it higher

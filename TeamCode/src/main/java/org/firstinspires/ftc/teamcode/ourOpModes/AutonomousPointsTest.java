@@ -1,0 +1,45 @@
+package org.firstinspires.ftc.teamcode.ourOpModes;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.ourMovementLib.Follower;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
+@TeleOp(group = "teleop")
+public class AutonomousPointsTest extends LinearOpMode {
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        StandardTrackingWheelLocalizer odometry = new StandardTrackingWheelLocalizer(hardwareMap);
+        IMU imu = new IMU(hardwareMap, telemetry);
+
+        Follower follower = new Follower(new SampleMecanumDrive(hardwareMap), odometry, this, telemetry, gamepad1, imu);
+        waitForStart();
+
+        while (opModeIsActive()){
+            if (gamepad1.touchpad){
+                //go to starting point
+                follower.goTo(0,0,0);
+            }
+
+            if (gamepad1.dpad_up){
+                follower.goTo(10,0,0);
+            }
+
+            if (gamepad1.dpad_down){
+                follower.goTo(-10,0,0);
+            }
+
+            if (gamepad1.dpad_right){
+                follower.goTo(0,10,0);
+            }
+
+            if (gamepad1.dpad_left){
+                follower.goTo(0,-10,0);
+            }
+
+        }
+    }
+}

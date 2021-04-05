@@ -9,18 +9,10 @@ public class RingCollector {
         intake = hardwareMap.get(DcMotor.class, "intake");
         taco = hardwareMap.get(DcMotor.class, "taco");
     }
-    public void collect(){
-        intake.setPower(1);
-        taco.setPower(1);
-    }
-    public void out(){
-        intake.setPower(-1);
-        taco.setPower(-1);
+    public void collect(double speed){
+        intake.setPower(speed);
+        taco.setPower(speed);
     }
 
-    public void sleep(){
-        intake.setPower(0);
-        taco.setPower(0);
-    }
 }
 

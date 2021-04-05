@@ -94,11 +94,7 @@ public class Teleop extends LinearOpMode
 
 
 
-            if (gamepad2.left_trigger != 0){ ringCollector.collect(); }
-
-
-            if (gamepad2.right_trigger != 0){ ringCollector.out(); }
-
+            ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
             if (gamepad2.left_bumper){
                 flicker.autoFlick();

@@ -37,7 +37,7 @@ public class Shooter {
         tarVelocity -= 10;
     }
 
-    public void setSpeed(int speed){
+    public void setSpeed(){
         shooter_motor.setVelocity(tarVelocity);
     }
 }

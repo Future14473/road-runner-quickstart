@@ -45,7 +45,7 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.9865; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 18; // in
+    public static double TRACK_WIDTH = 18.7; // in
  // the increase track width probably makes sense because our robot is heavy so it needs to turn as if it were a bigger robot to fight the friction/weight
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using

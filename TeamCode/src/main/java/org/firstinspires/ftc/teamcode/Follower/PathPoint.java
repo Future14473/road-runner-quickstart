@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.Follower;
 
-
-
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
 import static java.lang.Math.*;

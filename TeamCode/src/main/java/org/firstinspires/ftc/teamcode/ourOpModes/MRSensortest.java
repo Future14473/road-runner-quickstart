@@ -52,7 +52,9 @@ public class MRSensortest extends LinearOpMode {
             double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
             double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 9 / 12.0;
 
-            DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, imu.getHeading());
+            double heading = imu.getHeading();
+
+            DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, heading);
 
             if(position != null)
                 if(position instanceof point)
@@ -62,8 +64,8 @@ public class MRSensortest extends LinearOpMode {
             else
                 telemetry.addData("position", "undetermined");
 
-            telemetry.addData("laser length f+b", front + back);
-            telemetry.addData("heading in deg", Math.toDegrees(imu.getHeading()));
+            telemetry.addData("laser length vertical total", front + back);
+            telemetry.addData("heading in deg", Math.toDegrees(heading));
 
             telemetry.update();
 

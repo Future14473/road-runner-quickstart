@@ -145,9 +145,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightRear = hardwareMap.get(DcMotorEx.class, "backRight");
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
 
-        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
-        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
+//        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
+//        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
 
+        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
 
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
@@ -365,6 +367,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                     OMEGA_WEIGHT * drivePower.getHeading()
             ).div(denom);
         }
+
 
         setDrivePower(vel);
     }

@@ -8,11 +8,10 @@ public class DistanceSensorAlt {
     static double WIDTH = 8;
 
     // ang is trig rads
-    public static geom calculate_location( double left, double right, double up, double down, double angle) {
-        scaleGraphics g = new scaleGraphics();
+    public static geom calculate_location( double left, double right, double up, double down, double angle, scaleGraphics g) {
 
         // robot angle to trig angle
-        angle -= Math.PI/2;
+        angle += Math.PI/2;
 
         // keep within [-360,360]
         if(angle > Math.PI*2 || angle < 0)
@@ -27,20 +26,28 @@ public class DistanceSensorAlt {
         if(v_flip = (angle % Math.PI) < Math.PI/2)
             angle = 2*Math.PI - angle;
 
+        v_flip = false;
+
+        //System.out.println("vflip: " + v_flip);
+
         // compute
-        geom solution = calculate_location_quadrantII(left, right, up, down, angle, g);
-        if(solution == null)
-            return null;
+        List<geom> solution = calculate_location_quadrantII(left, right, up, down, angle, g);
 
         if (v_flip)
-            solution.scale(WIDTH / 2, HEIGHT / 2, 1, -1);
+            for(geom sol : solution)
+                sol.scale(WIDTH / 2, HEIGHT / 2, 1, -1);
 
-        solution.draw(g);
+        //g.setColor(Color.MAGENTA);
+        for(geom sol : solution)
+            sol.draw(g, 5);
 
-        return solution;
+        for(geom sol : solution)
+            sol.draw(g, 5);
+
+        return solution.size()>0 ? solution.get(0) : null;
     }
 
-    static geom calculate_location_quadrantII(double left, double right, double up, double down, double angle, scaleGraphics g){
+    static List<geom> calculate_location_quadrantII(double left, double right, double up, double down, double angle, scaleGraphics g){
         List<geom> vertical_partials = partial_solve(up, down, angle, WIDTH, HEIGHT);
 
         List<geom> horizontal_partials = partial_solve(left, right, angle, HEIGHT, WIDTH);
@@ -48,21 +55,27 @@ public class DistanceSensorAlt {
         for(geom partial : horizontal_partials)
             partial.rotate(WIDTH/2, WIDTH/2, Math.PI/2);
 
-        geom sol = null;
+        List<geom> sol = new ArrayList<>();
         // will return no solution when robot is aligned to within ~0.1 degs of x axis
-        if(horizontal_partials.size() > 0 && vertical_partials.size() > 0)
-            sol = line_line_intersect((line)horizontal_partials.get(0), (line)vertical_partials.get(0));
-        else
-            return null;
+        //if(horizontal_partials.size() > 0 && vertical_partials.size() > 0)
+        for(geom thing : horizontal_partials)
+            for(geom thing2 : vertical_partials){
+                geom temp = line_line_intersect((line)thing, (line) thing2);
+                if(temp != null)
+                    sol.add(temp);
+            }
+
+//        else
+//            return null;
 
         //draw them
-        g.setColor(scaleGraphics.Color.red);
-        for(geom partial : vertical_partials)
-            partial.draw(g);
-
-        g.setColor(scaleGraphics.Color.green);
-        for(geom partial : horizontal_partials)
-            partial.draw(g);
+//        g.setColor(Color.red);
+//        for(geom partial : vertical_partials)
+//            partial.draw(g);
+//
+//        g.setColor(Color.green);
+//        for(geom partial : horizontal_partials)
+//            partial.draw(g);
 
         return sol;
     }
@@ -77,6 +90,63 @@ public class DistanceSensorAlt {
 
         double up_ratio = up / (up+down);
         double down_ratio = down / (up+down);
+
+        //partial solve single
+        if(up > 1000){
+
+            double rise_down = rise * down_ratio;
+            double run_down = run * down_ratio;
+
+            if(angle < Math.PI){
+                partial_solutions.add(new line(
+                        new point(0, rise_down),
+                        new point(width - run_down, rise_down)
+                ));
+                partial_solutions.add(new line(
+                        new point(width - run_down, rise_down),
+                        new point(width - run_down, height)
+                ));
+            }else{
+                partial_solutions.add(new line(
+                        new point(run_down, rise_down),
+                        new point(width, rise_down)
+                ));
+                partial_solutions.add(new line(
+                        new point(width, rise_down),
+                        new point(width, height)
+                ));
+            }
+            return partial_solutions;
+        }
+        //partial solve single
+        if(down > 1000){
+
+            double rise_up = rise * up_ratio;
+            double run_up = run * up_ratio;
+
+            if(angle > Math.PI){
+                partial_solutions.add(new line(
+                        new point(0, height - rise_up),
+                        new point(width - run_up, height - rise_up)
+                ));
+                partial_solutions.add(new line(
+                        new point(width - run_up, height - rise_up),
+                        new point(width - run_up, 0)
+                ));
+            }else{
+
+                partial_solutions.add(new line(
+                        new point(run_up, height - rise_up),
+                        new point(width, height - rise_up)
+                ));
+                partial_solutions.add(new line(
+                        new point(run_up, height - rise_up),
+                        new point(run_up, 0)
+                ));
+            }
+            return partial_solutions;
+        }
+
 
         if(angle > Math.PI/2){
             partial_solutions.add(new line(
@@ -134,14 +204,13 @@ public class DistanceSensorAlt {
         double t = point.cross(point.subtract(q, p), s) / cross_r_s;
         double u = q_p_cross_r / cross_r_s;
 
-        double spoof = 0.1;
+        double spoof = 0.01;
 
         // p + t r
         if (0-spoof <= t && t <= 1+spoof)
             if (0-spoof <= u && u <= 1+spoof)
                 return point.add(p, point.multiply(t, r));
 
-        System.out.println("2nd null line a: " + a + " line b: " + b);
         return null;
     }
 
@@ -163,6 +232,8 @@ public class DistanceSensorAlt {
         void translate(double h, double v);
 
         void scale(double h, double v, double xs, double ys);
+
+        void draw (scaleGraphics g, double size);
 
         void draw (scaleGraphics g);
     }
@@ -189,6 +260,11 @@ public class DistanceSensorAlt {
         public void scale(double h, double v, double xs, double ys) {
             start.scale(h, v, xs, ys);
             end.scale(h, v, xs, ys);
+        }
+
+        @Override
+        public void draw(scaleGraphics g, double size) {
+            g.drawLine(start.x, start.y, end.x, end.y, (int) size);
         }
 
         @Override

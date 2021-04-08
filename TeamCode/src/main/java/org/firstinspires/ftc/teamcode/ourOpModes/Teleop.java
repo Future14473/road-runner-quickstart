@@ -58,7 +58,6 @@ public class Teleop extends LinearOpMode
         waitForStart();
 
 
-
         while (opModeIsActive()){
 
             double y = -gamepad1.right_stick_y;
@@ -85,7 +84,7 @@ public class Teleop extends LinearOpMode
                 shooter.decreaseSpeed();
             }
 
-            shooter.setSpeed(shooter.getTargetVelocity());
+            shooter.setSpeed();
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;

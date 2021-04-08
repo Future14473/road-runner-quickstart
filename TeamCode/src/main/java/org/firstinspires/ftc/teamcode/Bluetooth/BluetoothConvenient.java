@@ -11,9 +11,9 @@ import java.util.Arrays;
 public class BluetoothConvenient {
 
     // Bluetooth Debugging
-    BluetoothClient bluetoothClient;
+    public BluetoothClient bluetoothClient;
     // Forth Interpreter
-    Interpreter interpreter;
+    public Interpreter interpreter;
 
 
     public BluetoothConvenient(Telemetry telemetry, HardwareMap hardwareMap, Object o){

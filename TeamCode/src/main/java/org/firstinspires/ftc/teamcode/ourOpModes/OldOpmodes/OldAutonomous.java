@@ -56,7 +56,7 @@
 //
 //}
 
-package org.firstinspires.ftc.teamcode.ourOpModes;
+package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -68,6 +68,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
+import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
@@ -77,7 +78,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Auto", group = "drive")
-public class Autonomous extends LinearOpMode {
+public class OldAutonomous extends LinearOpMode {
     DcMotorEx shooter, taco;
     DcMotor intake;
     CRServo shooter_roller1, shooter_roller2;
@@ -111,7 +112,7 @@ public class Autonomous extends LinearOpMode {
         shooter_roller1 = hardwareMap.get(CRServo.class, "shooter_roller1");
         shooter_roller2 = hardwareMap.get(CRServo.class, "shooter_roller2");
         shooter_roller2.setDirection(DcMotorSimple.Direction.REVERSE);
-        wobble_arm = new Wobble_Arm(hardwareMap, Autonomous.this);
+        wobble_arm = new Wobble_Arm(hardwareMap, OldAutonomous.this);
 
         //intake.setPower(1.0);
 

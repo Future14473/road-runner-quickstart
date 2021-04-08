@@ -36,6 +36,11 @@ public class point implements DistanceSensorAlt.geom {
     }
 
     @Override
+    public void draw(scaleGraphics g, double size) {
+        g.fillOval(x, y, 0.12, 0.12);
+    }
+
+    @Override
     public void draw(scaleGraphics g) {
         g.fillOval(x, y, 0.12, 0.12);
     }

@@ -139,7 +139,8 @@ public class BluetoothClient {
 			if (address.equals("00:00:00:00:00:00"))
 				outAppend("<Error> Send fail. Server address is 00:00:00:00:00:00");
 			else
-				outAppend("<Error> Send fail. Check that the SPP UUID: " + MY_UUID.toString() + " exists on server");
+				outAppend("<Error> Send fail. Check that a device with the SPP UUID " + MY_UUID.toString() + " is paired");
+			e.printStackTrace();
 		}
 	}
 

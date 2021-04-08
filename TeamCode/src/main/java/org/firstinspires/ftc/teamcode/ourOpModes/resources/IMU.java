@@ -68,7 +68,7 @@ public class IMU  {
         return angles.firstAngle + headingOffset;
     }
 
-    public void setPreviousHeadingTo(double oldHeading, double newHeading){
+    public void thisHeadingIsActually(double oldHeading, double newHeading){
         headingOffset += newHeading - oldHeading;
     }
 

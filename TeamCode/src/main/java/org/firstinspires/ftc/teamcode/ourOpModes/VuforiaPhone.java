@@ -115,7 +115,7 @@ public class VuforiaPhone {
     private static final float quadField  = 36 * mmPerInch;
 
     // Class Members
-    private OpenGLMatrix lastLocation = null;
+    public OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
     private boolean targetVisible = false;
     private float phoneXRotate    = 0;
@@ -143,7 +143,7 @@ public class VuforiaPhone {
         parameters.cameraDirection = CAMERA_CHOICE;
 
         // Make sure extended tracking is disabled for this example.
-        parameters.useExtendedTracking = false;
+        parameters.useExtendedTracking = true;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -312,5 +312,10 @@ public class VuforiaPhone {
         running = false;
         // Disable Tracking when we are done;
         targetsUltimateGoal.deactivate();
+    }
+
+    public double locationToHeading(OpenGLMatrix location){
+        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
+        return Math.toRadians(rotation.thirdAngle);
     }
 }

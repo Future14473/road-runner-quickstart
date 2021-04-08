@@ -27,7 +27,7 @@ public class CalibrateIMUwithLaser {
 
         int increasing_trend = 0;
         while (increasing_trend < 13){
-            double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
+            double front = (range_back.getDistance(DistanceUnit.INCH) / 12.0)/ 0.915 + 5.15 / 12.0;
             double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 8.85 / 12.0;
 
             // new minumum
@@ -54,10 +54,10 @@ public class CalibrateIMUwithLaser {
         }
         DRIVE(0, 0, 0, drive);
 
-        if(least_length < 11.8 || least_length > 12.2)
-            calibrate(1, imu, range_front, range_back, telemetry, drive);
-        else
-            imu.setPreviousHeadingTo(angle_at_least_length, 0);
+//        if(least_length < 11.8 || least_length > 12.2)
+//            calibrate(1, imu, range_front, range_back, telemetry, drive);
+//        else
+            imu.thisHeadingIsActually(angle_at_least_length, 0);
     }
 
     static double average(List<Double> l){

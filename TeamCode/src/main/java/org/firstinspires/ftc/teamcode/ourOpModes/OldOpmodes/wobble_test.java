@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(group = "drive")
+@Disabled
 public class wobble_test extends LinearOpMode {
 
     @Override

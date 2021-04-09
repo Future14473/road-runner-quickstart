@@ -58,6 +58,7 @@
 
 package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -78,6 +79,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Auto", group = "drive")
+@Disabled
 public class OldAutonomous extends LinearOpMode {
     DcMotorEx shooter, taco;
     DcMotor intake;

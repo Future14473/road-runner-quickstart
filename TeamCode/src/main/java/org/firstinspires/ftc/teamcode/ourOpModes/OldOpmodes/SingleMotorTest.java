@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.ourMovementLib;
+package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @TeleOp(group = "drive")
+@Disabled
 public class SingleMotorTest extends LinearOpMode {
 
     @Override

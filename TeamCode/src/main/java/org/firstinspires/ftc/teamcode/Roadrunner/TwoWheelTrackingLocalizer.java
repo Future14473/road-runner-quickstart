@@ -84,9 +84,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @Override
     public void update() {
         double heading = drive.getIMU().getHeading();
+
         OpenGLMatrix vuLocation = vuforia.getLocation();
 
-        boolean hasVuforia = vuforia!=null;
+        boolean hasVuforia = vuLocation!=null;
         boolean hasLaser = lasers.isAccurate(heading);
 
         if(hasVuforia && !hasLaser){

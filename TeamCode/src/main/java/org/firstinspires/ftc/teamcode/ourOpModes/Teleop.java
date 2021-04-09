@@ -61,6 +61,8 @@ public class Teleop extends LinearOpMode
 
         Trajectory toStart;
 
+        waitForStart();
+
         while (opModeIsActive()){
             telemetry.addData("Current Position", drive.getPoseEstimate());
             if (gamepad1.dpad_up){

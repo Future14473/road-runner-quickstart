@@ -106,7 +106,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     // Insert Vuforia and Laser position overrides
     @Override
     public void update() {
+        double heading = drive.getIMU().getHeading();
+        Pose2d laserLoc = getPosLaser(heading);
         OpenGLMatrix vuLocation = vuforia.getLocation();
+
         if(vuLocation != null){
             VectorF vuTranslation = vuLocation.getTranslation();
             Orientation vuRotation = Orientation.getOrientation(vuLocation, EXTRINSIC, XYZ, RADIANS);
@@ -114,7 +117,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                     vuTranslation.get(1) / mmPerInch, vuRotation.thirdAngle);
             this.setPoseEstimate(vuPose);
         }else {
-
+            if(laserLoc!=null){
+                this.setPoseEstimate(laserLoc);
             }else{
                 super.update();
             }
@@ -122,13 +126,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         }
     }
 
-    point getPosLaser() {
+    Pose2d getPosLaser(double heading) {
         double left = range_left.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
         double right = range_right.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
         double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
         double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 9 / 12.0;
-
-        double heading = imu.getHeading();
 
         DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, heading, new scaleGraphics());
 
@@ -139,8 +141,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                 position.scale(4, 6, -1, -1);
 
             point p = (point) position;
-            this.setPoseEstimate(new Pose2d(p.x, p.y, heading));
+            return new Pose2d(p.x, p.y, heading);
         }
+
+        return null;
     }
 
     //to [0, 360]

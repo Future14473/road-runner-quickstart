@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import android.icu.text.MessagePattern;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -313,9 +314,9 @@ public class VuforiaPhone {
         return Math.toRadians(rotation.thirdAngle);
     }
 
-    public pose matrixToPose(OpenGLMatrix location){
+    public Pose2d matrixToPose(OpenGLMatrix location){
         VectorF translation = location.getTranslation();
         Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, RADIANS);
-        return new pose (translation.get(0), translation.get(1), rotation.thirdAngle);
+        return new Pose2d(translation.get(0), translation.get(1), rotation.thirdAngle);
     }
 }

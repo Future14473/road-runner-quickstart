@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
+import org.firstinspires.ftc.teamcode.LaserLocalization.laserLocalization;
 import org.firstinspires.ftc.teamcode.LaserLocalization.point;
 import org.firstinspires.ftc.teamcode.LaserLocalization.scaleGraphics;
 import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
@@ -64,13 +65,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
     private static final float mmPerInch        = 25.4f;
 
-
     VuforiaPhone vuforia;
-
-    ModernRoboticsI2cRangeSensor range_left;
-    ModernRoboticsI2cRangeSensor range_right;
-    ModernRoboticsI2cRangeSensor range_front;
-    ModernRoboticsI2cRangeSensor range_back;
+    laserLocalization lasers;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -88,11 +84,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         vuforia = new VuforiaPhone(hardwareMap);
         vuforia.beginTracking();
 
-        range_left = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_left");
-        range_right = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_right");
-        range_front = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
-        range_back = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_back");
-
         this.drive = drive;
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
@@ -107,44 +98,40 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @Override
     public void update() {
         double heading = drive.getIMU().getHeading();
-        Pose2d laserLoc = getPosLaser(heading);
         OpenGLMatrix vuLocation = vuforia.getLocation();
 
-        if(vuLocation != null){
-            VectorF vuTranslation = vuLocation.getTranslation();
-            Orientation vuRotation = Orientation.getOrientation(vuLocation, EXTRINSIC, XYZ, RADIANS);
-            Pose2d vuPose = new Pose2d(vuTranslation.get(0) / mmPerInch - 12 / mmPerInch,
-                    vuTranslation.get(1) / mmPerInch, vuRotation.thirdAngle);
-            this.setPoseEstimate(vuPose);
-        }else {
-            if(laserLoc!=null){
-                this.setPoseEstimate(laserLoc);
+        boolean hasVuforia = vuforia!=null;
+        boolean hasLaser = lasers.isAccurate(heading);
+
+        if(hasVuforia && !hasLaser){
+            this.setPoseEstimate(vuforia.matrixToPose(vuLocation));
+        }
+
+        if(!hasVuforia && hasLaser){
+            Pose2d laserPose = lasers.update(heading);
+            if(laserPose != null){
+                this.setPoseEstimate(laserPose);
             }else{
                 super.update();
             }
-
-        }
-    }
-
-    Pose2d getPosLaser(double heading) {
-        double left = range_left.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
-        double right = range_right.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
-        double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
-        double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 9 / 12.0;
-
-        DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, heading, new scaleGraphics());
-
-        if (position instanceof point) {
-            //if [45, -135], reflect over y and x axes DON'T ASK ME WHY IT JUST WORKS
-            heading = RotationUtil.mod(heading, 2 * Math.PI);
-            if (heading > Math.toRadians(315) || heading < Math.toRadians(135))
-                position.scale(4, 6, -1, -1);
-
-            point p = (point) position;
-            return new Pose2d(p.x, p.y, heading);
         }
 
-        return null;
+        if(hasVuforia && hasLaser){
+            //*
+            Pose2d laserPose = lasers.update(heading); // do laser
+            if(laserPose != null){
+                this.setPoseEstimate(laserPose);
+            }else{
+                super.update();
+            }
+            /*/
+            this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
+            //*/
+        }
+
+        if(!hasVuforia && !hasLaser){
+            super.update();
+        }
     }
 
     //to [0, 360]

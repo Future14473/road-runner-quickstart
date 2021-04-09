@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -316,9 +317,14 @@ public class VuforiaPhone {
         targetsUltimateGoal.deactivate();
     }
 
+    public double locationToHeading(OpenGLMatrix location){
+        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
+        return Math.toRadians(rotation.thirdAngle);
+    }
+
     public pose matrixToPose(OpenGLMatrix location){
         VectorF translation = location.getTranslation();
-        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
-        return new pose(translation.get(0), translation.get(1), Math.toRadians(rotation.thirdAngle));
+        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, RADIANS);
+        return new pose(translation.get(0), translation.get(1), rotation.thirdAngle);
     }
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.LaserLocalization;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
@@ -19,11 +20,18 @@ public class laserLocalization {
         range_back = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_back");
     }
 
-    public boolean isAccurate(double heading){
+    public static void main(String[] args) {
+        // test isAccurate()
+        for(int i = 0; i < 720; i+=20){
+            System.out.println(i + " " + isAccurate(Math.toRadians(i)));
+        }
+    }
+
+    public static boolean isAccurate(double heading){
         heading = RotationUtil.mod(heading, Math.PI*2);
         heading %= Math.PI/2;
         double diff = Math.abs(heading - Math.PI/4);
-        return diff < Math.toRadians(12);
+        return diff > Math.toRadians(20);
     }
 
     public Pose2d update(double heading){

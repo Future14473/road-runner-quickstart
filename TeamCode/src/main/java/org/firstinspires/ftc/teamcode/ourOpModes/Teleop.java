@@ -7,10 +7,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-
-import org.firstinspires.ftc.teamcode.Follower.Follower;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
@@ -18,9 +15,6 @@ import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
-
-
-
 
 @TeleOp(name="AAA Teleop", group="Teleop")
 //@Disabled
@@ -50,7 +44,7 @@ public class Teleop extends LinearOpMode
         wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         imu = drive.getIMU();

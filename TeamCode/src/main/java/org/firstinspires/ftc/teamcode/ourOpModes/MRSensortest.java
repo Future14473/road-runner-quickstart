@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
 import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
 import org.firstinspires.ftc.teamcode.LaserLocalization.point;
@@ -45,7 +44,7 @@ public class MRSensortest extends LinearOpMode {
 
         imu = new IMU(hardwareMap);
 
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SampleMecanumDrive(hardwareMap, telemetry);
 
         //CalibrateIMUwithLaser.calibrate(-1, imu, range_front, range_back, telemetry, drive);
         telemetry.setAutoClear(true);

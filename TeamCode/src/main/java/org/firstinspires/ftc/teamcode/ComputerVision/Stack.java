@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ComputerVision;
 
 import org.opencv.core.Rect;
+
 import java.util.ArrayList;
 
 public class Stack implements Comparable<Stack>{

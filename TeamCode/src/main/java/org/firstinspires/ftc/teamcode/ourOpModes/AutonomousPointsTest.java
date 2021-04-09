@@ -7,16 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Roadrunner.TwoWheelTrackingLocalizer;
-
-import java.util.Vector;
 
 @TeleOp(group = "teleop")
 public class AutonomousPointsTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-//        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+//        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, telemetry);
 //
 //        // all of the trajectories/poses
 //        Pose2d startPose = new Pose2d(-47, 9, Math.toRadians(0));
@@ -30,7 +27,7 @@ public class AutonomousPointsTest extends LinearOpMode {
 //
 //        while (opModeIsActive()){
 //            drive.followTrajectory(toHighGoal);
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, telemetry);
 
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
         Pose2d startPose = new Pose2d(-60.8, 30.92, 0);

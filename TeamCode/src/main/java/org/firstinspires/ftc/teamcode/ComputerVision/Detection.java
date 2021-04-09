@@ -1,19 +1,27 @@
 package org.firstinspires.ftc.teamcode.ComputerVision;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import org.openftc.easyopencv.OpenCvPipeline;
-
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
-
-import static org.opencv.imgproc.Imgproc.*;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2GRAY;
+import static org.opencv.imgproc.Imgproc.COLOR_BGR2HSV;
+import static org.opencv.imgproc.Imgproc.COLOR_RGB2BGR;
+import static org.opencv.imgproc.Imgproc.CV_SHAPE_ELLIPSE;
+import static org.opencv.imgproc.Imgproc.contourArea;
+import static org.opencv.imgproc.Imgproc.cvtColor;
 
 public class Detection extends OpenCvPipeline {
 

@@ -8,13 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-
-import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
-import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
-import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -65,7 +64,7 @@ public class RingFindingTest extends LinearOpMode {
 
         //intake.setPower(1.0);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         IMU imu = new IMU(hardwareMap);

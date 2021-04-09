@@ -1,34 +1,19 @@
 package org.firstinspires.ftc.teamcode.Roadrunner;
 
-import android.graphics.RadialGradient;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
 import org.firstinspires.ftc.teamcode.LaserLocalization.laserLocalization;
-import org.firstinspires.ftc.teamcode.LaserLocalization.point;
-import org.firstinspires.ftc.teamcode.LaserLocalization.scaleGraphics;
-import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
+import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:

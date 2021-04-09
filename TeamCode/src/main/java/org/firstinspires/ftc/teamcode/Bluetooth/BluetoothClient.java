@@ -6,7 +6,6 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -15,10 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class BluetoothClient {
 

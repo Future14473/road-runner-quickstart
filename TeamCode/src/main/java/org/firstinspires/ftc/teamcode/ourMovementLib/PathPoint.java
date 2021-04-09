@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.ourMovementLib;
 
 
-
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
-import java.nio.file.Path;
-
-import static java.lang.Math.*;
+import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 
 public class PathPoint extends point {
     PathPoint prev;

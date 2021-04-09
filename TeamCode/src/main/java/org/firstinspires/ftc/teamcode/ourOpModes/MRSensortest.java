@@ -24,7 +24,7 @@ public class MRSensortest extends LinearOpMode {
     ModernRoboticsI2cRangeSensor range_front;
     ModernRoboticsI2cRangeSensor range_back;
 
-    VuforiaPhone vuforiaPhone;
+    //VuforiaPhone vuforiaPhone;
 
     IMU imu;
 
@@ -33,9 +33,9 @@ public class MRSensortest extends LinearOpMode {
     @Override public void runOpMode() {
         telemetry.setAutoClear(false);
 
-        BluetoothConvenient BT = new BluetoothConvenient(telemetry, hardwareMap, this);
+        //BluetoothConvenient BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
-        vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
+        //vuforiaPhone = new VuforiaPhone(hardwareMap);
 
         // get a reference to our compass
         range_left = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_left");
@@ -43,22 +43,22 @@ public class MRSensortest extends LinearOpMode {
         range_front = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
         range_back = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_back");
 
-        imu = new IMU(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap);
 
         drive = new SampleMecanumDrive(hardwareMap);
 
         //CalibrateIMUwithLaser.calibrate(-1, imu, range_front, range_back, telemetry, drive);
         telemetry.setAutoClear(true);
 
-        vuforiaPhone.beginTracking();
-
-        while (!isStarted() || vuforiaPhone.getLocation()==null){
-            telemetry.addData("vuforia", "looking for trackable");
-            vuforiaPhone.printLocation(vuforiaPhone.lastLocation);
-        }
-        imu.thisHeadingIsActually(imu.getHeading(), vuforiaPhone.locationToHeading(vuforiaPhone.lastLocation));
-
-        vuforiaPhone.stopTracking();
+//        vuforiaPhone.beginTracking();
+//
+//        while (!isStarted() || vuforiaPhone.getLocation()==null){
+//            telemetry.addData("vuforia", "looking for trackable");
+//            vuforiaPhone.printLocation(vuforiaPhone.lastLocation);
+//        }
+//        imu.thisHeadingIsActually(imu.getHeading(), vuforiaPhone.locationToHeading(vuforiaPhone.lastLocation));
+//
+//        vuforiaPhone.stopTracking();
 
         // wait for the start button to be pressed
         waitForStart();
@@ -91,7 +91,7 @@ public class MRSensortest extends LinearOpMode {
 
             if(position instanceof point) {
                 telemetry.addData("position", String.format("%.2f %.2f", ((point) position).x, ((point) position).y));
-                BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", ((point) position).x, ((point) position).y, heading));
+                //BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", ((point) position).x, ((point) position).y, heading));
             }else if(position instanceof DistanceSensorAlt.line)
                 telemetry.addData("position", "is a line");
             else

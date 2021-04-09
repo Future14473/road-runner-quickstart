@@ -53,7 +53,7 @@ public class RingFindingTest extends LinearOpMode {
         });
 
 
-        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap);
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         taco = hardwareMap.get(DcMotorEx.class, "taco");
         intake = hardwareMap.get(DcMotor.class, "intake");
@@ -68,7 +68,7 @@ public class RingFindingTest extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        IMU imu = new IMU(hardwareMap, telemetry);
+        IMU imu = new IMU(hardwareMap);
 
         Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1, imu);
 

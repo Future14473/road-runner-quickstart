@@ -1,16 +1,34 @@
 package org.firstinspires.ftc.teamcode.Roadrunner;
 
+import android.graphics.RadialGradient;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
+import org.firstinspires.ftc.teamcode.LaserLocalization.laserLocalization;
+import org.firstinspires.ftc.teamcode.LaserLocalization.point;
+import org.firstinspires.ftc.teamcode.LaserLocalization.scaleGraphics;
+import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
@@ -45,6 +63,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     public static double X_MULTIPLIER = 1.0174; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
+    private static final float mmPerInch        = 25.4f;
+
+    VuforiaPhone vuforia;
+    laserLocalization lasers;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -59,6 +81,9 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                 new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
         ));
 
+        vuforia = new VuforiaPhone(hardwareMap);
+        vuforia.beginTracking();
+
         this.drive = drive;
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
@@ -68,6 +93,56 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
+
+    // Insert Vuforia and Laser position overrides
+    @Override
+    public void update() {
+        double heading = drive.getIMU().getHeading();
+        OpenGLMatrix vuLocation = vuforia.getLocation();
+
+        boolean hasVuforia = vuforia!=null;
+        boolean hasLaser = lasers.isAccurate(heading);
+
+        if(hasVuforia && !hasLaser){
+            this.setPoseEstimate(vuforia.matrixToPose(vuLocation));
+        }
+
+        if(!hasVuforia && hasLaser){
+            Pose2d laserPose = lasers.update(heading);
+            if(laserPose != null){
+                this.setPoseEstimate(laserPose);
+            }else{
+                super.update();
+            }
+        }
+
+        if(hasVuforia && hasLaser){
+            //*
+            Pose2d laserPose = lasers.update(heading); // do laser
+            if(laserPose != null){
+                this.setPoseEstimate(laserPose);
+            }else{
+                super.update();
+            }
+            /*/
+            this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
+            //*/
+        }
+
+        if(!hasVuforia && !hasLaser){
+            super.update();
+        }
+    }
+
+    //to [0, 360]
+    double to360(double ang, double cycleSize){
+        if(ang < 0){
+            return cycleSize - to360(-ang, cycleSize);
+        }else{
+            return ang%cycleSize;
+        }
+    }
+
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

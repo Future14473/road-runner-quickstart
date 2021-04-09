@@ -67,6 +67,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                 new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
         ));
 
+        lasers = new laserLocalization(hardwareMap);
         vuforia = new VuforiaPhone(hardwareMap);
         vuforia.beginTracking();
 

@@ -1,24 +1,26 @@
 package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 @TeleOp(name="Vuforia Nav", group ="Concept")
+@Disabled
 public class VuforiaOpMode extends LinearOpMode {
     private static final float mmPerInch        = 25.4f;
     @Override
     public void runOpMode() throws InterruptedException {
 
-        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap);
 
         waitForStart();
 
@@ -32,6 +34,9 @@ public class VuforiaOpMode extends LinearOpMode {
                 telemetry.addData("x", translation.get(0) / mmPerInch);
                 telemetry.addData("y", translation.get(1) / mmPerInch);
                 telemetry.addData("r", rotation.thirdAngle);
+                telemetry.update();
+            }else {
+                telemetry.addData("no vuforia", "nothing");
                 telemetry.update();
             }
 

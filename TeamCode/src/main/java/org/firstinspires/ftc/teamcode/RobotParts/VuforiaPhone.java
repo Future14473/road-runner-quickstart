@@ -27,15 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.ourOpModes;
+package org.firstinspires.ftc.teamcode.RobotParts;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -48,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
@@ -115,7 +113,7 @@ public class VuforiaPhone {
     private static final float quadField  = 36 * mmPerInch;
 
     // Class Members
-    private OpenGLMatrix lastLocation = null;
+    public OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia = null;
     private boolean targetVisible = false;
     private float phoneXRotate    = 0;
@@ -125,10 +123,8 @@ public class VuforiaPhone {
 
     VuforiaTrackables targetsUltimateGoal;
     List<VuforiaTrackable> allTrackables;
-    Telemetry telemetry;
 
-    public VuforiaPhone(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public VuforiaPhone(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -269,7 +265,6 @@ public class VuforiaPhone {
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -294,17 +289,10 @@ public class VuforiaPhone {
         if (targetVisible) {
             // express position (translation) of robot in inches.
             VectorF translation = location.getTranslation();
-            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
             // express the rotation of the robot in degrees.
             Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
-            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-        } else {
-            telemetry.addData("Visible Target", "none");
         }
-        telemetry.update();
-
     }
 
 
@@ -312,5 +300,16 @@ public class VuforiaPhone {
         running = false;
         // Disable Tracking when we are done;
         targetsUltimateGoal.deactivate();
+    }
+
+    public double locationToHeading(OpenGLMatrix location){
+        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
+        return Math.toRadians(rotation.thirdAngle);
+    }
+
+    public Pose2d matrixToPose(OpenGLMatrix location){
+        VectorF translation = location.getTranslation();
+        Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, RADIANS);
+        return new Pose2d(translation.get(0), translation.get(1), rotation.thirdAngle);
     }
 }

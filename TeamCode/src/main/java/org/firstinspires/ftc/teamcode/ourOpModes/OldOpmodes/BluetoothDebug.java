@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.ourOpModes;
+package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
 
 import android.app.Activity;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,16 +14,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothClient;
 import org.firstinspires.ftc.teamcode.Bluetooth.Interpreter;
 import org.firstinspires.ftc.teamcode.Follower.Follower;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 
 import java.util.Arrays;
 
 
 @TeleOp(name="BT Debug", group="Teleop")
-//@Disabled
-//use DriveWheelIMULocalization for the same functionality instead
+@Disabled
 public class BluetoothDebug extends LinearOpMode
 {
     // Bluetooth Debugging
@@ -72,7 +72,7 @@ public class BluetoothDebug extends LinearOpMode
                         Arrays.asList(response.split(" "))));
 
 
-        imu = new IMU(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap);
 
         //MecanumDrive = new Mecanum(hardwareMap);
         intake = hardwareMap.get(DcMotor.class, "intake");

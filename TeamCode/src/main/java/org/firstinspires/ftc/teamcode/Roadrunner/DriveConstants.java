@@ -20,13 +20,6 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-
-    public static double PARALLEL_X = 3.5; // X is the up and down direction
-    public static double PARALLEL_Y = -7.5; // Y is the strafe direction
-
-    public static double PERPENDICULAR_X = -3.5;
-    public static double PERPENDICULAR_Y = 7.5;
-
     public static final double TICKS_PER_REV = 383.6;
     public static final double MAX_RPM = 435;
 
@@ -39,9 +32,8 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = false;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(23, 0, 10, 0);
-
-    // old f value: getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV)
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
+            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -53,24 +45,17 @@ public class DriveConstants {
      */
     public static double WHEEL_RADIUS = 1.9865; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 16.5; // in
-
+    public static double TRACK_WIDTH = 18.7; // in
+ // the increase track width probably makes sense because our robot is heavy so it needs to turn as if it were a bigger robot to fight the friction/weight
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
      * the built-in velocity PID, *these values are fine as is*. However, if you do not have drive
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    // original values
-    public static double kV = 0.019;//-0.019;
-
-    //    public static double kA = 0;
-//    public static double kStatic = 0;
-//    public static double kV = 0;
-    public static double kA = 0.015;//0.005;
-    //    public static double kA = 0.17608;
-    public static double kStatic = 0.000001;//0.01;
-
+    public static double kV = 0.0138;
+    public static double kA = 0.0028;
+    public static double kStatic = 0.12073;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
@@ -79,9 +64,9 @@ public class DriveConstants {
      * small and gradually increase them later after everything is working. All distance units are
      * inches.
      */
-    public static double MAX_VEL = 32.4;
+    public static double MAX_VEL = 30;
     public static double MAX_ACCEL = 30;
-    public static double MAX_ANG_VEL = Math.toRadians(16.6157);
+    public static double MAX_ANG_VEL = 4.413;
     public static double MAX_ANG_ACCEL = Math.toRadians(60);
 
 

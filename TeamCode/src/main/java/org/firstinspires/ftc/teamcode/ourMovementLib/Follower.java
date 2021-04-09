@@ -1,26 +1,18 @@
-package org.firstinspires.ftc.teamcode.Follower;
+package org.firstinspires.ftc.teamcode.ourMovementLib;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.Roadrunner.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 public class Follower {
     private final SampleMecanumDrive drivetrain;
-    private final VuforiaPhone vuforia;
+    public final TwoWheelTrackingLocalizer odometry;
     private final Telemetry telemetry;
     private final LinearOpMode opmode;
     private final Gamepad gamepad;
@@ -28,17 +20,14 @@ public class Follower {
     private final IMU imu;
 
 
-    public pose position = new pose(0,0,0);
 
-    public Follower(SampleMecanumDrive drivetrain, VuforiaPhone vuforia, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad, IMU imu){
+    public Follower(SampleMecanumDrive drivetrain, TwoWheelTrackingLocalizer odometry, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad, IMU imu){
         this.drivetrain = drivetrain;
-        this.vuforia = vuforia;
         this.telemetry = telemetry;
         this.gamepad = gamepad;
-
-         this.imu = imu;
-        
+        this.odometry = odometry;
         this.opmode = opmode;
+        this.imu = imu;
     }
 
     public void goTo(double forwardAxisDest, double rightAxisDest, double turnAxisDest){
@@ -46,24 +35,20 @@ public class Follower {
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
             // get new position in Aviation coordinates
-            OpenGLMatrix location = vuforia.getLocation();
-            double forwardAxisPos, rightAxisPos, turnAxisPos;
-            while(location == null && opmode.opModeIsActive()){
-                // Activate Panic Mode
-                DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
-                location = vuforia.getLocation();
-            }
-            VectorF translation = location.getTranslation();
-            Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
-            // no fucking "x" or "y." Just forwardAxisPos and rightAxisPos for fucking clarity
-            forwardAxisPos = translation.get(0) / mmPerInch;
-            rightAxisPos = translation.get(1) / mmPerInch; //TODO Encoder configuration is flipped
+            odometry.update();
+            Pose2d currPos = odometry.getPoseEstimate();
+            double forwardAxisPos = currPos.getX();
+            double rightAxisPos = -currPos.getY();
             // X axis should be positive rightward, but is not. I'll fix it here, lest risk
             // breaking the config
 
             // Getting angle inconsistency that are really impacting the shooter accuracy
             //turnAxisPos =  imu.getHeading();
-            turnAxisPos = Math.toRadians(rotation.thirdAngle);
+            double turnAxisPos = currPos.getHeading();
+            if (turnAxisPos > 3.14){
+                turnAxisPos = turnAxisPos - 6.28;
+            }
+            turnAxisPos *= -1;
 
 
 
@@ -75,7 +60,7 @@ public class Follower {
 
             // calculate how far robot needs to go
             double forwardDistance = forwardAxisDest - forwardAxisPos; // positive means forward
-            double rightDistance = -(rightAxisDest - rightAxisPos); // positive means right
+            double rightDistance = rightAxisDest - rightAxisPos; // positive means right
             double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
 
             // Careful here! Forward according to the coordinate plane
@@ -88,7 +73,7 @@ public class Follower {
             //rightDistance = robotDirection.x;
 
             // tell the user how far robot needs to go (round decimals ffs)
-            telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.2f", forwardDistance, rightDistance, turnDistance));
+            telemetry.addData("Distance to Go",String.format("V: %.1f H: %.1f R: %.1f", forwardDistance, rightDistance, Math.toDegrees(turnDistance)));
 
             // decide how much power the robot should use to move on the forward axis
             double forwardPower = convertDistanceToPower(forwardDistance);
@@ -105,7 +90,7 @@ public class Follower {
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
             }else{
-                DRIVE(forwardPower, rightPower, -turnPower * 0.4);
+                DRIVE(forwardPower, rightPower, turnPower * 0.4);
 
                 // if all the powers are 0 then we've arrived
                 if(forwardPower == 0 && rightPower == 0 && turnPower == 0){
@@ -121,31 +106,43 @@ public class Follower {
     public void goToHeading(double turnAxisDest){
         boolean arrived = false;
         while (!arrived && opmode.opModeIsActive()){
-
+            // get new position in Aviation coordinates
+            odometry.update();
+            Pose2d currPos = odometry.getPoseEstimate();
             // Getting angle inconsistency that are really impacting the shooter accuracy
-            double turnAxisPos = imu.getHeading(); //Math.toRadians(rotation.thirdAngle);
+            double turnAxisPos =  currPos.getHeading(); //Math.toRadians(rotation.thirdAngle);
+
+            telemetry.addData("Current Position", String.format("R: %.2f", turnAxisPos));
+
+
             // calculate how far robot needs to go
             double turnDistance = RotationUtil.turnLeftOrRight(turnAxisPos, turnAxisDest, Math.PI * 2); // positive means turn right
+
+            telemetry.addData("Distance to Go",String.format("R: %.2f", turnDistance));
+
+
             // decide how much power the robot should use to turn
             double turnPower = convertAnglesToPower(turnDistance);
 
-            if(turnPower == 0)
-                arrived = true;
-
-            telemetry.addData("Current Position", String.format("R: %.2f", turnAxisPos));
-            telemetry.addData("Distance to Go",String.format("R: %.2f", turnDistance));
             telemetry.addData("Power",String.format("R: %.2f", -turnPower));
-            telemetry.update();
+
 
             // A pressed means manual control
             // Otherwise, let the robot move to destination
-            if (gamepad.a) {
+            if (gamepad.a){
                 // the y stick is negative when you push up, so invert it
                 DRIVE(-gamepad.left_stick_y, gamepad.left_stick_x, gamepad.right_stick_x);
-                continue;
-            }
-            DRIVE(0,0, -turnPower);
+            }else{
+                DRIVE(0,0, -turnPower);
 
+                // if all the powers are 0 then we've arrived
+                if(turnPower == 0){
+                    arrived = true;
+                }
+            }
+
+            // tell telemetry to send the new data
+            telemetry.update();
         }
     }
     /*
@@ -170,7 +167,7 @@ public class Follower {
 
         double power;
         // anything within 7 inches means the robot starts slowing
-        power = distance / 14; //needs to be slower, too jerky now
+        power = distance / 7; //needs to be slower, too jerky now
         // but too little power means the robot won't move at all
         if(Math.abs(power) < 0.15)
             // if power too low, make it higher
@@ -185,16 +182,16 @@ public class Follower {
 
     double convertAnglesToPower(double angle){
         // if within 0.1 radian, stop. That's close enough
-        if(Math.abs(angle) <= 0.04)
+        if(Math.abs(angle) <= 0.03)
            return  0;
 
         double power;
         // anything within 0.05 rad means the robot starts slowing
-        power = angle / 1.8;
+        power = angle / 1.65;
         // but too little power means the robot won't move at all
-        if(Math.abs(power) < 0.2)
+        if(Math.abs(power) < 0.27)
             // if power too low, make it higher
-            power = 0.2 * Math.signum(power);
+            power = 0.27 * Math.signum(power);
 
         return power;
     }

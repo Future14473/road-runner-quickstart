@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.teamcode.LaserLocalization.laserLocalization;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.ourOpModes.DirtyGlobalVariables;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
@@ -89,14 +90,17 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         boolean hasLaser = lasers.isAccurate(heading);
 
         if(hasVuforia && !hasLaser){
+            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
             this.setPoseEstimate(vuforia.matrixToPose(vuLocation));
         }
 
         if(!hasVuforia && hasLaser){
             Pose2d laserPose = lasers.update(heading);
             if(laserPose != null){
+                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
                 this.setPoseEstimate(laserPose);
             }else{
+                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
                 super.update();
             }
         }
@@ -105,11 +109,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
             //*
             Pose2d laserPose = lasers.update(heading); // do laser
             if(laserPose != null){
+                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
                 this.setPoseEstimate(laserPose);
             }else{
+                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
                 super.update();
             }
             /*/
+            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
             this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
             //*/
         }

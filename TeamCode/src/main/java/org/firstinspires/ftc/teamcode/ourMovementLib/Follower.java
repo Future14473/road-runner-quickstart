@@ -11,8 +11,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.Roadrunner.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
@@ -25,7 +25,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 
 public class Follower {
     private final SampleMecanumDrive drivetrain;
-    public final TwoWheelTrackingLocalizer odometry;
+    public final StandardTrackingWheelLocalizer odometry;
     private final Telemetry telemetry;
     private final LinearOpMode opmode;
     private final Gamepad gamepad;
@@ -34,7 +34,7 @@ public class Follower {
 
 
 
-    public Follower(SampleMecanumDrive drivetrain, TwoWheelTrackingLocalizer odometry, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad, IMU imu){
+    public Follower(SampleMecanumDrive drivetrain, StandardTrackingWheelLocalizer odometry, LinearOpMode opmode, Telemetry telemetry, Gamepad gamepad, IMU imu){
         this.drivetrain = drivetrain;
         this.telemetry = telemetry;
         this.gamepad = gamepad;

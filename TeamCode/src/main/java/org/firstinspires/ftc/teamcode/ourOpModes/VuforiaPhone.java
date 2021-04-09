@@ -43,6 +43,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.LaserLocalization.point;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.pose;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +145,7 @@ public class VuforiaPhone {
         parameters.cameraDirection = CAMERA_CHOICE;
 
         // Make sure extended tracking is disabled for this example.
-        parameters.useExtendedTracking = true;
+        parameters.useExtendedTracking = false;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -314,8 +316,9 @@ public class VuforiaPhone {
         targetsUltimateGoal.deactivate();
     }
 
-    public double locationToHeading(OpenGLMatrix location){
+    public pose matrixToPose(OpenGLMatrix location){
+        VectorF translation = location.getTranslation();
         Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, DEGREES);
-        return Math.toRadians(rotation.thirdAngle);
+        return new pose(translation.get(0), translation.get(1), Math.toRadians(rotation.thirdAngle));
     }
 }

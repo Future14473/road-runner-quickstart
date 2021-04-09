@@ -18,7 +18,7 @@ public class VuforiaOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap);
 
         waitForStart();
 
@@ -32,6 +32,9 @@ public class VuforiaOpMode extends LinearOpMode {
                 telemetry.addData("x", translation.get(0) / mmPerInch);
                 telemetry.addData("y", translation.get(1) / mmPerInch);
                 telemetry.addData("r", rotation.thirdAngle);
+                telemetry.update();
+            }else {
+                telemetry.addData("no vuforia", "nothing");
                 telemetry.update();
             }
 

@@ -104,7 +104,7 @@ public class OldAutonomous extends LinearOpMode {
         });
 
 
-        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap, telemetry);
+        VuforiaPhone vuforia = new VuforiaPhone(hardwareMap);
         shooter = hardwareMap.get(DcMotorEx.class, "shooter");
         taco = hardwareMap.get(DcMotorEx.class, "taco");
         intake = hardwareMap.get(DcMotor.class, "intake");
@@ -123,7 +123,7 @@ public class OldAutonomous extends LinearOpMode {
 
         //regulate_shooter_vel();
 
-        IMU imu = new IMU(hardwareMap, telemetry);
+        IMU imu = new IMU(hardwareMap);
 
         Follower follower = new Follower(drive, vuforia, this, telemetry, gamepad1, imu);
 

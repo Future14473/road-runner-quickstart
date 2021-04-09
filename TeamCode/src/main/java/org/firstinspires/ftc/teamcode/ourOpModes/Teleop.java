@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,7 +22,7 @@ import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
 
 
 
-@TeleOp(name="Teleop", group="Teleop")
+@TeleOp(name="AAA Teleop", group="Teleop")
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
 public class Teleop extends LinearOpMode
@@ -27,13 +30,10 @@ public class Teleop extends LinearOpMode
     // Declare OpMode members.
     //Mecanum MecanumDrive;
 
-
     IMU imu;
     double headingZero = 0;
 
     public void runOpMode() throws InterruptedException {
-
-        imu = new IMU(hardwareMap, telemetry);
 
         //MecanumDrive = new Mecanum(hardwareMap);
         RingCollector ringCollector = new RingCollector(hardwareMap);
@@ -50,15 +50,51 @@ public class Teleop extends LinearOpMode
         wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
 
-        VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        Follower follower = new Follower(drive, vuforiaPhone, this, telemetry, gamepad1, imu);
 
-        waitForStart();
+        imu = drive.getIMU();
 
+        // TRAJECTORY STUFF
+        // We want to start the bot at x: 10, y: -8, heading: 90 degrees
+        Pose2d startPose = new Pose2d(-60.8, 21.92, 0);
+
+        drive.setPoseEstimate(startPose);
+
+        Trajectory toHighGoal;
+
+        Trajectory toCollection;
+
+        Trajectory toStart;
 
         while (opModeIsActive()){
+            telemetry.addData("Current Position", drive.getPoseEstimate());
+            if (gamepad1.dpad_up){
+                toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
+                        .build();
+
+                drive.followTrajectory(toHighGoal);
+            }
+
+            if (gamepad1.dpad_right){
+                toCollection = drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .splineTo(new Vector2d(2.9, 24.9), 0)
+                        .build();
+
+                drive.followTrajectory(toCollection);
+            }
+
+            if (gamepad1.dpad_down){
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+                toStart = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                        .splineTo(new Vector2d(-60.8, 21.92), reverse?Math.PI:0)
+                        .build();
+
+                drive.followTrajectory(toStart);
+            }
+
+            drive.update();
 
             double y = -gamepad1.right_stick_y;
             double x = gamepad1.right_stick_x;
@@ -84,7 +120,7 @@ public class Teleop extends LinearOpMode
                 shooter.decreaseSpeed();
             }
 
-            shooter.setSpeed();
+            //shooter.setSpeed();
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;
@@ -93,10 +129,10 @@ public class Teleop extends LinearOpMode
 
             if(gamepad2.right_stick_button){
                 // high goal
-                follower.goTo(-4, 22, -0.31);
+                //follower.goTo(-4, 22, -0.31);
             }
 
-            follower.DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0);
+            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0, drive);
 
 
 
@@ -141,6 +177,21 @@ public class Teleop extends LinearOpMode
         }
 
 
+    }
+
+    /*
+     * For POSITIVE forward parameter: go forward
+     * For POSITIVE sideways parameter: go right
+     * For POSITIVE rotate parameter: turn right
+     */
+    public void DRIVE(double forward, double sideways, double rotate, SampleMecanumDrive drivetrain) {
+        drivetrain.setWeightedDrivePower(
+                new Pose2d(
+                        forward,
+                        -sideways, // note the drivetrain wheels are reversed so sideways is positive right
+                        -rotate * 2
+                )
+        );
     }
 }
 

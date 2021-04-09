@@ -35,7 +35,7 @@ public class MRSensortest extends LinearOpMode {
 
         BluetoothConvenient BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
-        vuforiaPhone = new VuforiaPhone(hardwareMap, telemetry);
+        vuforiaPhone = new VuforiaPhone(hardwareMap);
 
         // get a reference to our compass
         range_left = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_left");
@@ -43,7 +43,7 @@ public class MRSensortest extends LinearOpMode {
         range_front = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
         range_back = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_back");
 
-        imu = new IMU(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap);
 
         drive = new SampleMecanumDrive(hardwareMap);
 

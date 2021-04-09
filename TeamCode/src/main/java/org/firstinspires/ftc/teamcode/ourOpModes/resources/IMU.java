@@ -14,16 +14,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 
 public class IMU  {
-    BNO055IMU imu;
+    public BNO055IMU imu;
 
     // added to raw heading in case we need to reset the zero point
     public double headingOffset = 0;
 
-    public IMU (HardwareMap hardwareMap, Telemetry telemetry){
+    public IMU (HardwareMap hardwareMap){
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
         parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
 
         parameters.loggingEnabled = false;
@@ -32,10 +32,6 @@ public class IMU  {
 
         imu.initialize(parameters);
         // imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-
-        telemetry.addData("IMU", "startup done");
-        telemetry.update();
-
     }
 
 

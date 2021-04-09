@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Roadrunner.TwoWheelTrackingLocalizer;
+
+import java.util.Vector;
+
 @TeleOp(group = "teleop")
 public class AutonomousPointsTest extends LinearOpMode {
 
@@ -30,21 +33,29 @@ public class AutonomousPointsTest extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
-        Pose2d startPose = new Pose2d(10, -8, Math.toRadians(90));
+        Pose2d startPose = new Pose2d(-60.8, 30.92, 0);
 
         waitForStart();
         drive.setPoseEstimate(startPose);
 
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .splineTo(new Vector2d(20, 9), Math.toRadians(45))
+        Trajectory toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(20, 9), Math.toRadians(45))
+        Trajectory toCollection = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(2.9, 24.9), 0)
                 .build();
+        while (opModeIsActive()){
+            if (gamepad1.dpad_up){
+                drive.followTrajectory(toHighGoal);
+            }
 
-        drive.followTrajectory(traj1);
-        drive.followTrajectory(traj2);
+            if (gamepad1.dpad_right){
+                drive.followTrajectory(toCollection);
+
+            }
+        }
+
 
 //            if (gamepad1.b){
 //                //go to starting point

@@ -72,7 +72,7 @@ public class BluetoothDebug extends LinearOpMode
                         Arrays.asList(response.split(" "))));
 
 
-        imu = new IMU(hardwareMap, telemetry);
+        imu = new IMU(hardwareMap);
 
         //MecanumDrive = new Mecanum(hardwareMap);
         intake = hardwareMap.get(DcMotor.class, "intake");

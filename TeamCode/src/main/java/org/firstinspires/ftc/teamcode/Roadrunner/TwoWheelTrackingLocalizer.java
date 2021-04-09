@@ -1,16 +1,33 @@
 package org.firstinspires.ftc.teamcode.Roadrunner;
 
+import android.graphics.RadialGradient;
+
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.localization.TwoTrackingWheelLocalizer;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.LaserLocalization.DistanceSensorAlt;
+import org.firstinspires.ftc.teamcode.LaserLocalization.point;
+import org.firstinspires.ftc.teamcode.LaserLocalization.scaleGraphics;
+import org.firstinspires.ftc.teamcode.ourOpModes.VuforiaPhone;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.RADIANS;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
@@ -45,6 +62,15 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     public static double X_MULTIPLIER = 1.0174; // Multiplier in the X direction
     public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
+    private static final float mmPerInch        = 25.4f;
+
+
+    VuforiaPhone vuforia;
+
+    ModernRoboticsI2cRangeSensor range_left;
+    ModernRoboticsI2cRangeSensor range_right;
+    ModernRoboticsI2cRangeSensor range_front;
+    ModernRoboticsI2cRangeSensor range_back;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -59,6 +85,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
                 new Pose2d(PERPENDICULAR_X, PERPENDICULAR_Y, Math.toRadians(90))
         ));
 
+        vuforia = new VuforiaPhone(hardwareMap);
+        vuforia.beginTracking();
+
+        range_left = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_left");
+        range_right = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_right");
+        range_front = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_front");
+        range_back = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range_back");
+
         this.drive = drive;
 
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "frontRight"));
@@ -68,6 +102,56 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
+
+    // Insert Vuforia and Laser position overrides
+    @Override
+    public void update() {
+        OpenGLMatrix vuLocation = vuforia.getLocation();
+        if(vuLocation != null){
+            VectorF vuTranslation = vuLocation.getTranslation();
+            Orientation vuRotation = Orientation.getOrientation(vuLocation, EXTRINSIC, XYZ, RADIANS);
+            Pose2d vuPose = new Pose2d(vuTranslation.get(0) / mmPerInch - 12 / mmPerInch,
+                    vuTranslation.get(1) / mmPerInch, vuRotation.thirdAngle);
+            this.setPoseEstimate(vuPose);
+        }else {
+
+            }else{
+                super.update();
+            }
+
+        }
+    }
+
+    point getPosLaser() {
+        double left = range_left.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
+        double right = range_right.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 7.5 / 12.0;
+        double front = range_front.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 5.15 / 12.0;
+        double back = range_back.getDistance(DistanceUnit.INCH) / 12.0 / 0.915 + 9 / 12.0;
+
+        double heading = imu.getHeading();
+
+        DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, heading, new scaleGraphics());
+
+        if (position instanceof point) {
+            //if [45, -135], reflect over y and x axes DON'T ASK ME WHY IT JUST WORKS
+            heading = RotationUtil.mod(heading, 2 * Math.PI);
+            if (heading > Math.toRadians(315) || heading < Math.toRadians(135))
+                position.scale(4, 6, -1, -1);
+
+            point p = (point) position;
+            this.setPoseEstimate(new Pose2d(p.x, p.y, heading));
+        }
+    }
+
+    //to [0, 360]
+    double to360(double ang, double cycleSize){
+        if(ang < 0){
+            return cycleSize - to360(-ang, cycleSize);
+        }else{
+            return ang%cycleSize;
+        }
+    }
+
 
     public static double encoderTicksToInches(double ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;

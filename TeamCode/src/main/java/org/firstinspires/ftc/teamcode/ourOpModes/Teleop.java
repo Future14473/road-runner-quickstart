@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
+import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
@@ -35,7 +36,7 @@ public class Teleop extends LinearOpMode
 
         Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
-
+        SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
         Shooter shooter = new Shooter(hardwareMap);
 
@@ -61,6 +62,12 @@ public class Teleop extends LinearOpMode
         Trajectory toCollection;
 
         Trajectory toStart;
+
+        boolean isWobbleGrab = false;
+        boolean isWobbleDown = false;
+        boolean isStyxDown = true;
+
+        styx.allDown();
 
         waitForStart();
 
@@ -141,20 +148,33 @@ public class Teleop extends LinearOpMode
                 flicker.autoFlick();
             }
             if (gamepad2.right_bumper){
-                flicker.singleFlick();
+                if (isStyxDown){
+                    styx.allUp();
+                    isStyxDown = false;
+                } else {
+                    styx.allDown();
+                    isStyxDown = true;
+                }
             }
 
-            if (gamepad1.a) {
-                wobble_arm.down();
+            if (gamepad2.a) {
+                if (isWobbleDown){
+                    wobble_arm.up();
+                    isWobbleDown = false;
+                } else {
+                    wobble_arm.down();
+                    isWobbleDown = true;
+                }
             }
-            if (gamepad1.b) {
-                wobble_arm.up();
-            }
-            if (gamepad1.right_bumper) {
-                wobble_arm.grab();
-            }
-            if (gamepad1.left_bumper) {
-                wobble_arm.unGrab();
+
+            if (gamepad2.b) {
+                if (isWobbleGrab){
+                    wobble_arm.unGrab();
+                    isWobbleGrab = false;
+                } else {
+                    wobble_arm.grab();
+                    isWobbleGrab = true;
+                }
             }
 
             if(gamepad1.dpad_up)

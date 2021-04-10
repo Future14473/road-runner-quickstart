@@ -30,7 +30,7 @@ public class SideStyx {
     }
 
     public void shortUp(){
-        shortStyx.setPosition(-1);
+        shortStyx.setPosition(-0.5);
     }
 
     public void shortDown(){
@@ -38,7 +38,7 @@ public class SideStyx {
     }
 
     public void longUp(){
-        longStyx.setPosition(1);
+        longStyx.setPosition(0.5);
     }
 
     public void longDown(){

@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
 
 @TeleOp(name="AAA Teleop", group="Teleop")
@@ -37,6 +38,7 @@ public class Teleop extends LinearOpMode
         Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
+        Timing timer = new Timing(this);
 
         Shooter shooter = new Shooter(hardwareMap);
 
@@ -150,9 +152,11 @@ public class Teleop extends LinearOpMode
             if (gamepad2.right_bumper){
                 if (isStyxDown){
                     styx.allUp();
+                    timer.safeDelay(200);
                     isStyxDown = false;
                 } else {
                     styx.allDown();
+                    timer.safeDelay(200);
                     isStyxDown = true;
                 }
             }
@@ -160,9 +164,11 @@ public class Teleop extends LinearOpMode
             if (gamepad2.a) {
                 if (isWobbleDown){
                     wobble_arm.up();
+                    timer.safeDelay(200);
                     isWobbleDown = false;
                 } else {
                     wobble_arm.down();
+                    timer.safeDelay(200);
                     isWobbleDown = true;
                 }
             }

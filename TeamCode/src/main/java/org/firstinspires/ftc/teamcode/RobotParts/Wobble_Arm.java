@@ -19,10 +19,10 @@ public class Wobble_Arm {
     }
 
     public void up(){
-        angler.setPosition(0.06);
+        angler.setPosition(0.03);
     }
 
-    public void down(){angler.setPosition(0.44);}
+    public void down(){angler.setPosition(-0.44);}
 
 
     public void automaticReleaseWobble(){

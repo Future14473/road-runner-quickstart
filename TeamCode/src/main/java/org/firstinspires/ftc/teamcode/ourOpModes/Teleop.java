@@ -25,6 +25,7 @@ public class Teleop extends LinearOpMode
     //Mecanum MecanumDrive;
 
     IMU imu;
+    SampleMecanumDrive drive;
     double headingZero = 0;
 
     public void runOpMode() throws InterruptedException {
@@ -44,14 +45,14 @@ public class Teleop extends LinearOpMode
         wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, telemetry);
+        drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         imu = drive.getIMU();
 
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
-        Pose2d startPose = new Pose2d(-60.8, 21.92, 0);
+        Pose2d startPose = new Pose2d(-60.8, 16.92, 0);
 
         drive.setPoseEstimate(startPose);
 
@@ -74,7 +75,8 @@ public class Teleop extends LinearOpMode
             }
 
             if (gamepad1.dpad_right){
-                toCollection = drive.trajectoryBuilder(drive.getPoseEstimate())
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+                toCollection = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
                         .splineTo(new Vector2d(2.9, 24.9), 0)
                         .build();
 
@@ -116,7 +118,7 @@ public class Teleop extends LinearOpMode
                 shooter.decreaseSpeed();
             }
 
-            shooter.setSpeed();
+            //shooter.setSpeed();
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;
@@ -189,6 +191,7 @@ public class Teleop extends LinearOpMode
                 )
         );
     }
+
 }
 
 

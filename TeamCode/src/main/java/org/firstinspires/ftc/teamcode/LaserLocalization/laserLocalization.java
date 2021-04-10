@@ -49,12 +49,12 @@ public class laserLocalization {
             if (heading < Math.toRadians(315) || heading > Math.toRadians(135))
                 position.scale(4, 6, -1, -1);
 
-            position.translate(-6, -6);
+            position.translate(-2, -6);
             position.scale(0, 0, 12, 12);
 
             point p = (point)position;
 
-            return new Pose2d(p.y, -p.x, heading);
+            return new Pose2d(-p.y, p.x, heading);
         }
 
         return null;

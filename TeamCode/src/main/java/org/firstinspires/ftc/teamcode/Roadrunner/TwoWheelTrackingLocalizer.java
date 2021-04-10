@@ -109,18 +109,18 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         if(hasVuforia && hasLaser){
             //*
-            Pose2d laserPose = lasers.update(heading); // do laser
-            if(laserPose != null){
-                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
-                this.setPoseEstimate(laserPose);
-            }else{
-                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
-                super.update();
-            }
-            /*/
+//            Pose2d laserPose = lasers.update(heading); // do laser
+//            if(laserPose != null){
+//                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
+//                this.setPoseEstimate(laserPose);
+//            }else{
+//                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
+//                super.update();
+//            }
+
             DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
             this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
-            //*/
+
         }
 
         if(!hasVuforia && !hasLaser){

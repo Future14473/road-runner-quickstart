@@ -39,4 +39,7 @@ public class Shooter {
     public void setSpeed(){
         shooter_motor.setVelocity(tarVelocity);
     }
+    public void stop(){
+        shooter_motor.setVelocity(0);
+    }
 }

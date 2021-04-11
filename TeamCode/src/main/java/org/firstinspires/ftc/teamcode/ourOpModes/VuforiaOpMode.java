@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
+package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,7 +14,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 
 @TeleOp(name="Vuforia Nav", group ="Concept")
-@Disabled
 public class VuforiaOpMode extends LinearOpMode {
     private static final float mmPerInch        = 25.4f;
     @Override

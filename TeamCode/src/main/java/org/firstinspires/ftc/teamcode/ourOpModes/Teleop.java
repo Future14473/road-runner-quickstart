@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -8,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
@@ -28,18 +28,16 @@ public class Teleop extends LinearOpMode
     SampleMecanumDrive drive;
     double headingZero = 0;
 
+    BluetoothConvenient BT;
+
     public void runOpMode() throws InterruptedException {
+         BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
         //MecanumDrive = new Mecanum(hardwareMap);
         RingCollector ringCollector = new RingCollector(hardwareMap);
-
         Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
-
-
         Shooter shooter = new Shooter(hardwareMap);
-
-        telemetry.addData("Status", "Initialized");
 
         //Reset wobble arm to up position
         wobble_arm.automaticReleaseWobble();
@@ -53,19 +51,22 @@ public class Teleop extends LinearOpMode
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
         Pose2d startPose = new Pose2d(-60.8, 16.92, 0);
-
         drive.setPoseEstimate(startPose);
 
         Trajectory toHighGoal;
-
         Trajectory toCollection;
-
         Trajectory toStart;
+
+        boolean debug_disable_shooter = true;
 
         waitForStart();
 
         while (opModeIsActive()){
-            telemetry.addData("Current Position", drive.getPoseEstimate());
+
+            Pose2d p = drive.getPoseEstimate();
+            telemetry.addData("Current Position", p);
+            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+
             if (gamepad1.dpad_up){
                 toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
                         .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
@@ -102,7 +103,6 @@ public class Teleop extends LinearOpMode
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
 
-
             if(gamepad2.dpad_left){
                 shooter.setHighGoalSpeed();
             }
@@ -118,7 +118,13 @@ public class Teleop extends LinearOpMode
                 shooter.decreaseSpeed();
             }
 
-            shooter.setSpeed();
+            if(gamepad1.right_stick_button)
+                debug_disable_shooter = !debug_disable_shooter;
+
+            if(debug_disable_shooter)
+                shooter.stop();
+            else
+                shooter.setSpeed();
 
             if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
                 x*= 1.0/3;
@@ -131,9 +137,6 @@ public class Teleop extends LinearOpMode
             }
 
             DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0, drive);
-
-
-
 
             ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
@@ -175,6 +178,8 @@ public class Teleop extends LinearOpMode
         }
 
 
+        BT.bluetoothClient.endHostSession();
+        BT.interpreter.input.forceEnd = true;
     }
 
     /*

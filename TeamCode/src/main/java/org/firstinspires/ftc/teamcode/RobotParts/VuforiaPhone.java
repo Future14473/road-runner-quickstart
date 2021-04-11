@@ -311,6 +311,6 @@ public class VuforiaPhone {
     public Pose2d matrixToPose(OpenGLMatrix location){
         VectorF translation = location.getTranslation();
         Orientation rotation = Orientation.getOrientation(location, EXTRINSIC, XYZ, RADIANS);
-        return new Pose2d(translation.get(0), translation.get(1), rotation.thirdAngle);
+        return new Pose2d(translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, rotation.thirdAngle);
     }
 }

@@ -228,12 +228,13 @@ public class Interpreter {
 
         // run from terminal input
         input = new scan() {
+
             @Override
             public boolean hasNext() {
-                while (nexttoks.size() == 0){
+                while (nexttoks.size() == 0 && !forceEnd){
 
                 }
-                return true;
+                return !forceEnd;
             }
 
             @Override
@@ -716,9 +717,10 @@ public class Interpreter {
         }
     }
 
-    interface scan{
-        boolean hasNext();
-        String next();
+    public abstract class scan{
+        public boolean forceEnd = false;
+        abstract boolean hasNext();
+        abstract String next();
     }
 
     String startup =

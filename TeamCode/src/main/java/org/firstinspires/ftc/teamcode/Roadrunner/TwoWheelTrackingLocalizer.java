@@ -81,6 +81,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
+    int vuforiaAvailableTimes = 0;
+
     // Insert Vuforia and Laser position overrides
     @Override
     public void update() {
@@ -88,8 +90,27 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         OpenGLMatrix vuLocation = vuforia.getLocation();
 
-        boolean hasVuforia = vuLocation!=null;
-        boolean hasLaser = lasers.isAccurate(heading);
+        if(vuLocation!=null)
+            vuforiaAvailableTimes++;
+        else
+            vuforiaAvailableTimes = 0;
+
+        boolean hasVuforia = !drive.following && vuLocation!=null && vuforiaAvailableTimes>5;
+        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading);
+
+        double poseVel = 0;
+        if(drive.getPoseVelocity() != null)
+            poseVel = Math.sqrt(
+                        drive.getPoseVelocity().getX()*drive.getPoseVelocity().getX() +
+                        drive.getPoseVelocity().getY()*drive.getPoseVelocity().getY() +
+                        drive.getPoseVelocity().getHeading()*drive.getPoseVelocity().getHeading()
+                );
+
+        // this only works when rr path is running, so not very useful
+        DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
+
+        if(hasVuforia)
+            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
 
         if(hasVuforia && !hasLaser){
             DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
@@ -108,7 +129,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         }
 
         if(hasVuforia && hasLaser){
-            //*
 //            Pose2d laserPose = lasers.update(heading); // do laser
 //            if(laserPose != null){
 //                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
@@ -120,10 +140,10 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
             DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
             this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
-
         }
 
         if(!hasVuforia && !hasLaser){
+            DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
             super.update();
         }
     }

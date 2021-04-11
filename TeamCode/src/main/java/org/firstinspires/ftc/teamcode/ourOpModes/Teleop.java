@@ -18,11 +18,10 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
 
-@TeleOp(name="AAA Teleop", group="Teleop")
+@TeleOp(name = "AAA Teleop", group = "Teleop")
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
-public class Teleop extends LinearOpMode
-{
+public class Teleop extends LinearOpMode {
     // Declare OpMode members.
     //Mecanum MecanumDrive;
 
@@ -45,7 +44,7 @@ public class Teleop extends LinearOpMode
         telemetry.addData("Status", "Initialized");
 
         //Reset wobble arm to up position
-        wobble_arm.automaticReleaseWobble();
+//        wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
 
         drive = new SampleMecanumDrive(hardwareMap, telemetry);
@@ -56,7 +55,7 @@ public class Teleop extends LinearOpMode
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
         Pose2d startPose = new Pose2d(-60.8, 16.92, 0);
-
+        styx.allDown();
         drive.setPoseEstimate(startPose);
 
         Trajectory toHighGoal;
@@ -69,13 +68,12 @@ public class Teleop extends LinearOpMode
         boolean isWobbleDown = false;
         boolean isStyxDown = true;
 
-        styx.allDown();
 
         waitForStart();
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
             telemetry.addData("Current Position", drive.getPoseEstimate());
-            if (gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
                         .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
                         .build();
@@ -83,8 +81,8 @@ public class Teleop extends LinearOpMode
                 drive.followTrajectory(toHighGoal);
             }
 
-            if (gamepad1.dpad_right){
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+            if (gamepad1.dpad_right) {
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
                 toCollection = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
                         .splineTo(new Vector2d(2.9, 24.9), 0)
                         .build();
@@ -92,10 +90,10 @@ public class Teleop extends LinearOpMode
                 drive.followTrajectory(toCollection);
             }
 
-            if (gamepad1.dpad_down){
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+            if (gamepad1.dpad_down) {
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
                 toStart = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(-60.8, 21.92), reverse?Math.PI:0)
+                        .splineTo(new Vector2d(-60.8, 21.92), reverse ? Math.PI : 0)
                         .build();
 
                 drive.followTrajectory(toStart);
@@ -112,79 +110,64 @@ public class Teleop extends LinearOpMode
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
 
 
-            if(gamepad2.dpad_left){
+            if (gamepad2.dpad_left) {
                 shooter.setHighGoalSpeed();
             }
 
-            if(gamepad2.dpad_right){
+            if (gamepad2.dpad_right) {
                 shooter.setPowerShotSpeed();
             }
 
-            if(gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 shooter.increaseSpeed();
-            }
-            else if(gamepad2.dpad_down){
+            } else if (gamepad2.dpad_down) {
                 shooter.decreaseSpeed();
             }
 
             shooter.setSpeed();
 
-            if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
-                x*= 1.0/3;
+            if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
+                x *= 1.0 / 3;
 //                y*= 1.0/3;
             }
 
-            if(gamepad2.right_stick_button){
+            if (gamepad2.right_stick_button) {
                 // high goal
                 //follower.goTo(-4, 22, -0.31);
             }
 
-            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0, drive);
-
-
+            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
 
 
             ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
-            if (gamepad2.left_bumper){
+            if (gamepad2.left_bumper) {
                 flicker.autoFlick();
             }
-            if (gamepad2.right_bumper){
-                if (isStyxDown){
-                    styx.allUp();
-                    timer.safeDelay(200);
-                    isStyxDown = false;
-                } else {
-                    styx.allDown();
-                    timer.safeDelay(200);
-                    isStyxDown = true;
-                }
+            if (gamepad2.right_bumper) {
+                styx.allUp();
+            } else {
+                styx.allDown();
             }
 
+
             if (gamepad2.a) {
-                if (isWobbleDown){
-                    wobble_arm.up();
-                    timer.safeDelay(200);
-                    isWobbleDown = false;
-                } else {
-                    wobble_arm.down();
-                    timer.safeDelay(200);
-                    isWobbleDown = true;
-                }
+                wobble_arm.down();
+            }
+            if (gamepad2.x) {
+                wobble_arm.grab();
+            }
+
+
+            if (gamepad2.y) {
+                wobble_arm.unGrab();
             }
 
             if (gamepad2.b) {
-                if (isWobbleGrab){
-                    wobble_arm.unGrab();
-                    isWobbleGrab = false;
-                } else {
-                    wobble_arm.grab();
-                    isWobbleGrab = true;
-                }
+                wobble_arm.up();
             }
 
-            if(gamepad1.dpad_up)
-            {
+            if (gamepad1.dpad_up) {
                 headingZero = imu.getHeading();
             }
 
@@ -199,8 +182,6 @@ public class Teleop extends LinearOpMode
             telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             telemetry.update();
         }
-
-
     }
 
     /*

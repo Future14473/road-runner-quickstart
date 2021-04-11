@@ -29,20 +29,16 @@ public class SideStyx {
         longDown();
     }
 
-    public void shortUp(){
+    private void shortDown(){
         shortStyx.setPosition(-0.5);
     }
 
-    public void shortDown(){
-        shortStyx.setPosition(1);
+    private void shortUp(){ shortStyx.setPosition(0.5); }
+
+    private void longDown(){
+        longStyx.setPosition(1);
     }
 
-    public void longUp(){
-        longStyx.setPosition(0.5);
-    }
-
-    public void longDown(){
-        longStyx.setPosition(-1);
-    }
+    private void longUp(){ longStyx.setPosition(-0.25); }
 }
 

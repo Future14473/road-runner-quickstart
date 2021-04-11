@@ -76,13 +76,13 @@ public class Teleop extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()){
+        while (opModeIsActive()) {
 
             Pose2d p = drive.getPoseEstimate();
             telemetry.addData("Current Position", p);
             //BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
-            if (gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
                         .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
                         .build();
@@ -133,10 +133,10 @@ public class Teleop extends LinearOpMode {
                 shooter.decreaseSpeed();
             }
 
-            if(gamepad1.right_stick_button)
+            if (gamepad1.right_stick_button)
                 debug_disable_shooter = !debug_disable_shooter;
 
-            if(debug_disable_shooter)
+            if (debug_disable_shooter)
                 shooter.stop();
             else
                 shooter.setSpeed();
@@ -152,8 +152,6 @@ public class Teleop extends LinearOpMode {
             }
 
             DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
-
-
 
 
             ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
@@ -199,6 +197,7 @@ public class Teleop extends LinearOpMode {
             telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             telemetry.update();
         }
+    }
 
     /*
      * For POSITIVE forward parameter: go forward

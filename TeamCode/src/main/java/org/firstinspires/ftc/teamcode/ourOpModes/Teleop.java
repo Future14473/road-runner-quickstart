@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -11,16 +12,17 @@ import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
+import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
 
-@TeleOp(name="AAA Teleop", group="Teleop")
+@TeleOp(name = "AAA Teleop", group = "Teleop")
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
-public class Teleop extends LinearOpMode
-{
+public class Teleop extends LinearOpMode {
     // Declare OpMode members.
     //Mecanum MecanumDrive;
 
@@ -35,12 +37,18 @@ public class Teleop extends LinearOpMode
 
         //MecanumDrive = new Mecanum(hardwareMap);
         RingCollector ringCollector = new RingCollector(hardwareMap);
+
         Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
+        SideStyx styx = new SideStyx(hardwareMap, telemetry);
+        Timing timer = new Timing(this);
+
         Shooter shooter = new Shooter(hardwareMap);
 
+        telemetry.addData("Status", "Initialized");
+
         //Reset wobble arm to up position
-        wobble_arm.automaticReleaseWobble();
+//        wobble_arm.automaticReleaseWobble();
         flicker.flickIn();
 
         drive = new SampleMecanumDrive(hardwareMap, telemetry);
@@ -51,13 +59,20 @@ public class Teleop extends LinearOpMode
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
         Pose2d startPose = new Pose2d(-60.8, 16.92, 0);
+        styx.allDown();
         drive.setPoseEstimate(startPose);
 
         Trajectory toHighGoal;
+
         Trajectory toCollection;
+
         Trajectory toStart;
 
         boolean debug_disable_shooter = true;
+
+        boolean isWobbleGrab = false;
+        boolean isWobbleDown = false;
+        boolean isStyxDown = true;
 
         waitForStart();
 
@@ -75,8 +90,8 @@ public class Teleop extends LinearOpMode
                 drive.followTrajectory(toHighGoal);
             }
 
-            if (gamepad1.dpad_right){
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+            if (gamepad1.dpad_right) {
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
                 toCollection = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
                         .splineTo(new Vector2d(2.9, 24.9), 0)
                         .build();
@@ -84,10 +99,10 @@ public class Teleop extends LinearOpMode
                 drive.followTrajectory(toCollection);
             }
 
-            if (gamepad1.dpad_down){
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI/2;
+            if (gamepad1.dpad_down) {
+                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
                 toStart = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(-60.8, 21.92), reverse?Math.PI:0)
+                        .splineTo(new Vector2d(-60.8, 21.92), reverse ? Math.PI : 0)
                         .build();
 
                 drive.followTrajectory(toStart);
@@ -103,18 +118,18 @@ public class Teleop extends LinearOpMode
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
 
-            if(gamepad2.dpad_left){
+
+            if (gamepad2.dpad_left) {
                 shooter.setHighGoalSpeed();
             }
 
-            if(gamepad2.dpad_right){
+            if (gamepad2.dpad_right) {
                 shooter.setPowerShotSpeed();
             }
 
-            if(gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 shooter.increaseSpeed();
-            }
-            else if(gamepad2.dpad_down){
+            } else if (gamepad2.dpad_down) {
                 shooter.decreaseSpeed();
             }
 
@@ -126,44 +141,52 @@ public class Teleop extends LinearOpMode
             else
                 shooter.setSpeed();
 
-            if (! (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0) ){
-                x*= 1.0/3;
+            if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
+                x *= 1.0 / 3;
 //                y*= 1.0/3;
             }
 
-            if(gamepad2.right_stick_button){
+            if (gamepad2.right_stick_button) {
                 // high goal
                 //follower.goTo(-4, 22, -0.31);
             }
 
-            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr/2 : 0, drive);
+            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
+
+
+
 
             ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
-            if (gamepad2.left_bumper){
+            if (gamepad2.left_bumper) {
                 flicker.autoFlick();
             }
-            if (gamepad2.right_bumper){
-                flicker.singleFlick();
+            if (gamepad2.right_bumper) {
+                styx.allUp();
+            } else {
+                styx.allDown();
             }
 
-            if (gamepad1.a) {
+
+            if (gamepad2.a) {
                 wobble_arm.down();
             }
-            if (gamepad1.b) {
-                wobble_arm.up();
-            }
-            if (gamepad1.right_bumper) {
+            if (gamepad2.x) {
                 wobble_arm.grab();
             }
-            if (gamepad1.left_bumper) {
+
+
+            if (gamepad2.y) {
                 wobble_arm.unGrab();
             }
 
-            if(gamepad1.dpad_up)
-            {
-                headingZero = imu.getHeading();
+            if (gamepad2.b) {
+                wobble_arm.up();
             }
+
+//            if (gamepad1.dpad_up) {
+//                headingZero = imu.getHeading();
+//            }
 
 //            telemetry.addData("Flicker Position", flicker.getPosition());
 //            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
@@ -176,11 +199,6 @@ public class Teleop extends LinearOpMode
             telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             telemetry.update();
         }
-
-
-        BT.bluetoothClient.endHostSession();
-        BT.interpreter.input.forceEnd = true;
-    }
 
     /*
      * For POSITIVE forward parameter: go forward

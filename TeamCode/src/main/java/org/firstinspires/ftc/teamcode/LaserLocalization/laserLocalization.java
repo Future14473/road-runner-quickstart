@@ -43,7 +43,12 @@ public class laserLocalization {
 
         DistanceSensorAlt.geom position = DistanceSensorAlt.calculate_location(left, right, front, back, heading, new scaleGraphics());
 
+        if(left > 1000 || right > 1000 || front > 1000 || back > 1000) //invalid readings
+            return null;
+
         if(position instanceof point) {
+            // hardcoded fine tuning
+            position.translate(-0.5, -0.25);
             //if [45, -135], reflect over y and x axes DON'T ASK ME WHY IT JUST WORKS
             heading = RotationUtil.mod(heading, 2 * Math.PI);
             if (heading < Math.toRadians(315) || heading > Math.toRadians(135))

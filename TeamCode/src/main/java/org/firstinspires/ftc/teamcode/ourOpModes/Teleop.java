@@ -31,7 +31,7 @@ public class Teleop extends LinearOpMode
     BluetoothConvenient BT;
 
     public void runOpMode() throws InterruptedException {
-         BT = new BluetoothConvenient(telemetry, hardwareMap, this);
+        //BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
         //MecanumDrive = new Mecanum(hardwareMap);
         RingCollector ringCollector = new RingCollector(hardwareMap);
@@ -65,7 +65,7 @@ public class Teleop extends LinearOpMode
 
             Pose2d p = drive.getPoseEstimate();
             telemetry.addData("Current Position", p);
-            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+            //BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
             if (gamepad1.dpad_up){
                 toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())

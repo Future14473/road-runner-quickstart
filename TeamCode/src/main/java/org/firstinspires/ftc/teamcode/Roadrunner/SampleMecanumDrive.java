@@ -62,7 +62,7 @@ import static org.firstinspires.ftc.teamcode.Roadrunner.DriveConstants.kV;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(6, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.89;
 
@@ -222,9 +222,11 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void followTrajectory(Trajectory trajectory) {
         following = true;
+        DirtyGlobalVariables.following = true;
         followTrajectoryAsync(trajectory);
         waitForIdle();
         following = false;
+        DirtyGlobalVariables.following = false;
     }
 
     public Pose2d getLastError() {

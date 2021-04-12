@@ -79,30 +79,34 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             Pose2d p = drive.getPoseEstimate();
+            double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
             telemetry.addData("Current Position", p);
             //BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
             if (gamepad1.dpad_up) {
-                toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .splineTo(new Vector2d(-6.5, 27.4), Math.toRadians(12.5))
+                boolean reverse = Math.abs(pnAngle) < Math.PI / 2
+                        && drive.getPoseEstimate().getX() > -6.5;
+                toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                        .splineTo(new Vector2d(-8.5, 27.4), reverse ? Math.PI + Math.toRadians(15.5): Math.toRadians(15.5))
                         .build();
 
                 drive.followTrajectory(toHighGoal);
             }
 
             if (gamepad1.dpad_right) {
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
+                boolean reverse = Math.abs(pnAngle) < Math.PI / 2
+                        && drive.getPoseEstimate().getX() > 2.9;
                 toCollection = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(2.9, 24.9), 0)
+                        .splineTo(new Vector2d(2.9, 24.9), reverse ? Math.PI: 0)
                         .build();
 
                 drive.followTrajectory(toCollection);
             }
 
             if (gamepad1.dpad_down) {
-                boolean reverse = Math.abs(drive.getPoseEstimate().getHeading()) < Math.PI / 2;
+                boolean reverse = Math.abs(pnAngle) < Math.PI / 2 ;
                 toStart = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(-60.8, 21.92), reverse ? Math.PI : 0)
+                        .splineTo(new Vector2d(-60.8, 16.92), reverse ? Math.PI: 0)
                         .build();
 
                 drive.followTrajectory(toStart);

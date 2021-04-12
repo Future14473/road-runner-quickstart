@@ -4,4 +4,5 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class DirtyGlobalVariables {
     public static Telemetry telemetry;
+    public static boolean following = false;
 }

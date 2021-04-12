@@ -19,10 +19,10 @@ public class Wobble_Arm {
         timer = new Timing(opMode);
     }
 
-    public void up(){ angler.setPosition(-0.8); } //b button
+    public void up(){ angler.setPosition(-0.9); } //b button
     // 0.44 goes all the way into the robot
 
-    public void down(){angler.setPosition(0.4);} // a button
+    public void down(){angler.setPosition(0.2);} // a button
 
 
     public void automaticReleaseWobble(){
@@ -50,7 +50,7 @@ public class Wobble_Arm {
     }
 
     public void grab() {
-        gripper.setPosition(0.5);
+        gripper.setPosition(0.55);
     }
 
     public double getAnglerPosition(){return angler.getPosition();}

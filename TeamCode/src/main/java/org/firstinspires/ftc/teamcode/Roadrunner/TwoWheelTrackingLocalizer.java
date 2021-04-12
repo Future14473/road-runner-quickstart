@@ -84,52 +84,41 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     int vuforiaAvailableTimes = 0;
 
     // Insert Vuforia and Laser position overrides
-    @Override
-    public void update() {
-        double heading = drive.getIMU().getHeading();
-
-        OpenGLMatrix vuLocation = vuforia.getLocation();
-
-        if(vuLocation!=null)
-            vuforiaAvailableTimes++;
-        else
-            vuforiaAvailableTimes = 0;
-
-        boolean hasVuforia = !drive.following && vuLocation!=null && vuforiaAvailableTimes>5;
-        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading);
-
-        double poseVel = 0;
-        if(drive.getPoseVelocity() != null)
-            poseVel = Math.sqrt(
-                        drive.getPoseVelocity().getX()*drive.getPoseVelocity().getX() +
-                        drive.getPoseVelocity().getY()*drive.getPoseVelocity().getY() +
-                        drive.getPoseVelocity().getHeading()*drive.getPoseVelocity().getHeading()
-                );
-
-        // this only works when rr path is running, so not very useful
-        DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
-
-        if(hasVuforia)
-            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
-
-        if(hasVuforia && !hasLaser){
-            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
-            this.setPoseEstimate(vuforia.matrixToPose(vuLocation));
-        }
-
-        if(!hasVuforia && hasLaser){
-            Pose2d laserPose = lasers.update(heading);
-            if(laserPose != null){
-                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
-                this.setPoseEstimate(laserPose);
-            }else{
-                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
-                super.update();
-            }
-        }
-
-        if(hasVuforia && hasLaser){
-//            Pose2d laserPose = lasers.update(heading); // do laser
+//    @Override
+//    public void update() {
+//        double heading = drive.getIMU().getHeading();
+//
+//        OpenGLMatrix vuLocation = vuforia.getLocation();
+//
+//        if(vuLocation!=null)
+//            vuforiaAvailableTimes++;
+//        else
+//            vuforiaAvailableTimes = 0;
+//
+//        boolean hasVuforia = !drive.following && vuLocation!=null && vuforiaAvailableTimes>5;
+//        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading);
+//
+//        double poseVel = 0;
+//        if(drive.getPoseVelocity() != null)
+//            poseVel = Math.sqrt(
+//                        drive.getPoseVelocity().getX()*drive.getPoseVelocity().getX() +
+//                        drive.getPoseVelocity().getY()*drive.getPoseVelocity().getY() +
+//                        drive.getPoseVelocity().getHeading()*drive.getPoseVelocity().getHeading()
+//                );
+//
+//        // this only works when rr path is running, so not very useful
+//        DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
+//
+////        if(hasVuforia)
+////            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
+//
+////        if(hasVuforia && !hasLaser){
+////            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
+////            this.setPoseEstimate(vuforia.matrixToPose(vuLocation));
+////        }
+//
+//        if(!hasVuforia && hasLaser){
+//            Pose2d laserPose = lasers.update(heading);
 //            if(laserPose != null){
 //                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
 //                this.setPoseEstimate(laserPose);
@@ -137,15 +126,46 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 //                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
 //                super.update();
 //            }
+//        }
+//
+//        if(hasVuforia && hasLaser){
+//            Pose2d laserPose = lasers.update(heading); // do laser
+////            if(laserPose != null){
+////                DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
+////                this.setPoseEstimate(laserPose);
+////            }else{
+////                DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
+////                super.update();
+////            }
+//
+//            DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
+//            this.setPoseEstimate(laserPose);
+////            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
+////            this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
+//        }
+//
+//        if(!hasVuforia && !hasLaser){
+//            DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
+//            super.update();
+//        }
 
-            DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
-            this.setPoseEstimate(vuforia.matrixToPose(vuLocation)); // do Vuforia
+//    }
+
+    @Override
+    public void update() {
+        double heading = drive.getIMU().getHeading();
+        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading);
+
+
+        if(!DirtyGlobalVariables.following && hasLaser) {
+            Pose2d laserPose = lasers.update(heading); // do laser
+            DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
+            this.setPoseEstimate(laserPose);
         }
-
-        if(!hasVuforia && !hasLaser){
-            DirtyGlobalVariables.telemetry.addData("Localization", "using Wheels");
+        else {
             super.update();
         }
+
     }
 
     //to [0, 360]

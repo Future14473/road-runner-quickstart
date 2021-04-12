@@ -20,7 +20,7 @@ public class ShooterFlicker {
         this.telemetry = telemetry;
     }
 
-    public double flickIn = 0.5, flickOut = 0.36;
+    public double flickIn = 0.52, flickOut = 0.36;
 
     public void flickIn() { // left bumper
         flicker.setPosition(flickIn);

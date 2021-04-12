@@ -168,8 +168,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
             this.setPoseEstimate(Objects.requireNonNull(laserPose, "Laser Pose is null"));
         }
         else {
+            DirtyGlobalVariables.telemetry.addData("Localization", "using WHEELS");
             super.update();
         }
+
+//        DirtyGlobalVariables.telemetry.addData("Localization", "using WHEELS lasers disabled");
+//        super.update();
 
     }
 

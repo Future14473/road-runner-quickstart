@@ -31,7 +31,7 @@ public class laserLocalization {
         heading = RotationUtil.mod(heading, Math.PI*2);
         heading %= Math.PI/2;
         double diff = Math.abs(heading - Math.PI/4);
-        return diff > Math.toRadians(15);
+        return diff > Math.toRadians(5);
     }
 
     public Pose2d update(double heading){

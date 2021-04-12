@@ -222,11 +222,9 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     public void followTrajectory(Trajectory trajectory) {
         following = true;
-        DirtyGlobalVariables.following = true;
         followTrajectoryAsync(trajectory);
         waitForIdle();
         following = false;
-        DirtyGlobalVariables.following = false;
     }
 
     public Pose2d getLastError() {

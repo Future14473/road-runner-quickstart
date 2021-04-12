@@ -156,10 +156,13 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public void update() {
         double heading = drive.getIMU().getHeading();
 
+        DirtyGlobalVariables.telemetry.addData("Is following", drive.following);
+        DirtyGlobalVariables.telemetry.addData("Is accurate", laserLocalization.isAccurate(heading));
+
         Pose2d laserPose = lasers.update(Objects.requireNonNull(heading, "Heading is null")); // do laser
         boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading) && (laserPose != null);
 
-        DirtyGlobalVariables.telemetry.addData("Is following", drive.following);
+
         if(hasLaser) {
             DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
             this.setPoseEstimate(Objects.requireNonNull(laserPose, "Laser Pose is null"));

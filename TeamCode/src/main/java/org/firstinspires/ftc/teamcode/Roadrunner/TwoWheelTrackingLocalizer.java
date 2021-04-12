@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.util.Encoder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:
@@ -154,13 +155,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     @Override
     public void update() {
         double heading = drive.getIMU().getHeading();
-        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading);
 
+        Pose2d laserPose = lasers.update(Objects.requireNonNull(heading, "Heading is null")); // do laser
+        boolean hasLaser = !drive.following && laserLocalization.isAccurate(heading) && (laserPose != null);
 
-        if(!DirtyGlobalVariables.following && hasLaser) {
-            Pose2d laserPose = lasers.update(heading); // do laser
+        DirtyGlobalVariables.telemetry.addData("Is following", drive.following);
+        if(hasLaser) {
             DirtyGlobalVariables.telemetry.addData("Localization", "using Lasers");
-            this.setPoseEstimate(laserPose);
+            this.setPoseEstimate(Objects.requireNonNull(laserPose, "Laser Pose is null"));
         }
         else {
             super.update();

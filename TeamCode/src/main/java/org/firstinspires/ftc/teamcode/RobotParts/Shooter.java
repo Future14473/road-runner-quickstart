@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Shooter {
     DcMotorEx shooter_motor;
-    int powerShotSpeed = 1670, highGoalSpeed = 1670;
+    int powerShotSpeed = 1670, highGoalSpeed = 1650;
     int tarVelocity = highGoalSpeed;
 
     public Shooter(HardwareMap hardwareMap){

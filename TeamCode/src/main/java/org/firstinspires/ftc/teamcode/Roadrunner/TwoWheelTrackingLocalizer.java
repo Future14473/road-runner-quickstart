@@ -52,7 +52,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
     private static final float mmPerInch        = 25.4f;
 
-    VuforiaPhone vuforia;
+//    VuforiaPhone vuforia;
     laserLocalization lasers;
 
     // Parallel/Perpendicular to the forward axis
@@ -69,8 +69,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         lasers = new laserLocalization(hardwareMap);
-        vuforia = new VuforiaPhone(hardwareMap);
-        vuforia.beginTracking();
+//        vuforia = new VuforiaPhone(hardwareMap);
+//        vuforia.beginTracking();
 
         this.drive = drive;
 

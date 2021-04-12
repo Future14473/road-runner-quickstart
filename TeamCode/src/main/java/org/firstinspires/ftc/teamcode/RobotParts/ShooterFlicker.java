@@ -57,7 +57,7 @@ public class ShooterFlicker {
     int waitTime = 200;
 
     public void autoFlick() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 3; i++) {
             flickOut();
             timer.safeDelay(waitTime);
             flickIn();

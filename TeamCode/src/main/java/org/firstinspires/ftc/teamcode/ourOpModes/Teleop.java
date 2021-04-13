@@ -117,7 +117,10 @@ public class Teleop extends LinearOpMode {
             double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
-
+            if (gamepad1.left_bumper) {
+                turnPwr = gamepad1.left_stick_x;
+                x *= 0.3;
+            }
 
             if (gamepad2.dpad_left) {
                 shooter.setHighGoalSpeed();
@@ -185,7 +188,6 @@ public class Teleop extends LinearOpMode {
 //            if (gamepad1.dpad_up) {
 //                headingZero = imu.getHeading();
 //            }
-
 //            telemetry.addData("Flicker Position", flicker.getPosition());
 //            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
 //            telemetry.addData("Is Flick Out", (MathStuff.isEqual(flicker.getPosition(), flicker.flickOut)));

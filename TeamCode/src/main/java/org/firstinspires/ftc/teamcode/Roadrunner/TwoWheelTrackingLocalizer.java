@@ -104,8 +104,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         DirtyGlobalVariables.telemetry.addData("In Path?", drive.following);
 
-        if(hasVuforia)
-            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
+//        if(hasVuforia && !drive.following)
+//            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
 
         if(drive.following){
 //            if(hasVuforia){
@@ -136,7 +136,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     void doVuforia(OpenGLMatrix vuLocation){
         DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
-        this.setPoseEstimateForce(vuforia.matrixToPose(vuLocation));
+        Pose2d tempPose = vuforia.matrixToPose(vuLocation);
+        this.setPoseEstimateForce(new Pose2d(tempPose.getX(), tempPose.getY(), this.getHeading()));
     }
 
     void doLaser(double heading){

@@ -76,7 +76,7 @@ public class Teleop extends LinearOpMode {
 
             Pose2d p = drive.getPoseEstimate();
             double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
-            telemetry.addData("Current Position", p);
+            DirtyGlobalVariables.telemetry.addData("Current Position", p);
             BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
             if (gamepad1.dpad_up) {
@@ -195,7 +195,7 @@ public class Teleop extends LinearOpMode {
 
             //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
-            telemetry.update();
+            DirtyGlobalVariables.telemetry.update();
         }
     }
 

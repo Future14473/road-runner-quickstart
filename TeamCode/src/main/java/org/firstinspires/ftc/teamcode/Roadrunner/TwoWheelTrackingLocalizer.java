@@ -108,16 +108,17 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
             drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
 
         if(drive.following){
-            if(hasVuforia){
-                doVuforia(vuLocation);
-            }else{
-                super.update();
-            }
+//            if(hasVuforia){
+//                doVuforia(vuLocation);
+//            }else{
+            super.update();
+//            }
         }else{
             if(hasVuforia){
                 doVuforia(vuLocation);
             }else{
-                doLaser(heading);
+                super.update();
+                //doLaser(heading);
             }
         }
     }

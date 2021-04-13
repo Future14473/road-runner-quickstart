@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
-import org.firstinspires.ftc.teamcode.ourOpModes.robotParts.RingCollector;
+import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
 //@Disabled
@@ -33,15 +32,12 @@ public class Teleop extends LinearOpMode {
     BluetoothConvenient BT;
 
     public void runOpMode() throws InterruptedException {
-        //BT = new BluetoothConvenient(telemetry, hardwareMap, this);
+        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
-        //MecanumDrive = new Mecanum(hardwareMap);
         RingCollector ringCollector = new RingCollector(hardwareMap);
-
         Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
-        Timing timer = new Timing(this);
 
         Shooter shooter = new Shooter(hardwareMap);
 
@@ -81,7 +77,7 @@ public class Teleop extends LinearOpMode {
             Pose2d p = drive.getPoseEstimate();
             double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
             telemetry.addData("Current Position", p);
-            //BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
             if (gamepad1.dpad_up) {
                 boolean reverse = Math.abs(pnAngle) < Math.PI / 2
@@ -197,8 +193,8 @@ public class Teleop extends LinearOpMode {
 //            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
 //            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
-            telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
-            telemetry.addData("Target Velocity", shooter.getTargetVelocity());
+            //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
+            //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             telemetry.update();
         }
     }

@@ -168,7 +168,7 @@ public class BluetoothDebug extends LinearOpMode
             {
                 shooter.setVelocity(0);
             }
-            telemetry.addData("Shooter Velocity", shooter.getVelocity());
+            //telemetry.addData("Shooter Velocity", shooter.getVelocity());
 
             // shooter gate
 //        gate.setPower(0);

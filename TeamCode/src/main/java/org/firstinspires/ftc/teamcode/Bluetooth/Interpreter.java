@@ -510,7 +510,9 @@ public class Interpreter {
             for(int i=0; i<params.length;i++){
                 int stackElem = stack.pop();
                 // stack has object address or integer?
-                params[i] = (stackElem < 0)? objects.get(-stackElem-1):stackElem;
+                //params[i] = (stackElem < 0)? objects.get(-stackElem-1):stackElem;
+                params[i] = stackElem;
+
             }
             // invoke
             Object returnval = themethod.invoke(actor, params);

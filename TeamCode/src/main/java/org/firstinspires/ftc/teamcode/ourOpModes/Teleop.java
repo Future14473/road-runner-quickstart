@@ -31,11 +31,13 @@ public class Teleop extends LinearOpMode {
 
     BluetoothConvenient BT;
 
+    Wobble_Arm wobble_arm;
+
     public void runOpMode() throws InterruptedException {
         BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
         RingCollector ringCollector = new RingCollector(hardwareMap);
-        Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
+        wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
@@ -66,47 +68,29 @@ public class Teleop extends LinearOpMode {
 
         boolean debug_disable_shooter = true;
 
-        boolean isWobbleGrab = false;
-        boolean isWobbleDown = false;
-        boolean isStyxDown = true;
+        boolean ringCollecting = false;
+        boolean ringCollectButtonWasPressed = false;
+
+        boolean shooterEnabled = false;
+        boolean shooterEnableButtonWasPressed = false;
 
         waitForStart();
 
         while (opModeIsActive()) {
 
             Pose2d p = drive.getPoseEstimate();
-            double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+            //double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
             DirtyGlobalVariables.telemetry.addData("Current Position", p);
             BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
-            if (gamepad1.dpad_up) {
-                boolean reverse = Math.abs(pnAngle) < Math.PI / 2
-                        && drive.getPoseEstimate().getX() > -6.5;
-                toHighGoal = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(-8.5, 27.4), reverse ? Math.PI + Math.toRadians(15.5): Math.toRadians(15.5))
-                        .build();
+            if (gamepad1.dpad_up)
+                goTo(-8, 34.0, Math.toRadians(15.5));
 
-                drive.followTrajectory(toHighGoal);
-            }
+            if (gamepad1.dpad_right)
+                goTo(2.9, 24.9, Math.toRadians(0));
 
-            if (gamepad1.dpad_right) {
-                boolean reverse = Math.abs(pnAngle) < Math.PI / 2
-                        && drive.getPoseEstimate().getX() > 2.9;
-                toCollection = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(2.9, 24.9), reverse ? Math.PI: 0)
-                        .build();
-
-                drive.followTrajectory(toCollection);
-            }
-
-            if (gamepad1.dpad_down) {
-                boolean reverse = Math.abs(pnAngle) < Math.PI / 2 ;
-                toStart = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                        .splineTo(new Vector2d(-60.8, 16.92), reverse ? Math.PI: 0)
-                        .build();
-
-                drive.followTrajectory(toStart);
-            }
+            if (gamepad1.dpad_down)
+                goTo(-60.8, 16.92, Math.toRadians(0));
 
             drive.update();
 
@@ -136,8 +120,9 @@ public class Teleop extends LinearOpMode {
                 shooter.decreaseSpeed();
             }
 
-            if (gamepad1.right_stick_button)
+            if(gamepad1.right_stick_button){
                 debug_disable_shooter = !debug_disable_shooter;
+            }
 
             if (debug_disable_shooter)
                 shooter.stop();
@@ -156,8 +141,7 @@ public class Teleop extends LinearOpMode {
 
             DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
 
-
-            ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
+            ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
 
             if (gamepad2.left_bumper) {
                 flicker.autoFlick();
@@ -199,6 +183,26 @@ public class Teleop extends LinearOpMode {
             //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             DirtyGlobalVariables.telemetry.update();
         }
+    }
+
+    public void wobble_forth(int pos){
+        wobble_arm.angler.setPosition(pos/10.0);
+    }
+
+    public void goto_forth(int x, int y, int heading){
+        goTo(x/10.0, y/10.0, Math.toRadians(heading));
+    }
+
+    void goTo(double x, double y, double heading){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+        ;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .splineTo(new Vector2d(x, y), reverse ? Math.PI + heading: heading)
+                .build();
+
+        drive.followTrajectory(destination);
     }
 
     /*

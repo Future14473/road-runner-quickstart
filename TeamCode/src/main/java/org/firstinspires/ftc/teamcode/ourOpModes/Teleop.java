@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -91,6 +92,15 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad1.dpad_down)
                 goTo(-60.8, 16.92, Math.toRadians(0));
+
+            if(gamepad1.y)
+                goTo(-3.78, 15.42, Math.toRadians(18.27));
+
+            if(gamepad1.x) // 11.5 degs
+                turnTo(11.5);
+
+            if(gamepad1.a) // 2.5 degs
+                turnTo(2.5);
 
             drive.update();
 
@@ -203,6 +213,18 @@ public class Teleop extends LinearOpMode {
                 .build();
 
         drive.followTrajectory(destination);
+    }
+
+    void turnTo(double heading){
+        double curr_heading = drive.getPoseEstimate().getHeading();
+        double delta_heading = RotationUtil.turnLeftOrRight(curr_heading, Math.toRadians(heading), Math.PI*2);
+        Trajectory direction =
+                drive.trajectoryBuilder(
+                        drive.getPoseEstimate().plus(
+                                new Pose2d(0, 0,delta_heading)))
+                        .build();
+
+        drive.followTrajectory(direction);
     }
 
     /*

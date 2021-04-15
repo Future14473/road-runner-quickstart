@@ -39,7 +39,7 @@ public class Teleop extends LinearOpMode {
     Wobble_Arm wobble_arm;
 
     public void runOpMode() throws InterruptedException {
-        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
+//        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
         RingCollector ringCollector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
@@ -48,7 +48,6 @@ public class Teleop extends LinearOpMode {
 
         Shooter shooter = new Shooter(hardwareMap);
 
-        telemetry.addData("Status", "Initialized");
 
         //Reset wobble arm to up position
 //        wobble_arm.automaticReleaseWobble();
@@ -82,11 +81,10 @@ public class Teleop extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
             Pose2d p = drive.getPoseEstimate();
             //double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
-            DirtyGlobalVariables.telemetry.addData("Current Position", p);
-            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+//            DirtyGlobalVariables.telemetry.addData("Current Position", p);
+//            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
 
             if (gamepad1.dpad_up)
                 goTo(-8, 34.0, Math.toRadians(15.5));
@@ -195,7 +193,7 @@ public class Teleop extends LinearOpMode {
 //            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
 //            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
 
-            //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
+            telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             DirtyGlobalVariables.telemetry.update();
         }

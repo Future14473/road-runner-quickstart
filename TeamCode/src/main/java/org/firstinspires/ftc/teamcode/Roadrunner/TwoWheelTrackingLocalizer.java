@@ -111,12 +111,16 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 //            if(hasVuforia){
 //                doVuforia(vuLocation);
 //            }else{
+            DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
+
             super.update();
 //            }
         }else{
             if(hasVuforia){
+                DirtyGlobalVariables.telemetry.addData("Localization", "vuforia");
                 doVuforia(vuLocation);
             }else{
+                DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
                 super.update();
                 //doLaser(heading);
             }

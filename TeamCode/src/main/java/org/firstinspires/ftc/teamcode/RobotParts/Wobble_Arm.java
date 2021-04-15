@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
 public class Wobble_Arm {
-    Servo angler;
+    public Servo angler;
     Servo gripper;
     Timing timer;
     public Boolean isGrabbing = false; //todo make not public
@@ -19,10 +19,10 @@ public class Wobble_Arm {
         timer = new Timing(opMode);
     }
 
-    public void up(){ angler.setPosition(-0.9); } //b button
+    public void up(){ angler.setPosition(0.5); } //b button
     // 0.44 goes all the way into the robot
 
-    public void down(){angler.setPosition(0.2);} // a button
+    public void down(){angler.setPosition(0.75);} // a button
 
 
     public void automaticReleaseWobble(){
@@ -50,7 +50,7 @@ public class Wobble_Arm {
     }
 
     public void grab() {
-        gripper.setPosition(0.55);
+        gripper.setPosition(0.51);
     }
 
     public double getAnglerPosition(){return angler.getPosition();}

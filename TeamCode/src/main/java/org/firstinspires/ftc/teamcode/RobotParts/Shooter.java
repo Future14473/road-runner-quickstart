@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ourOpModes.DirtyGlobalVariables;
 
 public class Shooter {
     DcMotorEx shooter_motor;
-    int powerShotSpeed = 1310, highGoalSpeed = 1650;
+    int powerShotSpeed = 1350, highGoalSpeed = 1650;
     int tarVelocity = highGoalSpeed;
 
     public Shooter(HardwareMap hardwareMap){
@@ -48,6 +48,6 @@ public class Shooter {
         shooter_motor.setVelocity(tarVelocity);
     }
     public void stop(){
-        shooter_motor.setVelocity(0);
+        tarVelocity = 0;
     }
 }

@@ -34,7 +34,7 @@ public class Teleop extends LinearOpMode {
     SampleMecanumDrive drive;
     double headingZero = 0;
 
-    BluetoothConvenient BT;
+//    BluetoothConvenient BT;
 
     Wobble_Arm wobble_arm;
 

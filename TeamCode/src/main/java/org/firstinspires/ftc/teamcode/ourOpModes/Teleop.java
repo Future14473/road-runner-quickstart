@@ -140,8 +140,8 @@ public class Teleop extends LinearOpMode {
 
             if (debug_disable_shooter)
                 shooter.stop();
-            else
-                shooter.setSpeed();
+
+            shooter.setSpeed();
 
             if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
                 x *= 1.0 / 3;

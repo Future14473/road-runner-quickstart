@@ -150,6 +150,7 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_button) {
+
                 // high goal
                 //follower.goTo(-4, 22, -0.31);
             }

@@ -78,16 +78,17 @@ public class Detection extends OpenCvPipeline {
         picSetup(input);
         stack = finalRings();
 //        output = markWobble(input, find_wobble(formatted, "blue"));
-        output = markRings(input, find_rings(formatted));
+        //output = markRings(input, find_rings(formatted));
+
         CountRings(find_rings(formatted));
 
-        telemetry.addData("angle", Math.toDegrees(angle));
-        telemetry.addData("distance", distance);
+        //telemetry.addData("angle", Math.toDegrees(angle));
+        //telemetry.addData("distance", distance);
         telemetry.addData("ring count", stack);
         telemetry.update();
 
         formatted.release();
-        return output;
+        return input;
     }
 
     // Setting up the picture to have a height of 960 pix and recoloring to BGR

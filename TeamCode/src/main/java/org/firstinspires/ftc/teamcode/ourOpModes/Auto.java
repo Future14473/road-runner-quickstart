@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
+import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
@@ -20,6 +22,9 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Objects;
 
@@ -40,6 +45,22 @@ public class Auto extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 //        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
+
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
+                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+        Detection detector = new Detection(telemetry);
+
+
+        webcam.setPipeline(detector);
+
+        //Opening and Streaming from Camera
+
+        webcam.openCameraDeviceAsync(() -> {
+            webcam.startStreaming(352, 288, OpenCvCameraRotation.UPRIGHT);
+        });
 
         RingCollector ringCollector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, this);
@@ -89,12 +110,36 @@ public class Auto extends LinearOpMode {
         }).start();
 
         int whichPowerShot = 0;
+        /*
+        if(detector.stack == 0){
+            goTo(46,13.2,0.3);
+        }
+        else if(detector.stack == 1){
+            goTo(35,18,0.42);
+        }
+        else{
+
+        }
+        */
+
+
+
 
         while (opModeIsActive()) {
             Pose2d p = drive.getPoseEstimate();
             //double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
 //            DirtyGlobalVariables.telemetry.addData("Current Position", p);
 //            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+
+            if (gamepad1.a){
+                goTo(27,42,0);
+            }
+            if (gamepad1.b){
+                goTo(51,18,0);
+            }
+            if (gamepad1.right_bumper){
+                goTo(68,42,0);
+            }
 
             if (gamepad1.dpad_up)
                 goTo(-8, 34.0, Math.toRadians(15.5));
@@ -118,6 +163,8 @@ public class Auto extends LinearOpMode {
                 flicker.singleFlick();
 
             }
+
+//            if (gamepad1.)
 
             if(gamepad1.x){
                 shooter.stop();
@@ -226,6 +273,8 @@ public class Auto extends LinearOpMode {
             //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             DirtyGlobalVariables.telemetry.update();
         }
+        webcam.stopStreaming();
+
     }
 
     public void wobble_forth(int pos){

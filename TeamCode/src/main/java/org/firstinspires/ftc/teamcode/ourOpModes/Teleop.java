@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -18,6 +20,8 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
+
+import java.util.Objects;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
 //@Disabled
@@ -57,7 +61,7 @@ public class Teleop extends LinearOpMode {
 
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
-        Pose2d startPose = new Pose2d(-60.8, 16.92, 0);
+        Pose2d startPose = new Pose2d(-54.5, 20, 0);
         styx.allDown();
         drive.setPoseEstimate(startPose);
 
@@ -94,13 +98,15 @@ public class Teleop extends LinearOpMode {
                 goTo(-60.8, 16.92, Math.toRadians(0));
 
             if(gamepad1.y)
-                goTo(-3.78, 15.42, Math.toRadians(18.27));
+                goTo(-3.78, 15.42, Math.toRadians(17.27));
 
             if(gamepad1.x) // 11.5 degs
-                turnTo(11.5);
+                goTo(-3.78, 15.42, Math.toRadians(9.5));
+//                goTo(-3.78,15.42, Math.toRadians(9.5));
 
             if(gamepad1.a) // 2.5 degs
-                turnTo(2.5);
+                goTo(-3.78, 15.42, Math.toRadians(6.5));
+//                goTo(-3.78,15.42, Math.toRadians(6.5));
 
             drive.update();
 
@@ -214,18 +220,34 @@ public class Teleop extends LinearOpMode {
 
         drive.followTrajectory(destination);
     }
+    void turnStrong(double targetDir){
+        PIDFController pid = new PIDFController(new PIDCoefficients(10, 2, 4), 0, 0);
+        pid.setTargetPosition(0);
+        double heading;
+        while ( (heading=imu.getHeading()+10) < Math.toRadians(5) && opModeIsActive()){
+            double pwr = pid.update(-RotationUtil.turnLeftOrRight(heading, targetDir, Math.PI*2));
 
-    void turnTo(double heading){
-        double curr_heading = drive.getPoseEstimate().getHeading();
-        double delta_heading = RotationUtil.turnLeftOrRight(curr_heading, Math.toRadians(heading), Math.PI*2);
-        Trajectory direction =
-                drive.trajectoryBuilder(
-                        drive.getPoseEstimate().plus(
-                                new Pose2d(0, 0,delta_heading)))
-                        .build();
+            DRIVE(0, 0, -pwr, drive);
+        }
 
-        drive.followTrajectory(direction);
     }
+
+//    void turnTo(double heading){
+//        double curr_heading = Objects.requireNonNull(drive.getPoseEstimate().getHeading(), "Curr heading is null");
+//        double delta_heading = Objects.requireNonNull((RotationUtil.turnLeftOrRight(curr_heading, Math.toRadians(heading), Math.PI*2)),"delta heading null");
+//        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
+//                .splineTo(new Vector2d(x, y), reverse ? Math.PI + heading: heading)
+//                .build();
+//        Trajectory direction =
+//                drive.trajectoryBuilder(drive.getPoseEstimate())
+//                        .splineTo(
+//                        new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), delta_heading)
+//                )
+//
+//                        .build();
+//
+//        drive.turn(delta_heading);
+//    }
 
     /*
      * For POSITIVE forward parameter: go forward

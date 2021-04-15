@@ -1,16 +1,24 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import android.util.Log;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+
+import org.firstinspires.ftc.teamcode.ourOpModes.DirtyGlobalVariables;
 
 public class Shooter {
     DcMotorEx shooter_motor;
-    int powerShotSpeed = 1500, highGoalSpeed = 1650;
+    int powerShotSpeed = 1310, highGoalSpeed = 1650;
     int tarVelocity = highGoalSpeed;
 
     public Shooter(HardwareMap hardwareMap){
         shooter_motor = hardwareMap.get(DcMotorEx.class, "shooter");
         shooter_motor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        Log.e("PIDF Shooter vals", String.valueOf(shooter_motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER)));
+        shooter_motor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(10,3,4,0));
     }
 
     public double getShooterVelocity(){

@@ -72,8 +72,11 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         lasers = new laserLocalization(hardwareMap);
-        vuforia = new VuforiaPhone(hardwareMap);
-        vuforia.beginTracking();
+        new Thread(()->{
+            vuforia = new VuforiaPhone(hardwareMap);
+            vuforia.beginTracking();
+        });
+
 
         this.drive = drive;
 
@@ -91,7 +94,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public void update() {
         double heading = drive.getIMU().getHeading();
 
-        OpenGLMatrix vuLocation = vuforia.getLocation();
+//        OpenGLMatrix vuLocation = vuforia.getLocation();
+        OpenGLMatrix vuLocation = null;
         if(vuLocation!=null)
             vuforiaAvailableTimes++;
         else

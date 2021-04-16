@@ -2,33 +2,36 @@ package org.firstinspires.ftc.teamcode.ourOpModes.OldOpmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(group = "drive")
-@Disabled
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(group = "teleop")
 public class wobble_test extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Wobble_Arm wobble_arm = new Wobble_Arm(hardwareMap, this);
+        DcMotorEx wobble_arm = hardwareMap.get(DcMotorEx.class, "wobble_angler");
+        wobble_arm.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
 
         waitForStart();
         while (opModeIsActive()){
-            telemetry.addData("Wobble angler", wobble_arm.getAnglerPosition());
+            wobble_arm.setPower(10);
+            telemetry.addData("Velocity", wobble_arm.getVelocity());
+            telemetry.addData("Wobble angler", wobble_arm.getCurrentPosition());
             telemetry.update();
+
             if (gamepad1.a) {
-                wobble_arm.down();
+                wobble_arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                wobble_arm.setTargetPosition(0);
             }
             if (gamepad1.b) {
-                wobble_arm.up();
+                wobble_arm.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+                wobble_arm.setTargetPosition(700);
             }
-            if (gamepad1.right_bumper) {
-                wobble_arm.grab();
-            }
-            if (gamepad1.left_bumper) {
-                wobble_arm.unGrab();
-            }
+
         }
     }
 }

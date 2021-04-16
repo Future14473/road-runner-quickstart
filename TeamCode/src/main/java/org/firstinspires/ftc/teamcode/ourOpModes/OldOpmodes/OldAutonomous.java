@@ -1,3 +1,4 @@
+/*
 // old autonomous op mode
 //package org.firstinspires.ftc.teamcode.ourOpModes;
 //
@@ -134,14 +135,14 @@ public class OldAutonomous extends LinearOpMode {
         telemetry.addData("Autonomous", "Hold A for manual control");
         telemetry.update();
 
-        /*
          * Start robot like this. Make sure heading is aligned.
          *        WALL
          * -----------------------
          *      |           |
          *Tape->|   HERE    | <- Tape
          *      |           |
-         */
+
+
 
         waitForStart();
         shooter.setPower(-0.87);
@@ -249,13 +250,13 @@ public class OldAutonomous extends LinearOpMode {
         // follower.goTo(4.5, 28.5, -0.07);
     }
 
-    /*
     Notes for shooting, shoot 2 and 3 are not tested yet
     The idea is to separate the 3 rings into 3 different sections:
         1st ring: Second Roller only, place on the shooter entrance but not touching the fly wheel
         2nd ring: Second Roller and Taco, place between the taco and second roller
         3rd ring: Second Roller and Taco, place between intake and taco entrance
-    */
+
+
 
 
     volatile int shooter_vel = 0;
@@ -332,7 +333,6 @@ public class OldAutonomous extends LinearOpMode {
     //follower.austinStop();
 
 
-    /*
     while (!isStopRequested()) {
             telemetry.addData("Follower Position", follower.getPositionOdoTest().toString());
 //            follower.debugGoTo(new PathPoint(0,10,0));
@@ -350,5 +350,7 @@ public class OldAutonomous extends LinearOpMode {
             telemetry.update();
 
         }
-     */
+
+
 }
+*/

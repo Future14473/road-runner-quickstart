@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -44,3 +45,4 @@ public class VuforiaOpMode extends LinearOpMode {
         vuforia.stopTracking();
     }
 }
+*/

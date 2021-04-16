@@ -22,4 +22,11 @@ public class Timing {
             //wait
         }
     }
+
+    public void execAsync(Runnable r, long delayMilis){
+        new Thread(()->{
+            safeDelay(delayMilis);
+            r.run();
+        }).start();
+    }
 }

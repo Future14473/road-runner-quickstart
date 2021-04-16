@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
+import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
@@ -45,18 +46,25 @@ public class Auto extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 //        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
                 getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        int[] viewportContainerIds = OpenCvCameraFactory.getInstance().splitLayoutForMultipleViewports(cameraMonitorViewId,
+                2, OpenCvCameraFactory.ViewportSplitMethod.HORIZONTALLY);
+
         OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
-                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+                createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), viewportContainerIds[1]);
 
         Detection detector = new Detection(telemetry);
 
+        VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
 
         webcam.setPipeline(detector);
 
-        //Opening and Streaming from Camera
+
+        DirtyGlobalVariables.vuforia = vuforiaPhone;
+        DirtyGlobalVariables.vuforia.beginTracking();
+
+//        Opening and Streaming from Camera
 
         webcam.openCameraDeviceAsync(() -> {
             webcam.startStreaming(352, 288, OpenCvCameraRotation.UPRIGHT);
@@ -68,7 +76,7 @@ public class Auto extends LinearOpMode {
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
         Shooter shooter = new Shooter(hardwareMap);
-
+        shooter.stop();
 
         //Reset wobble arm to up position
 //        wobble_arm.automaticReleaseWobble();
@@ -85,27 +93,14 @@ public class Auto extends LinearOpMode {
         styx.allDown();
         drive.setPoseEstimate(startPose);
 
-        Trajectory toHighGoal;
-
-        Trajectory toCollection;
-
-        Trajectory toStart;
-
         boolean debug_disable_shooter = true;
 
-        boolean ringCollecting = false;
-        boolean ringCollectButtonWasPressed = false;
-
-        boolean shooterEnabled = false;
-        boolean shooterEnableButtonWasPressed = false;
-
         waitForStart();
-
+        webcam.stopStreaming();
         new Thread(()->{
             while (opModeIsActive()) {
                 shooter.setSpeed();
-                telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
-                telemetry.update();
+                //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             }
         }).start();
 
@@ -130,6 +125,10 @@ public class Auto extends LinearOpMode {
             //double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
 //            DirtyGlobalVariables.telemetry.addData("Current Position", p);
 //            BT.bluetoothClient.send(String.format("\\xyrplot %.2f %.2f %.2f\n", -p.getY()/12.0 + 6, p.getX()/12.0 + 6 , p.getHeading()));
+
+            if (gamepad1.right_trigger > 0.2){
+                goTo(-24,28,Math.PI);
+            }
 
             if (gamepad1.a){
                 goTo(27,42,0);
@@ -220,15 +219,6 @@ public class Auto extends LinearOpMode {
 //            else
 //                shooter.setSpeed();
 
-            if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
-                x *= 1.0 / 3;
-//                y*= 1.0/3;
-            }
-
-            if (gamepad2.right_stick_button) {
-                // high goal
-                //follower.goTo(-4, 22, -0.31);
-            }
 
             DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
 
@@ -242,7 +232,6 @@ public class Auto extends LinearOpMode {
             } else {
                 styx.allDown();
             }
-
 
             if (gamepad2.a) {
                 wobble_arm.down();
@@ -273,12 +262,7 @@ public class Auto extends LinearOpMode {
             //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
             DirtyGlobalVariables.telemetry.update();
         }
-        webcam.stopStreaming();
 
-    }
-
-    public void wobble_forth(int pos){
-        wobble_arm.angler.setPosition(pos/10.0);
     }
 
     public void goto_forth(int x, int y, int heading){

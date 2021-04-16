@@ -199,10 +199,6 @@ public class Teleop extends LinearOpMode {
         }
     }
 
-    public void wobble_forth(int pos){
-        wobble_arm.angler.setPosition(pos/10.0);
-    }
-
     public void goto_forth(int x, int y, int heading){
         goTo(x/10.0, y/10.0, Math.toRadians(heading));
     }

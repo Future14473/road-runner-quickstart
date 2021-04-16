@@ -55,7 +55,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
     private static final float mmPerInch        = 25.4f;
 
-    VuforiaPhone vuforia;
     laserLocalization lasers;
 
     // Parallel/Perpendicular to the forward axis
@@ -72,11 +71,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         ));
 
         lasers = new laserLocalization(hardwareMap);
-        new Thread(()->{
-            vuforia = new VuforiaPhone(hardwareMap);
-            vuforia.beginTracking();
-        });
-
 
         this.drive = drive;
 
@@ -94,8 +88,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public void update() {
         double heading = drive.getIMU().getHeading();
 
-//        OpenGLMatrix vuLocation = vuforia.getLocation();
-        OpenGLMatrix vuLocation = null;
+        OpenGLMatrix vuLocation = DirtyGlobalVariables.vuforia.getLocation();
         if(vuLocation!=null)
             vuforiaAvailableTimes++;
         else
@@ -144,7 +137,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     void doVuforia(OpenGLMatrix vuLocation){
         DirtyGlobalVariables.telemetry.addData("Localization", "using Vuforia");
-        Pose2d tempPose = vuforia.matrixToPose(vuLocation);
+        Pose2d tempPose = DirtyGlobalVariables.vuforia.matrixToPose(vuLocation);
         this.setPoseEstimateForce(new Pose2d(tempPose.getX(), tempPose.getY(), this.getHeading()));
     }
 

@@ -46,7 +46,7 @@ public class BluetoothDebug extends LinearOpMode
 
     public void toTele(){
         telemetry.addData("Test", "message");
-        telemetry.update();
+        //telemetry.update();
         bluetoothClient.send("test message\n");
     }
     DcMotor test;

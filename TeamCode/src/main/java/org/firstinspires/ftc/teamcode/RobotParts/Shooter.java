@@ -50,4 +50,8 @@ public class Shooter {
     public void stop(){
         tarVelocity = 0;
     }
+
+    public void stop2(){
+        shooter_motor.setVelocity(0);
+    }
 }

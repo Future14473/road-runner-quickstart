@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -31,10 +34,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.Objects;
 
-@TeleOp(name = "AAA Auto", group = "Teleop")
+@Autonomous(name = "ZenAuto", group = "Autonomous")
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
-public class Auto extends LinearOpMode {
+public class ZenAuto extends LinearOpMode {
     // Declare OpMode members.
 
     IMU imu;
@@ -66,6 +69,7 @@ public class Auto extends LinearOpMode {
         //Vuforia Setup
         VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
 
+        FtcDashboard.getInstance().startCameraStream(webcam, 0);
         DirtyGlobalVariables.vuforia = vuforiaPhone;
         DirtyGlobalVariables.vuforia.beginTracking();
 
@@ -76,6 +80,7 @@ public class Auto extends LinearOpMode {
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
         Shooter shooter = new Shooter(hardwareMap);
+        Timing timer = new Timing(this);
 
         //Reset wobble arm to up position
 //        wobble_arm.automaticReleaseWobble();
@@ -102,151 +107,49 @@ public class Auto extends LinearOpMode {
         waitForStart();
 
         webcam.stopStreaming();
-
+        ringCollector.collect(1);
         wobble_arm.up();
 
         new Thread(()->{
             while (opModeIsActive()) {
                 shooter.setSpeed();
+                drive.update();
                 //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             }
         }).start();
 
         int whichPowerShot = 0;
 
-            Pose2d p = drive.getPoseEstimate();
+        Pose2d p = drive.getPoseEstimate();
 
-            //High Goal Shooting
-            goTo(-8, 34.0, Math.toRadians(15.5));
-            flicker.autoFlick();
+        //High Goal Shooting
+        goTo(-8, 31.0, Math.toRadians(17));
+        flicker.autoFlick();
 
-            if(detector.stack == 0){
-                goTo(27,42,0);        }
-            else if(detector.stack == 1){
-                goTo(51,18,0);
-            }
-            else{
-                goTo(64,42,0);
-            }
-            wobble_arm.automaticReleaseWobble();
-
-            //Ring collect
-            goTo(-2, 40, Math.PI);
-            ringCollector.collect(1);
-            goTo(-23,40, Math.PI);
-
-
-            // Power Shots
-//            if(gamepad1.y) {
-//                shooter.setPowerShotSpeed();
-//
-//                goTo(-3.78, 15.42, Math.toRadians(17.27));
-//                flicker.singleFlick();
-//
-//                goTo(-3.78, 15.42, Math.toRadians(11.5));
-//                flicker.singleFlick();
-//
-//                goTo(-3.78, 15.42, Math.toRadians(6.5));
-//                flicker.singleFlick();
-//
-//            }
-
-            if(gamepad1.x){
-                shooter.stop();
-
-                if(whichPowerShot == 0){
-                    turnStrong(17.27);
-
-                }if(whichPowerShot == 1){
-                    turnStrong(11.5);
-
-                }if(whichPowerShot == 2){
-                    turnStrong(6.5);
-
-                }
-                whichPowerShot++;
-                whichPowerShot %= 3;
-            }
-
-            drive.update();
-
-            if (gamepad2.dpad_left) {
-                shooter.setHighGoalSpeed();
-            }
-
-            if (gamepad2.dpad_right) {
-                shooter.setPowerShotSpeed();
-            }
-
-            speedUp.toggle(gamepad2.dpad_up);
-            speedDown.toggle(gamepad2.dpad_down);
-            telemetry.addData("Shooter Target Vel", shooter.getTargetVelocity());
-
-            if(gamepad1.right_stick_button){
-                debug_disable_shooter = !debug_disable_shooter;
-            }
-
-
-            ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
-
-            if (gamepad2.left_bumper) {
-                flicker.autoFlick();
-            }
-            if (gamepad2.right_bumper) {
-                styx.allUp();
-            } else {
-                styx.allDown();
-            }
-
-            if (gamepad2.a) {
-                wobble_arm.down();
-            }
-            if (gamepad2.x) {
-                wobble_arm.grab();
-            }
-
-
-            if (gamepad2.y) {
-                wobble_arm.unGrab();
-            }
-
-            if (gamepad2.b) {
-                wobble_arm.up();
-            }
-            telemetry.addData("wobble angle", wobble_arm.getAnglerPosition());
-
-            double y = -gamepad1.right_stick_y;
-            double x = gamepad1.right_stick_x;
-
-            // absolute turning
-            double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
-            double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
-            double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
-            if (gamepad1.left_bumper) {
-                turnPwr = gamepad1.left_stick_x;
-                x *= 0.3;
-            }
-
-            if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
-                x *= 1.0 / 3;
-//                y*= 1.0/3;
-            }
-
-            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
-
-//            if (gamepad1.dpad_up) {
-//                headingZero = imu.getHeading();
-//            }
-//            telemetry.addData("Flicker Position", flicker.getPosition());
-//            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
-//            telemetry.addData("Is Flick Out", (MathStuff.isEqual(flicker.getPosition(), flicker.flickOut)));
-//            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-//            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
-//            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
-
-            //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
-            DirtyGlobalVariables.telemetry.update();
+        telemetry.addData("stack height", detector.stack);
+        telemetry.update();
+        if(detector.stack == 0){
+            goTo(27,42,0);        }
+        else if(detector.stack == 1){
+            goTo(51,18,0);
         }
+        else{
+            goTo(72,42,0);
+        }
+        wobble_arm.down();
+        timer.safeDelay(500);
+        wobble_arm.automaticReleaseWobble();
+
+        goTo(-5, 40, Math.PI);
+        //Ring collect
+        goTo(-23,40, Math.PI);
+
+        drive.update();
+
+        telemetry.addData("Shooter Target Vel", shooter.getTargetVelocity());
+
+        DirtyGlobalVariables.telemetry.update();
+    }
 
 
     public void goto_forth(int x, int y, int heading){
@@ -277,28 +180,6 @@ public class Auto extends LinearOpMode {
 
     }
 
-//    void turnTo(double heading){
-//        double curr_heading = Objects.requireNonNull(drive.getPoseEstimate().getHeading(), "Curr heading is null");
-//        double delta_heading = Objects.requireNonNull((RotationUtil.turnLeftOrRight(curr_heading, Math.toRadians(heading), Math.PI*2)),"delta heading null");
-//        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
-//                .splineTo(new Vector2d(x, y), reverse ? Math.PI + heading: heading)
-//                .build();
-//        Trajectory direction =
-//                drive.trajectoryBuilder(drive.getPoseEstimate())
-//                        .splineTo(
-//                        new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), delta_heading)
-//                )
-//
-//                        .build();
-//
-//        drive.turn(delta_heading);
-//    }
-
-    /*
-     * For POSITIVE forward parameter: go forward
-     * For POSITIVE sideways parameter: go right
-     * For POSITIVE rotate parameter: turn right
-     */
     public void DRIVE(double forward, double sideways, double rotate, SampleMecanumDrive drivetrain) {
         drivetrain.setWeightedDrivePower(
                 new Pose2d(

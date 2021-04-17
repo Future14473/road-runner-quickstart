@@ -113,7 +113,7 @@ public class ZenAuto extends LinearOpMode {
         new Thread(()->{
             while (opModeIsActive()) {
                 shooter.setSpeed();
-                drive.update();
+//                drive.update();
                 //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             }
         }).start();
@@ -123,26 +123,30 @@ public class ZenAuto extends LinearOpMode {
         Pose2d p = drive.getPoseEstimate();
 
         //High Goal Shooting
-        goTo(-8, 31.0, Math.toRadians(17));
+        goTo(-8, 31.0, Math.toRadians(20));
         flicker.autoFlick();
+
+        for(int i = 0; i<5;i++){
+            drive.update();
+        }
 
         telemetry.addData("stack height", detector.stack);
         telemetry.update();
         if(detector.stack == 0){
-            goTo(27,42,0);        }
+            goTo(27,50,0);        }
         else if(detector.stack == 1){
-            goTo(51,18,0);
+            goTo(36,25,0);
         }
         else{
-            goTo(72,42,0);
+            goTo(63,50,0);
         }
         wobble_arm.down();
         timer.safeDelay(500);
         wobble_arm.automaticReleaseWobble();
 
-        goTo(-5, 40, Math.PI);
+        goTo(-1, 37, Math.PI);
         //Ring collect
-        goTo(-23,40, Math.PI);
+        goTo(-26,37, Math.PI);
 
         drive.update();
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -37,6 +38,7 @@ import java.util.Objects;
 @Autonomous(name = "ZenAuto", group = "Autonomous")
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
+@Config
 public class ZenAuto extends LinearOpMode {
     // Declare OpMode members.
 
@@ -45,6 +47,27 @@ public class ZenAuto extends LinearOpMode {
     double headingZero = 0;
 
     Wobble_Arm wobble_arm;
+
+    public static double high_goal_x = -8;
+    public static double high_goal_y = 31;
+
+    public static double box_close_x = 29;
+    public static double box_close_y = 50;
+
+    public static double box_medium_x = 36;
+    public static double box_medium_y = 25;
+
+    public static double box_far_x = 63;
+    public static double box_far_y = 47;
+
+    public static double before_stack_x = 5;
+    public static double before_stack_y = 42;
+
+    public static double stack_turn_x = 5;
+    public static double stack_turn_y = 42;
+
+    public static double push_stack_x = -26;
+    public static double push_stack_y = 42;
 
     public void runOpMode() throws InterruptedException {
 
@@ -104,7 +127,12 @@ public class ZenAuto extends LinearOpMode {
 
         boolean debug_disable_shooter = true;
 
+
+
         waitForStart();
+
+
+
 
         webcam.stopStreaming();
         ringCollector.collect(1);
@@ -123,7 +151,7 @@ public class ZenAuto extends LinearOpMode {
         Pose2d p = drive.getPoseEstimate();
 
         //High Goal Shooting
-        goTo(-8, 31.0, Math.toRadians(20));
+        goTo(high_goal_x, high_goal_y, Math.toRadians(20));
         flicker.autoFlick();
 
         for(int i = 0; i<5;i++){
@@ -133,20 +161,24 @@ public class ZenAuto extends LinearOpMode {
         telemetry.addData("stack height", detector.stack);
         telemetry.update();
         if(detector.stack == 0){
-            goTo(27,50,0);        }
+            goTo(box_close_x,box_close_y,0);        }
         else if(detector.stack == 1){
-            goTo(36,25,0);
+            goTo(box_medium_x,box_medium_y,0);
         }
         else{
-            goTo(63,50,0);
+            goTo(box_far_x, box_far_y,0);
         }
         wobble_arm.down();
         timer.safeDelay(500);
         wobble_arm.automaticReleaseWobble();
 
-        goTo(-1, 37, Math.PI);
+        goTo(before_stack_x, before_stack_y, 0);
+        for(int i = 0; i<10;i++){
+            drive.update();
+        }
+        goTo(stack_turn_x, stack_turn_y, Math.PI);
         //Ring collect
-        goTo(-26,37, Math.PI);
+        goTo(push_stack_x,push_stack_y, Math.PI);
 
         drive.update();
 

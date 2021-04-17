@@ -30,7 +30,7 @@ public class Wobble_Arm {
         timer = new Timing(opMode);
     }
 
-    int upPos = -190, downPos = -330;
+    int upPos = -190, downPos = -360;
     public void up(){
 //        angler.setPower(
 //                0.5 * (upPos - getAnglerPosition())
@@ -70,7 +70,7 @@ public class Wobble_Arm {
     }
 
     public void grab() {
-        gripper.setPosition(0.5);
+        gripper.setPosition(0.4);
     }
 
     public double getAnglerPosition(){return angler.getCurrentPosition();}

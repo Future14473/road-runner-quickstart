@@ -63,6 +63,7 @@ public class Teleop extends LinearOpMode {
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
         Shooter shooter = new Shooter(hardwareMap);
+        shooter.setHighGoalSpeedTeleop();
 
 
         //Reset wobble arm to up position

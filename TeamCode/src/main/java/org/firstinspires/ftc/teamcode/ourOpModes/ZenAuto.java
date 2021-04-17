@@ -48,8 +48,8 @@ public class ZenAuto extends LinearOpMode {
 
     Wobble_Arm wobble_arm;
 
-    public static double high_goal_x = -8;
-    public static double high_goal_y = 31;
+    public static double high_goal_x = -10;
+    public static double high_goal_y = 30;
 
     public static double box_close_x = 29;
     public static double box_close_y = 50;
@@ -61,13 +61,14 @@ public class ZenAuto extends LinearOpMode {
     public static double box_far_y = 47;
 
     public static double before_stack_x = 5;
-    public static double before_stack_y = 42;
+    public static double before_stack_y = 44;
 
-    public static double stack_turn_x = 5;
-    public static double stack_turn_y = 42;
+    public static double grab_wobble_x = -46;
+    public static double grab_wobble_y = 30;
 
-    public static double push_stack_x = -26;
-    public static double push_stack_y = 42;
+    public static int wobble_close_delay = 900,
+    wobble_middle_delay = 1200,
+    wobble_far_delay = 2000;
 
     public void runOpMode() throws InterruptedException {
 
@@ -103,7 +104,7 @@ public class ZenAuto extends LinearOpMode {
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
 
         Shooter shooter = new Shooter(hardwareMap);
-        Timing timer = new Timing(this);
+        //Timing timer = new Timing(this);
 
         //Reset wobble arm to up position
 //        wobble_arm.automaticReleaseWobble();
@@ -141,7 +142,9 @@ public class ZenAuto extends LinearOpMode {
         new Thread(()->{
             while (opModeIsActive()) {
                 shooter.setSpeed();
-//                drive.update();
+                telemetry.setAutoClear(true);
+                if(!drive.following)
+                    drive.update();
                 //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             }
         }).start();
@@ -160,33 +163,71 @@ public class ZenAuto extends LinearOpMode {
 
         telemetry.addData("stack height", detector.stack);
         telemetry.update();
+
+
+        boxes(detector);
+
+
+        //vuforia scan position
+        goTo(before_stack_x, before_stack_y, Math.toRadians(20));
+
+        wobble_arm.down();
+        wobble_arm.unGrab();
+
+        //grab wobble position
+        goTo(grab_wobble_x,grab_wobble_y, 0);
+
+        wobble_arm.grab();
+        wobble_arm.up();
+
+        boxes(detector);
+
+        goTo(12, 24, 0);
+    }
+
+    void boxes(Detection detector){
         if(detector.stack == 0){
-            goTo(box_close_x,box_close_y,0);        }
+            goTo(box_close_x,box_close_y,0);
+
+            new Thread(()->{
+
+                Timing timer = new Timing(this);
+                //timer.safeDelay(wobble_close_delay);
+                wobble_arm.down();
+                timer.safeDelay(500);
+                wobble_arm.automaticReleaseWobble();
+
+            }).start();
+
+        }
         else if(detector.stack == 1){
             goTo(box_medium_x,box_medium_y,0);
+
+            new Thread(()->{
+
+                Timing timer = new Timing(this);
+                //timer.safeDelay(wobble_middle_delay);
+                wobble_arm.down();
+                timer.safeDelay(500);
+                wobble_arm.automaticReleaseWobble();
+
+            }).start();
         }
         else{
             goTo(box_far_x, box_far_y,0);
+
+            new Thread(()->{
+
+                Timing timer = new Timing(this);
+                //timer.safeDelay(wobble_far_delay);
+                wobble_arm.down();
+                timer.safeDelay(500);
+                wobble_arm.automaticReleaseWobble();
+
+            }).start();
+
         }
-        wobble_arm.down();
-        timer.safeDelay(500);
-        wobble_arm.automaticReleaseWobble();
-
-        goTo(before_stack_x, before_stack_y, 0);
-        for(int i = 0; i<10;i++){
-            drive.update();
-        }
-        goTo(stack_turn_x, stack_turn_y, Math.PI);
-        //Ring collect
-        goTo(push_stack_x,push_stack_y, Math.PI);
-
-        drive.update();
-
-        telemetry.addData("Shooter Target Vel", shooter.getTargetVelocity());
-
-        DirtyGlobalVariables.telemetry.update();
     }
-
 
     public void goto_forth(int x, int y, int heading){
         goTo(x/10.0, y/10.0, Math.toRadians(heading));

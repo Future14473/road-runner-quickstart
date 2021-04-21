@@ -94,7 +94,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         else
             vuforiaAvailableTimes = 0;
 
-        boolean hasVuforia = vuLocation!=null && vuforiaAvailableTimes>5;
+        boolean hasVuforia = vuLocation!=null && vuforiaAvailableTimes>5 && !DirtyGlobalVariables.isInAuto;
 
         // this only works when rr path is running, so not very useful
         //DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);

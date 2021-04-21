@@ -32,7 +32,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Objects;
 
 @TeleOp(name = "AAA Auto", group = "Teleop")
-//@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
 public class Auto extends LinearOpMode {
     // Declare OpMode members.

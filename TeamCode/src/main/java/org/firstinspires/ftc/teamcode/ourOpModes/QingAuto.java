@@ -64,7 +64,7 @@ public class QingAuto extends LinearOpMode {
     wobble_far_delay = 2000;
 
     public void runOpMode() throws InterruptedException {
-
+        DirtyGlobalVariables.isInAuto = true;
         //setup RC for display
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
                 getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -144,22 +144,10 @@ public class QingAuto extends LinearOpMode {
 
         boxes(detector);
 
-
-        //vuforia scan position
-//        goTo(before_stack_x, before_stack_y, Math.toRadians(20));
-//
-//        wobble_arm.down();
-//        wobble_arm.unGrab();
-//
-//        //grab wobble position
-//        goTo(grab_wobble_x,grab_wobble_y, 0);
-//
-//        wobble_arm.grab();
-//        wobble_arm.up();
-//
-//        boxes(detector);
-
+        // park
         goTo(17, 24, 0);
+
+        DirtyGlobalVariables.isInAuto = false;
     }
 
     void boxes(Detection detector){

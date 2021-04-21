@@ -44,6 +44,7 @@ public class Teleop extends LinearOpMode {
     boolean debug_disable_shooter = false;
 
     public void runOpMode() throws InterruptedException {
+        DirtyGlobalVariables.isInAuto = false;
 //        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
 
         //Vuforia Setup

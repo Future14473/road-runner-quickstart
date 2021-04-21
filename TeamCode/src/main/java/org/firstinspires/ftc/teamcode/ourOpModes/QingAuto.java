@@ -42,9 +42,9 @@ public class QingAuto extends LinearOpMode {
     Wobble_Arm wobble_arm;
 
     public static double high_goal_x = -10;
-    public static double high_goal_y = 57;
+    public static double high_goal_y = 53;
 
-    public static double box_close_x = 25;
+    public static double box_close_x = 20;
     public static double box_close_y = 50;
 
     public static double box_medium_x = 46;
@@ -175,7 +175,7 @@ public class QingAuto extends LinearOpMode {
                 wobble_arm.down();
                 timer.safeDelay(1000);
                 wobble_arm.automaticReleaseWobble();
-
+                timer.safeDelay(1000);
             }).start();
 
         }
@@ -187,9 +187,9 @@ public class QingAuto extends LinearOpMode {
                 Timing timer = new Timing(this);
                 //timer.safeDelay(wobble_middle_delay);
                 wobble_arm.down();
-                timer.safeDelay(500);
+                timer.safeDelay(1000);
                 wobble_arm.automaticReleaseWobble();
-
+                timer.safeDelay(1000);
             }).start();
         }
         else{
@@ -200,9 +200,9 @@ public class QingAuto extends LinearOpMode {
                 Timing timer = new Timing(this);
                 //timer.safeDelay(wobble_far_delay);
                 wobble_arm.down();
-                timer.safeDelay(500);
+                timer.safeDelay(1000);
                 wobble_arm.automaticReleaseWobble();
-
+                timer.safeDelay(1000);
             }).start();
 
         }

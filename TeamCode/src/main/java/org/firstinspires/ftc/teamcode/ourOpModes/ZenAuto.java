@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -36,6 +37,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Objects;
 
 @Autonomous(name = "ZenAuto", group = "Autonomous")
+@Disabled
 //@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
 @Config

@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -32,6 +33,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.Objects;
 
 @TeleOp(name = "AAA Auto", group = "Teleop")
+@Disabled
 //use DriveWheelIMULocalization for the same functionality instead
 public class Auto extends LinearOpMode {
     // Declare OpMode members.

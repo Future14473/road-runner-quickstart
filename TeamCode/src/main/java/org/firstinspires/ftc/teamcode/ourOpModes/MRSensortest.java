@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
 
 @TeleOp(name = "Localization test", group = "Sensor")
+@Disabled
 public class MRSensortest extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor range_left;

@@ -45,7 +45,7 @@ public class QingAuto extends LinearOpMode {
     public static double high_goal_y = 53;
 
     public static double box_close_x = 20;
-    public static double box_close_y = 50;
+    public static double box_close_y = 55;
 
     public static double box_medium_x = 46;
     public static double box_medium_y = 30;
@@ -91,7 +91,6 @@ public class QingAuto extends LinearOpMode {
         DirtyGlobalVariables.vuforia.beginTracking();
 
         //Robot Part Setup
-        RingCollector ringCollector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, this);
         ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
         SideStyx styx = new SideStyx(hardwareMap, telemetry);
@@ -119,7 +118,6 @@ public class QingAuto extends LinearOpMode {
         waitForStart();
 
         webcam.stopStreaming();
-        ringCollector.collect(1);
         wobble_arm.up();
 
         new Thread(()->{
@@ -167,45 +165,20 @@ public class QingAuto extends LinearOpMode {
     void boxes(Detection detector){
         if(detector.stack == 0){
             goTo(box_close_x,box_close_y,0);
-
-            new Thread(()->{
-
-                Timing timer = new Timing(this);
-                //timer.safeDelay(wobble_close_delay);
-                wobble_arm.down();
-                timer.safeDelay(1000);
-                wobble_arm.automaticReleaseWobble();
-                timer.safeDelay(1000);
-            }).start();
-
         }
         else if(detector.stack == 1){
             goTo(box_medium_x,box_medium_y,0);
-
-            new Thread(()->{
-
-                Timing timer = new Timing(this);
-                //timer.safeDelay(wobble_middle_delay);
-                wobble_arm.down();
-                timer.safeDelay(1000);
-                wobble_arm.automaticReleaseWobble();
-                timer.safeDelay(1000);
-            }).start();
         }
         else{
             goTo(box_far_x, box_far_y,0);
-
-            new Thread(()->{
-
-                Timing timer = new Timing(this);
-                //timer.safeDelay(wobble_far_delay);
-                wobble_arm.down();
-                timer.safeDelay(1000);
-                wobble_arm.automaticReleaseWobble();
-                timer.safeDelay(1000);
-            }).start();
-
         }
+
+            Timing timer = new Timing(this);
+            //timer.safeDelay(wobble_far_delay);
+            wobble_arm.down();
+            timer.safeDelay(1000);
+            wobble_arm.automaticReleaseWobble();
+            timer.safeDelay(1000);
     }
 
     public void goto_forth(int x, int y, int heading){

@@ -265,7 +265,7 @@ public class Auto extends LinearOpMode {
         drive.followTrajectory(destination);
     }
     void turnStrong(double targetDir){
-        PIDFController pid = new PIDFController(new PIDCoefficients(10, 2, 4), 0, 0);
+        PIDFController pid = new PIDFController(new PIDCoefficients(10, 3, 4), 0, 0);
         pid.setTargetPosition(0);
         double toTurn;
         while (

@@ -44,8 +44,8 @@ public class QingAuto extends LinearOpMode {
     public static double high_goal_x = -10;
     public static double high_goal_y = 53;
 
-    public static double box_close_x = 20;
-    public static double box_close_y = 55;
+    public static double box_close_x = 16;
+    public static double box_close_y = 45;
 
     public static double box_medium_x = 46;
     public static double box_medium_y = 30;

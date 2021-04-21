@@ -54,7 +54,7 @@ public class ZenAuto extends LinearOpMode {
     public static double high_goal_y = 30;
 
     public static double box_close_x = 29;
-    public static double box_close_y = 50;
+    public static double box_close_y = 33;
 
     public static double box_medium_x = 36;
     public static double box_medium_y = 25;

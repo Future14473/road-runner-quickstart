@@ -33,15 +33,6 @@ public class Teleop extends LinearOpMode {
 
     VuforiaPhone vuforiaPhone;
 
-    void init_camera(){
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().
-                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-
-        int[] viewportContainerIds = {cameraMonitorViewId};
-
-        vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
-    }
-
     public void runOpMode() throws InterruptedException {
 
         init_camera();
@@ -114,10 +105,10 @@ public class Teleop extends LinearOpMode {
             ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
 
             if (gamepad2.left_bumper)
-                flicker.flickThrice(shooter);
+                new Thread(() -> flicker.flickThrice(shooter)).start();
 
             if(gamepad2.left_stick_button)
-                flicker.singleFlick();
+                new Thread(() -> flicker.singleFlick()).start();
 
             if (gamepad2.right_bumper)
                 styx.allUp();
@@ -145,6 +136,15 @@ public class Teleop extends LinearOpMode {
 
             DirtyGlobalVariables.telemetry.update();
         }
+    }
+
+    void init_camera(){
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
+        int[] viewportContainerIds = {cameraMonitorViewId};
+
+        vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
     }
 
     void drivetrain_controls(){

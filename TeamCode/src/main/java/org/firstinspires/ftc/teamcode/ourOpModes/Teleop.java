@@ -21,26 +21,16 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
-//@Disabled
-//use DriveWheelIMULocalization for the same functionality instead
 public class Teleop extends LinearOpMode {
-    // Declare OpMode members.
-    //Mecanum MecanumDrive;
-
     IMU imu;
     SampleMecanumDrive drive;
     double headingZero = 0;
 
-//    BluetoothConvenient BT;
-
     Wobble_Arm wobble_arm;
-
     boolean debug_disable_shooter = false;
 
     public void runOpMode() throws InterruptedException {
         DirtyGlobalVariables.isInAuto = false;
-//        BT = new BluetoothConvenient(telemetry, hardwareMap, this);
-
         //Vuforia Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
                 getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -105,11 +95,9 @@ public class Teleop extends LinearOpMode {
 
             if(gamepad1.x) // 11.5 degs
                 goTo(-3.78, 15.42, Math.toRadians(9.5));
-//                goTo(-3.78,15.42, Math.toRadians(9.5));
 
             if(gamepad1.a) // 2.5 degs
                 goTo(-3.78, 15.42, Math.toRadians(6.5));
-//                goTo(-3.78,15.42, Math.toRadians(6.5));
 
             drive.update();
 
@@ -147,7 +135,6 @@ public class Teleop extends LinearOpMode {
 
             if (!(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)) {
                 x *= 1.0 / 3;
-//                y*= 1.0/3;
             }
 
             DRIVE(y, x, magnitude > 0.5 ? -turnPwr : 0, drive);
@@ -155,7 +142,7 @@ public class Teleop extends LinearOpMode {
             ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
 
             if (gamepad2.left_bumper) {
-                flicker.flickThrice();
+                flicker.flickThrice(shooter);
             }
             if(gamepad2.left_stick_button){
                 flicker.singleFlick();
@@ -183,66 +170,20 @@ public class Teleop extends LinearOpMode {
                 wobble_arm.up();
             }
             telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
-
-//            if (gamepad1.dpad_up) {
-//                headingZero = imu.getHeading();
-//            }
-//            telemetry.addData("Flicker Position", flicker.getPosition());
-//            telemetry.addData("Is Flick In", (MathStuff.isEqual(flicker.getPosition(), flicker.flickIn)));
-//            telemetry.addData("Is Flick Out", (MathStuff.isEqual(flicker.getPosition(), flicker.flickOut)));
-//            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-//            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
-//            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
-
             telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
-            //telemetry.addData("Target Velocity", shooter.getTargetVelocity());
+
             DirtyGlobalVariables.telemetry.update();
         }
     }
 
-    public void goto_forth(int x, int y, int heading){
-        goTo(x/10.0, y/10.0, Math.toRadians(heading));
-    }
 
     void goTo(double x, double y, double heading){
-        Pose2d p = drive.getPoseEstimate();
-        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
-        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
-        ;
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .splineToConstantHeading(new Vector2d(x, y), heading)
+                .splineToSplineHeading(new Pose2d(x, y, heading), heading)
                 .build();
 
         drive.followTrajectory(destination);
     }
-    void turnStrong(double targetDir){
-        PIDFController pid = new PIDFController(new PIDCoefficients(10, 2, 4), 0, 0);
-        pid.setTargetPosition(0);
-        double heading;
-        while ( (heading=imu.getHeading()+10) < Math.toRadians(5) && opModeIsActive()){
-            double pwr = pid.update(-RotationUtil.turnLeftOrRight(heading, targetDir, Math.PI*2));
-
-            DRIVE(0, 0, -pwr, drive);
-        }
-
-    }
-
-//    void turnTo(double heading){
-//        double curr_heading = Objects.requireNonNull(drive.getPoseEstimate().getHeading(), "Curr heading is null");
-//        double delta_heading = Objects.requireNonNull((RotationUtil.turnLeftOrRight(curr_heading, Math.toRadians(heading), Math.PI*2)),"delta heading null");
-//        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
-//                .splineTo(new Vector2d(x, y), reverse ? Math.PI + heading: heading)
-//                .build();
-//        Trajectory direction =
-//                drive.trajectoryBuilder(drive.getPoseEstimate())
-//                        .splineTo(
-//                        new Pose2d(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY(), delta_heading)
-//                )
-//
-//                        .build();
-//
-//        drive.turn(delta_heading);
-//    }
 
     /*
      * For POSITIVE forward parameter: go forward

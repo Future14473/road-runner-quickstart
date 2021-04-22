@@ -23,7 +23,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous(name = "AAA Qing Auto", group = "Autonomous")
-//@Disabled
 @Config
 public class QingAuto extends LinearOpMode {
 
@@ -37,15 +36,16 @@ public class QingAuto extends LinearOpMode {
     SideStyx styx;
     Shooter shooter;
 
-
     public static double box_close_x = 16;
     public static double box_close_y = 45;
 
     public static double box_medium_x = 46;
-    public static double box_medium_y = 30;
+    public static double box_medium_y = 23;
 
     public static double box_far_x = 63;
     public static double box_far_y = 47;
+
+    public static double shoot_angle = 23;
 
     private void init_camera(){
         //setup RC for display
@@ -119,16 +119,18 @@ public class QingAuto extends LinearOpMode {
 
             telemetry.addData("State", current_state.toString());
             telemetry.addData("stack height", detector.stack);
+            telemetry.addData("Shooter Speed", shooter.getShooterVelocity());
+
 
             telemetry.update();
 
             switch (current_state){
             case TO_HIGH_GOAL:
-                goTo(10, 24, Math.toRadians(50));
+                goTo(-5, 24, Math.toRadians(shoot_angle));
                 current_state = state.SHOOTING;
                 break;
             case SHOOTING:
-                flicker.flickThrice();
+                flicker.flickThrice(shooter);
                 current_state = state.BOXES;
                 break;
             case BOXES:
@@ -154,6 +156,7 @@ public class QingAuto extends LinearOpMode {
             goTo(box_close_x,box_close_y,0);
             break;
         case 1:
+        case 2:
             goTo(box_medium_x, box_medium_y, 0);
             break;
         default:
@@ -169,7 +172,7 @@ public class QingAuto extends LinearOpMode {
 
     void goTo(double x, double y, double heading){
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .splineToConstantHeading(new Vector2d(x, y), heading)
+                .splineToSplineHeading(new Pose2d(x, y, heading), heading)
                 .build();
 
         drive.followTrajectory(destination);

@@ -23,7 +23,7 @@ public class Wobble_Arm {
         angler = hardwareMap.get(DcMotorEx.class, "wobble_angler");
         angler.setTargetPosition(0);
         angler.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        angler.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, 0, 0));
+        angler.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, 6, 0));
         angler.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
         //angler.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -47,7 +47,7 @@ public class Wobble_Arm {
 //        angler.setPower(
 //                0.5 * (upPos - getAnglerPosition())
 //        );
-        angler.setTargetPosition(0);
+        angler.setTargetPosition(-100);
         angler.setPower(0.6);
     }
 

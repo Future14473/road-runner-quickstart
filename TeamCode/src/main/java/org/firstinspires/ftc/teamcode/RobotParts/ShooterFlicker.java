@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.ourOpModes.QingAuto;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
 public class ShooterFlicker {
@@ -56,12 +57,19 @@ public class ShooterFlicker {
 
     int waitTime = 1000;
 
-    public void flickThrice() {
+    public void flickThrice(Shooter shooter) {
         for (int i = 0; i < 3; i++) {
+            wait_until_speed(shooter);
             flickOut();
-            timer.safeDelay(waitTime);
+            delay(500);
             flickIn();
-            timer.safeDelay(waitTime);
+            delay(200);
+        }
+    }
+
+    void wait_until_speed(Shooter shooter){
+        while (opMode.opModeIsActive() && Math.abs(shooter.getShooterVelocity() - shooter.getTargetVelocity()) > 40){
+
         }
     }
 
@@ -72,5 +80,11 @@ public class ShooterFlicker {
         timer.safeDelay(200);
     }
 
+    public void delay(long delay){
+        long start = System.currentTimeMillis();
+        while((System.currentTimeMillis() - start < delay) && opMode.opModeIsActive()){
+            //wait
+        }
+    }
 }
 

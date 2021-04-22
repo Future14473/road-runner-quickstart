@@ -113,7 +113,7 @@ public class Auto extends LinearOpMode {
 
             //High Goal Shooting
             goTo(-8, 34.0, Math.toRadians(15.5));
-            flicker.flickThrice();
+            flicker.flickThrice(shooter);
 
             if(detector.stack == 0){
                 goTo(27,42,0);        }
@@ -185,7 +185,7 @@ public class Auto extends LinearOpMode {
             ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
 
             if (gamepad2.left_bumper) {
-                flicker.flickThrice();
+                flicker.flickThrice(shooter);
             }
             if (gamepad2.right_bumper) {
                 styx.allUp();

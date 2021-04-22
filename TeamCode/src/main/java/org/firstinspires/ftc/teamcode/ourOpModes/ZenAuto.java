@@ -149,7 +149,7 @@ public class ZenAuto extends LinearOpMode {
 
         //High Goal Shooting
         goTo(high_goal_x, high_goal_y, Math.toRadians(20));
-        flicker.flickThrice();
+        flicker.flickThrice(shooter);
 
         for(int i = 0; i<5;i++){
             drive.update();

@@ -196,12 +196,6 @@ public class BluetoothDebug extends LinearOpMode
                 headingZero = imu.getHeading();
             }
 
-
-            telemetry.addData("IsGrabbing? ", wobble_arm.isGrabbing);
-            telemetry.addData("Angler Postion:", wobble_arm.getAnglerPosition());
-            telemetry.addData("Gripper Postion:", wobble_arm.getGripperPosition());
-
-            //        telemetry.addData("Wobble_Adjuster_position", wobble_angler.getPosition());
             telemetry.update();
         }
 

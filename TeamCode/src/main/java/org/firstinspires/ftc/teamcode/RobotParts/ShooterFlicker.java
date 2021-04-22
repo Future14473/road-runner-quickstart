@@ -35,26 +35,6 @@ public class ShooterFlicker {
         return flicker.getPosition();
     }
 
-    // try to add a overcomplicated wait block
-//    private void waitTillIn() {
-//        while (!(MathStuff.isEqual(flicker.getPosition(), flickIn))
-//                && opMode.opModeIsActive()) {
-//            telemetry.addData("Stuck in ", "wait till in");
-//            telemetry.update();
-//            Log.e("Stuck in ", "wait till in");
-//        }
-//
-//    }
-//
-//    private void waitTillOut() {
-//        while (!(MathStuff.isEqual(flicker.getPosition(), flickOut))
-//                && opMode.opModeIsActive()) {
-//            telemetry.addData("Stuck in ", "wait till out");
-//            telemetry.update();
-//            Log.e("Stuck in ", "wait till out");
-//        }
-//    }
-
     int waitTime = 1000;
 
     public void flickThrice(Shooter shooter) {
@@ -64,7 +44,7 @@ public class ShooterFlicker {
             if(i==0)
                 delay(500);
             if(i==1)
-                delay(500);//idkk
+                delay(500);
             if(i==2)
                 delay(250);
 

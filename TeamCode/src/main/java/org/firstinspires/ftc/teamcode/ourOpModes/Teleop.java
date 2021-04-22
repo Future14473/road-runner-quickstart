@@ -98,7 +98,7 @@ public class Teleop extends LinearOpMode {
             toggleShooter.toggle(gamepad1.right_stick_button);
 
             if (debug_disable_shooter)
-                shooter.stop2();
+                shooter.stopHard();
             else
                 shooter.setSpeed();
 

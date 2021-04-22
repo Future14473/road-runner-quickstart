@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
 @Config
 public class Wobble_Arm {
-    public DcMotorEx angler;
+    DcMotorEx angler;
     Servo gripper;
     Timing timer;
-    public Boolean isGrabbing = false; //todo make not public
+
+    public static int upPos = -190, downPos = -360;
+    public static double grabPos = 0.2, unGrabPos = 1;
 
     public Wobble_Arm(HardwareMap hardwareMap, LinearOpMode opMode){
         angler = hardwareMap.get(DcMotorEx.class, "wobble_angler");
@@ -25,19 +27,15 @@ public class Wobble_Arm {
         angler.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         angler.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, 6, 0));
         angler.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        //angler.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         gripper = hardwareMap.get(Servo.class, "wobble_gripper");
         timer = new Timing(opMode);
     }
 
-    public static int upPos = -190, downPos = -360;
-    public static double grabPos = 0.2, unGrabPos = 1;
     public void up(){
         angler.setTargetPosition(upPos);
         angler.setPower(0.6);
-    } //b button
+    }
     // 0.44 goes all the way into the robot
 
     public void home(){
@@ -48,8 +46,7 @@ public class Wobble_Arm {
     public void down(){
         angler.setTargetPosition(downPos);
         angler.setPower(0.6);
-
-    } // a button
+    }
 
     public void automaticReleaseWobble(){
         unGrab();
@@ -57,28 +54,17 @@ public class Wobble_Arm {
         up();
     }
 
-    public void autonomousInit(){
-        grab();
-        timer.execAsync(this::up, 200);
-    }
-
-    public void safeReleaseWobble(){
-        unGrab();
-        timer.execAsync(this::up, 400);
-    }
-
     public void unGrab(){
         gripper.setPosition(unGrabPos);
     }
-
 
     public void grab() {
         gripper.setPosition(grabPos);
     }
 
     public double getAnglerPosition(){return angler.getCurrentPosition();}
-    public double getGripperPosition(){return gripper.getPosition();}
 
+    public double getGripperPosition(){return gripper.getPosition();}
 
 }
 

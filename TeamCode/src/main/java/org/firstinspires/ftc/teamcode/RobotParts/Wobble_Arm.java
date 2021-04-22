@@ -35,26 +35,17 @@ public class Wobble_Arm {
     public static int upPos = -190, downPos = -360;
     public static double grabPos = 0.2, unGrabPos = 1;
     public void up(){
-//        angler.setPower(
-//                0.5 * (upPos - getAnglerPosition())
-//        );
         angler.setTargetPosition(upPos);
         angler.setPower(0.6);
     } //b button
     // 0.44 goes all the way into the robot
 
     public void home(){
-//        angler.setPower(
-//                0.5 * (upPos - getAnglerPosition())
-//        );
-        angler.setTargetPosition(-100);
+        angler.setTargetPosition(-50);
         angler.setPower(0.6);
     }
 
     public void down(){
-//        angler.setPower(
-//                0.5 * (downPos - getAnglerPosition())
-//        );
         angler.setTargetPosition(downPos);
         angler.setPower(0.6);
 

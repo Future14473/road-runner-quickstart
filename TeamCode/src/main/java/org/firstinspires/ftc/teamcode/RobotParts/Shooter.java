@@ -15,7 +15,7 @@ public class Shooter {
     DcMotorEx shooter_motor;
     public static int powerShotSpeed = 1350, highGoalSpeed = 1420, highGoalSpeedTeleop = 1550;
     int tarVelocity = highGoalSpeed;
-    public static PIDFCoefficients pidf = new PIDFCoefficients(10, 3,4, 0);
+    public static PIDFCoefficients pidf = new PIDFCoefficients(10, 3,6, 0);
 
     public Shooter(HardwareMap hardwareMap){
         shooter_motor = hardwareMap.get(DcMotorEx.class, "shooter");

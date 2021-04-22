@@ -111,7 +111,7 @@ public class QingAuto extends LinearOpMode {
         wobble_arm.up();
 
         current_state = state.TO_HIGH_GOAL;
-        while (opModeIsActive()) {
+        while (opModeIsActive() && !isStopRequested()) {
 
             shooter.setSpeed();
             if(!drive.isBusy())
@@ -126,7 +126,7 @@ public class QingAuto extends LinearOpMode {
 
             switch (current_state){
             case TO_HIGH_GOAL:
-                goTo(-5, 24, Math.toRadians(shoot_angle));
+                goTo(-7, 24, Math.toRadians(shoot_angle));
                 current_state = state.SHOOTING;
                 break;
             case SHOOTING:

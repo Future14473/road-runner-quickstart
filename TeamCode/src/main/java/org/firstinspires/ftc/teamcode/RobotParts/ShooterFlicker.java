@@ -60,8 +60,17 @@ public class ShooterFlicker {
     public void flickThrice(Shooter shooter) {
         for (int i = 0; i < 3; i++) {
             wait_until_speed(shooter);
+
+            if(i==0)
+                delay(500);
+            if(i==1)
+                delay(500);//idkk
+            if(i==2)
+                delay(250);
+
             flickOut();
-            delay(500);
+            delay(700);
+
             flickIn();
             delay(200);
         }

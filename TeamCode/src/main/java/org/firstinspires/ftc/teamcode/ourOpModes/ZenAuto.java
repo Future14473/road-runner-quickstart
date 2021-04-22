@@ -7,17 +7,12 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
 import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
@@ -34,12 +29,9 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.Objects;
-
 @Autonomous(name = "ZenAuto", group = "Autonomous")
 @Disabled
 //@Disabled
-//use DriveWheelIMULocalization for the same functionality instead
 @Config
 public class ZenAuto extends LinearOpMode {
     // Declare OpMode members.
@@ -51,22 +43,22 @@ public class ZenAuto extends LinearOpMode {
     Wobble_Arm wobble_arm;
 
     public static double high_goal_x = -10;
-    public static double high_goal_y = 30;
+    public static double high_goal_y = 33;
 
     public static double box_close_x = 29;
     public static double box_close_y = 33;
 
-    public static double box_medium_x = 36;
-    public static double box_medium_y = 25;
+    public static double box_medium_x = 39;
+    public static double box_medium_y = 14;
 
-    public static double box_far_x = 63;
+    public static double box_far_x = 66;
     public static double box_far_y = 47;
 
     public static double before_stack_x = 5;
     public static double before_stack_y = 44;
 
     public static double grab_wobble_x = -46;
-    public static double grab_wobble_y = 30;
+    public static double grab_wobble_y = 32;
 
     public static int wobble_close_delay = 900,
     wobble_middle_delay = 1200,
@@ -125,7 +117,7 @@ public class ZenAuto extends LinearOpMode {
         // TRAJECTORY STUFF
         // We want to start the bot at x: 10, y: -8, heading: 90 degrees
         Pose2d startPose = new Pose2d(-54.5, 20, 0);
-        styx.allDown();
+        //styx.allDown();
         drive.setPoseEstimate(startPose);
 
         boolean debug_disable_shooter = true;
@@ -145,7 +137,7 @@ public class ZenAuto extends LinearOpMode {
             while (opModeIsActive()) {
                 shooter.setSpeed();
                 telemetry.setAutoClear(true);
-                if(!drive.following)
+                if(!drive.isBusy())
                     drive.update();
                 //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
             }
@@ -157,7 +149,7 @@ public class ZenAuto extends LinearOpMode {
 
         //High Goal Shooting
         goTo(high_goal_x, high_goal_y, Math.toRadians(20));
-        flicker.autoFlick();
+        flicker.flickThrice();
 
         for(int i = 0; i<5;i++){
             drive.update();
@@ -180,11 +172,19 @@ public class ZenAuto extends LinearOpMode {
         goTo(grab_wobble_x,grab_wobble_y, 0);
 
         wobble_arm.grab();
+        new Timing(this).safeDelay(500);
         wobble_arm.up();
+        new Timing(this).safeDelay(500);
 
         boxes(detector);
 
+        wobble_arm.home();
+
         goTo(12, 24, 0);
+
+        new Timing(this).safeDelay(1000);
+
+
     }
 
     void boxes(Detection detector){

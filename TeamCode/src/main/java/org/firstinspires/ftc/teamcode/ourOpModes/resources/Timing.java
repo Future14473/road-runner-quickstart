@@ -16,13 +16,6 @@ public class Timing {
         }
     }
 
-    public static void delay(long delay){
-        long start = System.currentTimeMillis();
-        while(System.currentTimeMillis() - start < delay) {
-            //wait
-        }
-    }
-
     public void execAsync(Runnable r, long delayMilis){
         new Thread(()->{
             safeDelay(delayMilis);

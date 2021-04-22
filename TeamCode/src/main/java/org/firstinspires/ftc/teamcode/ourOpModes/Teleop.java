@@ -5,12 +5,10 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Bluetooth.BluetoothConvenient;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
@@ -20,11 +18,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-
-import java.util.Objects;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
 //@Disabled
@@ -99,7 +93,7 @@ public class Teleop extends LinearOpMode {
 
             // Collection
             if (gamepad1.dpad_right)
-                goTo(2.9, 24.9, Math.toRadians(0));
+                goTo(0, 30, Math.toRadians(35));
 
             //Back to Home
             if (gamepad1.dpad_down)
@@ -124,6 +118,8 @@ public class Teleop extends LinearOpMode {
 
             // absolute turning
             double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
+            if(Math.abs(targetDir) < Math.toRadians(20))
+                targetDir = 0;
             double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
             double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
             if (gamepad1.left_bumper) {
@@ -154,12 +150,15 @@ public class Teleop extends LinearOpMode {
 //                y*= 1.0/3;
             }
 
-            DRIVE(y, x, (magnitude > 0.5 && Math.abs(turnPwr) > 0.08) ? -turnPwr / 2 : 0, drive);
+            DRIVE(y, x, magnitude > 0.5 ? -turnPwr : 0, drive);
 
             ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
 
             if (gamepad2.left_bumper) {
-                flicker.autoFlick();
+                flicker.flickThrice();
+            }
+            if(gamepad2.left_stick_button){
+                flicker.singleFlick();
             }
             if (gamepad2.right_bumper) {
                 styx.allUp();
@@ -210,8 +209,8 @@ public class Teleop extends LinearOpMode {
         double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
         boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
         ;
-        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
-                .splineTo(new Vector2d(x, y), reverse ? Math.PI + heading: heading)
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineToConstantHeading(new Vector2d(x, y), heading)
                 .build();
 
         drive.followTrajectory(destination);

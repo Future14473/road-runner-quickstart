@@ -99,25 +99,25 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         // this only works when rr path is running, so not very useful
         //DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
 
-        DirtyGlobalVariables.telemetry.addData("In Path?", drive.following);
+        //DirtyGlobalVariables.telemetry.addData("In Path?", drive.isBusy());
 
 //        if(hasVuforia && !drive.following)
 //            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
 
-        if(drive.following){
+        if(drive.isBusy()){
 //            if(hasVuforia){
 //                doVuforia(vuLocation);
 //            }else{
-            DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
+            //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
 
             super.update();
 //            }
         }else{
             if(hasVuforia){
-                DirtyGlobalVariables.telemetry.addData("Localization", "vuforia");
+                //DirtyGlobalVariables.telemetry.addData("Localization", "vuforia");
                 doVuforia(vuLocation);
             }else{
-                DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
+                //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
                 super.update();
                 //doLaser(heading);
             }

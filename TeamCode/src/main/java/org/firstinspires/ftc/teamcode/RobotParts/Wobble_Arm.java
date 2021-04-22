@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
+@Config
 public class Wobble_Arm {
     public DcMotorEx angler;
     Servo gripper;
@@ -30,7 +32,8 @@ public class Wobble_Arm {
         timer = new Timing(opMode);
     }
 
-    int upPos = -190, downPos = -360;
+    public static int upPos = -190, downPos = -360;
+    public static double grabPos = 0.2, unGrabPos = 1;
     public void up(){
 //        angler.setPower(
 //                0.5 * (upPos - getAnglerPosition())
@@ -39,6 +42,14 @@ public class Wobble_Arm {
         angler.setPower(0.6);
     } //b button
     // 0.44 goes all the way into the robot
+
+    public void home(){
+//        angler.setPower(
+//                0.5 * (upPos - getAnglerPosition())
+//        );
+        angler.setTargetPosition(0);
+        angler.setPower(0.6);
+    }
 
     public void down(){
 //        angler.setPower(
@@ -66,11 +77,12 @@ public class Wobble_Arm {
     }
 
     public void unGrab(){
-        gripper.setPosition(1);
+        gripper.setPosition(unGrabPos);
     }
 
+
     public void grab() {
-        gripper.setPosition(0.4);
+        gripper.setPosition(grabPos);
     }
 
     public double getAnglerPosition(){return angler.getCurrentPosition();}

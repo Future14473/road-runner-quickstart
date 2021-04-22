@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -14,35 +12,31 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
-import org.firstinspires.ftc.teamcode.RobotParts.Toggleable;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous(name = "AAA Qing Auto", group = "Autonomous")
 //@Disabled
-//use DriveWheelIMULocalization for the same functionality instead
 @Config
 public class QingAuto extends LinearOpMode {
-    // Declare OpMode members.
 
-    IMU imu;
     SampleMecanumDrive drive;
-    double headingZero = 0;
+    OpenCvCamera webcam;
+    Detection detector;
+    VuforiaPhone vuforiaPhone;
 
     Wobble_Arm wobble_arm;
+    ShooterFlicker flicker;
+    SideStyx styx;
+    Shooter shooter;
 
-    public static double high_goal_x = -10;
-    public static double high_goal_y = 53;
 
     public static double box_close_x = 16;
     public static double box_close_y = 45;
@@ -53,18 +47,7 @@ public class QingAuto extends LinearOpMode {
     public static double box_far_x = 63;
     public static double box_far_y = 47;
 
-    public static double before_stack_x = 5;
-    public static double before_stack_y = 44;
-
-    public static double grab_wobble_x = -46;
-    public static double grab_wobble_y = 30;
-
-    public static int wobble_close_delay = 900,
-    wobble_middle_delay = 1200,
-    wobble_far_delay = 2000;
-
-    public void runOpMode() throws InterruptedException {
-        DirtyGlobalVariables.isInAuto = true;
+    private void init_camera(){
         //setup RC for display
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
                 getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -72,10 +55,10 @@ public class QingAuto extends LinearOpMode {
                 2, OpenCvCameraFactory.ViewportSplitMethod.HORIZONTALLY);
 
         //OpenCV Setup
-        OpenCvCamera webcam = OpenCvCameraFactory.getInstance().
+        webcam = OpenCvCameraFactory.getInstance().
                 createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), viewportContainerIds[1]);
 
-        Detection detector = new Detection(telemetry);
+        detector = new Detection(telemetry);
 
         webcam.setPipeline(detector);
 
@@ -84,35 +67,42 @@ public class QingAuto extends LinearOpMode {
         });
 
         //Vuforia Setup
-        VuforiaPhone vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
+        vuforiaPhone = new VuforiaPhone(hardwareMap, viewportContainerIds);
 
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
         DirtyGlobalVariables.vuforia = vuforiaPhone;
         DirtyGlobalVariables.vuforia.beginTracking();
+    }
 
-        //Robot Part Setup
+    state current_state;
+    enum state {
+        TO_HIGH_GOAL, SHOOTING, BOXES, PARKING, IDLE
+    }
+
+    public void runOpMode() throws InterruptedException {
+        telemetry.setAutoClear(true);
+
+        DirtyGlobalVariables.isInAuto = true;
+
+        init_camera();
+
+        // init hardware objects
         wobble_arm = new Wobble_Arm(hardwareMap, this);
-        ShooterFlicker flicker = new ShooterFlicker(hardwareMap, this, telemetry);
-        SideStyx styx = new SideStyx(hardwareMap, telemetry);
+        flicker = new ShooterFlicker(hardwareMap, this, telemetry);
+        styx = new SideStyx(hardwareMap, telemetry);
+        shooter = new Shooter(hardwareMap);
 
-        Shooter shooter = new Shooter(hardwareMap);
-        //Timing timer = new Timing(this);
-
-        //Reset wobble arm to up position
-//        wobble_arm.automaticReleaseWobble();
+        // init hardware positions
         flicker.flickIn();
         wobble_arm.grab();
+        styx.allDown();
 
-
+        // init drive
         drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        imu = drive.getIMU();
-
-        // TRAJECTORY STUFF
-        // We want to start the bot at x: 10, y: -8, heading: 90 degrees
+        // init pose
         Pose2d startPose = new Pose2d(-54.5, 20, 0);
-        styx.allDown();
         drive.setPoseEstimate(startPose);
 
         waitForStart();
@@ -120,93 +110,77 @@ public class QingAuto extends LinearOpMode {
         webcam.stopStreaming();
         wobble_arm.up();
 
-        new Thread(()->{
-            while (opModeIsActive()) {
-                shooter.setSpeed();
-                telemetry.setAutoClear(true);
-                if(!drive.following)
-                    drive.update();
-                //telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
+        current_state = state.TO_HIGH_GOAL;
+        while (opModeIsActive()) {
+
+            shooter.setSpeed();
+            if(!drive.isBusy())
+                drive.update();
+
+            telemetry.addData("State", current_state.toString());
+            telemetry.addData("stack height", detector.stack);
+
+            telemetry.update();
+
+            switch (current_state){
+            case TO_HIGH_GOAL:
+                goTo(10, 24, Math.toRadians(50));
+                current_state = state.SHOOTING;
+                break;
+            case SHOOTING:
+                flicker.flickThrice();
+                current_state = state.BOXES;
+                break;
+            case BOXES:
+                boxes();
+                current_state = state.PARKING;
+                break;
+            case PARKING:
+                goTo(17, 24, 0);
+                current_state = state.IDLE;
+                break;
+            case IDLE:
+                DirtyGlobalVariables.isInAuto = false;
+                wobble_arm.home();
+                shooter.stop();
+                return;
             }
-        }).start();
-
-        int whichPowerShot = 0;
-
-        Pose2d p = drive.getPoseEstimate();
-
-        //High Goal Shooting
-        goTo(high_goal_x, high_goal_y, Math.toRadians(20));
-        flicker.autoFlick();
-
-        telemetry.addData("stack height", detector.stack);
-        telemetry.update();
-
-
-        boxes(detector);
-
-        // park
-        goTo(17, 24, 0);
-
-        DirtyGlobalVariables.isInAuto = false;
+        }
     }
 
-    void boxes(Detection detector){
-        if(detector.stack == 0){
+    void boxes(){
+        switch(detector.stack){
+        case 0:
             goTo(box_close_x,box_close_y,0);
-        }
-        else if(detector.stack == 1){
-            goTo(box_medium_x,box_medium_y,0);
-        }
-        else{
-            goTo(box_far_x, box_far_y,0);
+            break;
+        case 1:
+            goTo(box_medium_x, box_medium_y, 0);
+            break;
+        default:
+            goTo(box_far_x, box_far_y, 0);
+            break;
         }
 
-            Timing timer = new Timing(this);
-            //timer.safeDelay(wobble_far_delay);
-            wobble_arm.down();
-            timer.safeDelay(1000);
-            wobble_arm.automaticReleaseWobble();
-            timer.safeDelay(1000);
-    }
-
-    public void goto_forth(int x, int y, int heading){
-        goTo(x/10.0, y/10.0, Math.toRadians(heading));
+        wobble_arm.down();
+        delay(1000);
+        wobble_arm.automaticReleaseWobble();
+        delay(1000);
     }
 
     void goTo(double x, double y, double heading){
-        Pose2d p = drive.getPoseEstimate();
-        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
-        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
-        ;
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineToConstantHeading(new Vector2d(x, y), heading)
                 .build();
 
         drive.followTrajectory(destination);
     }
-    void turnStrong(double targetDir){
-        PIDFController pid = new PIDFController(new PIDCoefficients(10, 2, 4), 0, 0);
-        pid.setTargetPosition(0);
-        double toTurn;
-        while (
-                (toTurn = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI*2)) > Math.toRadians(5) && opModeIsActive()){
-            double pwr = pid.update(-toTurn);
-            telemetry.addData("turn power", pwr);
-            DRIVE(0, 0, -pwr, drive);
+
+    public void delay(long delay){
+        long start = System.currentTimeMillis();
+        while((System.currentTimeMillis() - start < delay) && opModeIsActive()){
+            //wait
         }
-
     }
-
-    public void DRIVE(double forward, double sideways, double rotate, SampleMecanumDrive drivetrain) {
-        drivetrain.setWeightedDrivePower(
-                new Pose2d(
-                        forward,
-                        -sideways, // note the drivetrain wheels are reversed so sideways is positive right
-                        -rotate * 2
-                )
-        );
-    }
-
 }
 
 

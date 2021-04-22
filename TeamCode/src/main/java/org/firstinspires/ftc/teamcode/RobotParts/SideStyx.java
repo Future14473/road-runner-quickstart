@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
+@Config
 public class SideStyx {
     Servo shortStyx;
     Servo longStyx;
@@ -29,16 +31,21 @@ public class SideStyx {
         longDown();
     }
 
+    public static double down = -0.15, up = 0.5;
+
+    public static double down_long = 0.7, up_long = -0.15;
+
+
     private void shortDown(){
-        shortStyx.setPosition(-0.5);
+        shortStyx.setPosition(0.5);
     }
 
-    private void shortUp(){ shortStyx.setPosition(0.5); }
+    private void shortUp(){ shortStyx.setPosition(-0.15); }
 
     private void longDown(){
-        longStyx.setPosition(1);
+        longStyx.setPosition(down_long);
     }
 
-    private void longUp(){ longStyx.setPosition(-0.25); }
+    private void longUp(){ longStyx.setPosition(up_long); }
 }
 

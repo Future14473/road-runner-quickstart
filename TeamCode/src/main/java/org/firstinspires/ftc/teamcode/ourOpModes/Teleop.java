@@ -67,7 +67,7 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             // High Goal
             if (gamepad1.dpad_up)
-                goTo(-8, 34.0, Math.toRadians(15.5));
+                goTo(-7, 24, Math.toRadians(23));
 
             // Collection
             if (gamepad1.dpad_right)

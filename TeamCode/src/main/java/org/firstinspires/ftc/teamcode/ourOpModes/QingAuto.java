@@ -36,16 +36,15 @@ public class QingAuto extends LinearOpMode {
     SideStyx styx;
     Shooter shooter;
 
-    public static double box_close_x = 16;
-    public static double box_close_y = 45;
+    public static double
+            box_close_x = 16,
+            box_close_y = 45,
 
-    public static double box_medium_x = 46;
-    public static double box_medium_y = 23;
+            box_medium_x = 46,
+            box_medium_y = 23,
 
-    public static double box_far_x = 63;
-    public static double box_far_y = 47;
-
-    public static double shoot_angle = 23;
+            box_far_x = 63,
+            box_far_y = 47;
 
     private void init_camera(){
         //setup RC for display
@@ -120,13 +119,11 @@ public class QingAuto extends LinearOpMode {
             telemetry.addData("State", current_state.toString());
             telemetry.addData("stack height", detector.stack);
             telemetry.addData("Shooter Speed", shooter.getShooterVelocity());
-
-
             telemetry.update();
 
             switch (current_state){
             case TO_HIGH_GOAL:
-                goTo(-7, 24, Math.toRadians(shoot_angle));
+                goTo(-7, 24, Math.toRadians(23));
                 current_state = state.SHOOTING;
                 break;
             case SHOOTING:

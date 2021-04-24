@@ -70,7 +70,10 @@ public class ShooterFlicker {
             flickOut();
             timer.safeDelay(150);
             flickIn();
-            timer.safeDelay(300);
+            timer.safeDelay(615);
+            if(i == 2){
+                timer.safeDelay(150);
+            }
         }
         shooter.decreaseSpeed();
     }

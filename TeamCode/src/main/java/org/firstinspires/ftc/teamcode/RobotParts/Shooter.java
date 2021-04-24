@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.ourOpModes.DirtyGlobalVariables;
 public class Shooter {
     DcMotorEx shooter_motor;
 
-    public static int powerShotSpeed = 1350, highGoalSpeed = 1380, highGoalSpeedTeleop = 1550;
+    public static int powerShotSpeed = 1350, highGoalSpeed = 1410, highGoalSpeedTeleop = 1550;
     int tarVelocity = highGoalSpeed;
 
     public static PIDFCoefficients pidf = new PIDFCoefficients(10, 3,6, 0);
@@ -48,11 +48,11 @@ public class Shooter {
 
     //for faster tuning
     public void increaseSpeed(){
-        tarVelocity += 300;
+        tarVelocity += 700;
     }
 
     public void decreaseSpeed(){
-        tarVelocity -= 300;
+        tarVelocity -= 700;
     }
 
     public void setSpeed(){

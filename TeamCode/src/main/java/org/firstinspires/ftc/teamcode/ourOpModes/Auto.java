@@ -208,7 +208,7 @@ public class Auto extends LinearOpMode {
             if (gamepad2.b) {
                 wobble_arm.up();
             }
-            telemetry.addData("wobble angle", wobble_arm.getAnglerPosition());
+//            telemetry.addData("wobble angle", wobble_arm.getAnglerPosition());
 
             double y = -gamepad1.right_stick_y;
             double x = gamepad1.right_stick_x;

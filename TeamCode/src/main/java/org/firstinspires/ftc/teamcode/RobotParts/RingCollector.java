@@ -9,8 +9,9 @@ public class RingCollector {
     public RingCollector(HardwareMap hardwareMap){
         intake1 = hardwareMap.get(DcMotor.class, "intake");
         intake2 = hardwareMap.get(DcMotor.class, "intake2");
-        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
+//        intake2.setDirection(DcMotorSimple.Direction.REVERSE);
         taco = hardwareMap.get(DcMotor.class, "taco");
+        taco.setDirection(DcMotorSimple.Direction.REVERSE);
     }
     public void collect(double speed){
         intake1.setPower(speed);

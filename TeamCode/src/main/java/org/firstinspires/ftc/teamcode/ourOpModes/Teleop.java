@@ -105,7 +105,7 @@ public class Teleop extends LinearOpMode {
             else
                 shooter.setSpeed();
 
-            ringCollector.collect(gamepad2.left_trigger + gamepad2.right_trigger);
+            ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
 
             if (gamepad2.left_bumper)
                 new Thread(() -> flicker.flickThrice(shooter)).start();
@@ -134,7 +134,7 @@ public class Teleop extends LinearOpMode {
 
             drive.update();
 
-            telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
+//            telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
             telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
 
             DirtyGlobalVariables.telemetry.update();

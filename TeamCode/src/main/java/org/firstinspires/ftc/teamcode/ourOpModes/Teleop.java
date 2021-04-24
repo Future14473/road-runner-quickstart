@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.Toggleable;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
@@ -40,6 +41,8 @@ public class Teleop extends LinearOpMode {
         DirtyGlobalVariables.isInAuto = false;
         DirtyGlobalVariables.vuforia = vuforiaPhone;
         DirtyGlobalVariables.vuforia.beginTracking();
+        
+
 
         ringCollector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
@@ -57,6 +60,7 @@ public class Teleop extends LinearOpMode {
         flicker.flickIn();
         styx.allDown();
 
+        Pathing pathing = new Pathing(drive);
 
         Toggleable toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
         Toggleable speedUp = new Toggleable(shooter::increaseSpeed);
@@ -67,11 +71,10 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             // High Goal
             if (gamepad1.dpad_up)
-                goTo(-7, 24, Math.toRadians(23));
-
+                pathing.highGoal();
             // Collection
             if (gamepad1.dpad_right)
-                goTo(0, 30, Math.toRadians(35));
+                pathing.collectPos();
 
             //Back to Home
             if (gamepad1.dpad_down)
@@ -79,13 +82,13 @@ public class Teleop extends LinearOpMode {
 
             // Power Shots
             if(gamepad1.y)
-                goTo(-3.78, 15.42, Math.toRadians(17.27));
+                pathing.powerShot1();
 
             if(gamepad1.x) // 11.5 degs
-                goTo(-3.78, 15.42, Math.toRadians(9.5));
+                pathing.powerShot2();
 
             if(gamepad1.a) // 2.5 degs
-                goTo(-3.78, 15.42, Math.toRadians(6.5));
+                pathing.powerShot3();
 
             if (gamepad2.dpad_left)
                 shooter.setHighGoalSpeed();

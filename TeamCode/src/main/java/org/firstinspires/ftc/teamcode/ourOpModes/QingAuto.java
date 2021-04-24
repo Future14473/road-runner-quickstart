@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -37,7 +38,7 @@ public class QingAuto extends LinearOpMode {
     Shooter shooter;
 
     public static double
-            box_close_x = 16,
+            box_close_x = 19,
             box_close_y = 45,
 
             box_medium_x = 46,
@@ -104,6 +105,8 @@ public class QingAuto extends LinearOpMode {
         Pose2d startPose = new Pose2d(-54.5, 20, 0);
         drive.setPoseEstimate(startPose);
 
+        Pathing pathing = new Pathing(drive);
+
         waitForStart();
 
         webcam.stopStreaming();
@@ -112,8 +115,10 @@ public class QingAuto extends LinearOpMode {
         current_state = state.TO_HIGH_GOAL;
         while (opModeIsActive() && !isStopRequested()) {
 
+            Pathing.startTeleopPosition = drive.getPoseEstimate();
+            telemetry.addData("Teleop Start Position", Pathing.startTeleopPosition);
             shooter.setSpeed();
-            if(!drive.isBusy())
+            if (!drive.isBusy())
                 drive.update();
 
             telemetry.addData("State", current_state.toString());
@@ -121,28 +126,30 @@ public class QingAuto extends LinearOpMode {
             telemetry.addData("Shooter Speed", shooter.getShooterVelocity());
             telemetry.update();
 
-            switch (current_state){
-            case TO_HIGH_GOAL:
-                goTo(-7, 24, Math.toRadians(23));
-                current_state = state.SHOOTING;
-                break;
-            case SHOOTING:
-                flicker.flickThrice(shooter);
-                current_state = state.BOXES;
-                break;
-            case BOXES:
-                boxes();
-                current_state = state.PARKING;
-                break;
-            case PARKING:
-                goTo(17, 24, 0);
-                current_state = state.IDLE;
-                break;
-            case IDLE:
-                DirtyGlobalVariables.isInAuto = false;
-                wobble_arm.home();
-                shooter.stop();
-                return;
+            switch (current_state) {
+                case TO_HIGH_GOAL:
+                    pathing.goToSplineHeading(-7, 24, Math.toRadians(24));
+                    current_state = state.SHOOTING;
+                    break;
+                case SHOOTING:
+//                    flicker.flickThrice(shooter);
+                    flicker.fastTriFlick(shooter);
+                    current_state = state.BOXES;
+                    break;
+                case BOXES:
+                    boxes();
+                    current_state = state.PARKING;
+                    break;
+                case PARKING:
+                    pathing.goToLineConstant(17, 24, 0);
+                    current_state = state.IDLE;
+                    break;
+                case IDLE:
+                    DirtyGlobalVariables.isInAuto = false;
+                    wobble_arm.home();
+                    shooter.stop();
+
+                    return;
             }
         }
     }
@@ -150,14 +157,13 @@ public class QingAuto extends LinearOpMode {
     void boxes(){
         switch(detector.stack){
         case 0:
-            goTo(box_close_x,box_close_y,0);
+            goTo(box_close_x,box_close_y, Math.toRadians(-5));
             break;
         case 1:
-        case 2:
-            goTo(box_medium_x, box_medium_y, 0);
+            goTo(box_medium_x, box_medium_y, Math.toRadians(0));
             break;
         default:
-            goTo(box_far_x, box_far_y, 0);
+            goTo(box_far_x, box_far_y, Math.toRadians(-3));
             break;
         }
 

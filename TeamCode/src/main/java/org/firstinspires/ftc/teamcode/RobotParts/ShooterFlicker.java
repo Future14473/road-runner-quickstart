@@ -62,6 +62,19 @@ public class ShooterFlicker {
         }
     }
 
+    public void fastTriFlick(Shooter shooter){
+        for (int i = 0; i < 3; i++) {
+            if(i == 1){
+                shooter.increaseSpeed();
+            }
+            flickOut();
+            timer.safeDelay(150);
+            flickIn();
+            timer.safeDelay(300);
+        }
+        shooter.decreaseSpeed();
+    }
+
     public void singleFlick(){
         flickOut();
         timer.safeDelay(waitTime);

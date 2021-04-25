@@ -132,8 +132,8 @@ public class QingAuto extends LinearOpMode {
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
-//                    flicker.flickThrice(shooter);
-                    flicker.fastTriFlick(shooter);
+                    flicker.flickThrice(shooter);
+//                    flicker.fastTriFlick(shooter);
                     current_state = state.BOXES;
                     break;
                 case BOXES:

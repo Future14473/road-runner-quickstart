@@ -19,7 +19,7 @@ public class Wobble_Arm {
     Timing timer;
 
     public static int upPos = -190, downPos = -360;
-    public static double grabPos = 0.2, unGrabPos = 1;
+    public static double grabPos = 0.3, unGrabPos = 1;
 
     public Wobble_Arm(HardwareMap hardwareMap, LinearOpMode opMode){
 //        angler = hardwareMap.get(DcMotorEx.class, "wobble_angler");

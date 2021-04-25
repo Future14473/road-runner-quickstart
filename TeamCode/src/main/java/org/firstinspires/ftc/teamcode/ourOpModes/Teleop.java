@@ -65,6 +65,12 @@ public class Teleop extends LinearOpMode {
         Toggleable toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
         Toggleable speedUp = new Toggleable(shooter::increaseSpeed);
         Toggleable speedDown = new Toggleable(shooter::decreaseSpeed);
+        Toggleable tripleFlick = new Toggleable(()->
+            new Thread(()->flicker.flickThrice(shooter)).start()
+        );
+        Toggleable singleFlick = new Toggleable(()->
+                new Thread(()->flicker.singleFlick()).start()
+        );
 
         waitForStart();
 
@@ -99,6 +105,8 @@ public class Teleop extends LinearOpMode {
             speedUp.toggle(gamepad2.dpad_up);
             speedDown.toggle(gamepad2.dpad_down);
             toggleShooter.toggle(gamepad1.right_stick_button);
+            tripleFlick.toggle(gamepad2.left_bumper);
+            singleFlick.toggle(gamepad2.left_bumper);
 
             if (debug_disable_shooter)
                 shooter.stopHard();
@@ -106,12 +114,6 @@ public class Teleop extends LinearOpMode {
                 shooter.setSpeed();
 
             ringCollector.collect(gamepad2.left_trigger - gamepad2.right_trigger);
-
-            if (gamepad2.left_bumper)
-                new Thread(() -> flicker.flickThrice(shooter)).start();
-
-            if(gamepad2.left_stick_button)
-                new Thread(() -> flicker.singleFlick()).start();
 
             if (gamepad2.right_bumper)
                 styx.allUp();

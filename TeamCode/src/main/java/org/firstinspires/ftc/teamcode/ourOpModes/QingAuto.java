@@ -38,8 +38,8 @@ public class QingAuto extends LinearOpMode {
     Shooter shooter;
 
     public static double
-            box_close_x = 19,
-            box_close_y = 45,
+            box_close_x = 16,
+            box_close_y = 49,
 
             box_medium_x = 46,
             box_medium_y = 23,
@@ -132,8 +132,8 @@ public class QingAuto extends LinearOpMode {
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
-                    flicker.flickThrice(shooter);
-//                    flicker.fastTriFlick(shooter);
+//                    flicker.flickThrice(shooter);
+                    flicker.fastTriFlick(shooter);
                     current_state = state.BOXES;
                     break;
                 case BOXES:
@@ -157,13 +157,13 @@ public class QingAuto extends LinearOpMode {
     void boxes(){
         switch(detector.stack){
         case 0:
-            goTo(box_close_x,box_close_y, Math.toRadians(-5));
+            goTo(box_close_x,box_close_y, 0);
             break;
         case 1:
-            goTo(box_medium_x, box_medium_y, Math.toRadians(0));
+            goTo(box_medium_x, box_medium_y, 0);
             break;
         default:
-            goTo(box_far_x, box_far_y, Math.toRadians(-3));
+            goTo(box_far_x, box_far_y, 0);
             break;
         }
 

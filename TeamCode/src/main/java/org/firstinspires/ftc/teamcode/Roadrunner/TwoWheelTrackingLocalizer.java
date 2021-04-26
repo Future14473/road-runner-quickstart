@@ -52,7 +52,8 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double PERPENDICULAR_Y = -1.34;//-1.375;
 
     public static double X_MULTIPLIER = 1.0174; // Multiplier in the X direction
-    public static double Y_MULTIPLIER = 1.0175; // Multiplier in the Y direction
+    public static double Y_MULTIPLIER = 1.072; //RETUNED AS OF 4/25/21
+    // 1.0175; // Multiplier in the Y direction
     private static final float mmPerInch        = 25.4f;
 
     laserLocalization lasers;
@@ -82,47 +83,47 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
     }
 
-    int vuforiaAvailableTimes = 0;
-    // Vuforia and Laser position overrides
-    @Override
-    public void update() {
-        double heading = drive.getIMU().getHeading();
-
-        OpenGLMatrix vuLocation = DirtyGlobalVariables.vuforia.getLocation();
-        if(vuLocation!=null)
-            vuforiaAvailableTimes++;
-        else
-            vuforiaAvailableTimes = 0;
-
-        boolean hasVuforia = vuLocation!=null && vuforiaAvailableTimes>5 && !DirtyGlobalVariables.isInAuto;
-
-        // this only works when rr path is running, so not very useful
-        //DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
-
-        //DirtyGlobalVariables.telemetry.addData("In Path?", drive.isBusy());
-
-//        if(hasVuforia && !drive.following)
-//            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
-
-        if(drive.isBusy()){
+//    int vuforiaAvailableTimes = 0;
+//    // Vuforia and Laser position overrides
+//    @Override
+//    public void update() {
+//        double heading = drive.getIMU().getHeading();
+//
+//        OpenGLMatrix vuLocation = DirtyGlobalVariables.vuforia.getLocation();
+//        if(vuLocation!=null)
+//            vuforiaAvailableTimes++;
+//        else
+//            vuforiaAvailableTimes = 0;
+//
+//        boolean hasVuforia = vuLocation!=null && vuforiaAvailableTimes>5 && !DirtyGlobalVariables.isInAuto;
+//
+//        // this only works when rr path is running, so not very useful
+//        //DirtyGlobalVariables.telemetry.addData("Pose Velocity", poseVel);
+//
+//        //DirtyGlobalVariables.telemetry.addData("In Path?", drive.isBusy());
+//
+////        if(hasVuforia && !drive.following)
+////            drive.getIMU().thisHeadingIsActually(heading, vuforia.matrixToPose(vuLocation).getHeading());
+//
+//        if(drive.isBusy()){
+////            if(hasVuforia){
+////                doVuforia(vuLocation);
+////            }else{
+//            //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
+//
+//            super.update();
+////            }
+//        }else{
 //            if(hasVuforia){
+//                //DirtyGlobalVariables.telemetry.addData("Localization", "vuforia");
 //                doVuforia(vuLocation);
 //            }else{
-            //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
-
-            super.update();
+//                //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
+//                super.update();
+//                //doLaser(heading);
 //            }
-        }else{
-            if(hasVuforia){
-                //DirtyGlobalVariables.telemetry.addData("Localization", "vuforia");
-                doVuforia(vuLocation);
-            }else{
-                //DirtyGlobalVariables.telemetry.addData("Localization", "wheels");
-                super.update();
-                //doLaser(heading);
-            }
-        }
-    }
+//        }
+//    }
 
     void setPoseEstimateForce(Pose2d pose){
         try {

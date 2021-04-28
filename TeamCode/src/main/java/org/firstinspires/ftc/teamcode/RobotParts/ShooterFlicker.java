@@ -53,7 +53,7 @@ public class ShooterFlicker {
                 delay(350);
 
             flickOut();
-            delay(700);
+            delay(1000);
 
             flickIn();
             delay(200);

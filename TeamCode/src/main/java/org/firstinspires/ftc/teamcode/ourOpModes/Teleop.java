@@ -20,9 +20,9 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.RotationUtil;
 
 @TeleOp(name = "AAA Teleop", group = "Teleop")
 public class Teleop extends LinearOpMode {
-    IMU imu;
     SampleMecanumDrive drive;
-    double headingZero = 0;
+    Pathing pathing;
+    IMU imu;
 
     Wobble_Arm wobble_arm;
     RingCollector ringCollector;
@@ -30,9 +30,9 @@ public class Teleop extends LinearOpMode {
     SideStyx styx;
     Shooter shooter;
 
-    boolean debug_disable_shooter = false;
-
     VuforiaPhone vuforiaPhone;
+
+    boolean debug_disable_shooter = false;
 
     public void runOpMode() throws InterruptedException {
 
@@ -41,8 +41,6 @@ public class Teleop extends LinearOpMode {
         DirtyGlobalVariables.isInAuto = false;
         DirtyGlobalVariables.vuforia = vuforiaPhone;
         DirtyGlobalVariables.vuforia.beginTracking();
-        
-
 
         ringCollector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, Teleop.this);
@@ -60,13 +58,13 @@ public class Teleop extends LinearOpMode {
         flicker.flickIn();
         styx.allDown();
 
-        Pathing pathing = new Pathing(drive);
+        pathing = new Pathing(drive);
 
         Toggleable toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
         Toggleable speedUp = new Toggleable(shooter::increaseSpeed);
         Toggleable speedDown = new Toggleable(shooter::decreaseSpeed);
         Toggleable tripleFlick = new Toggleable(()->
-            new Thread(()->flicker.flickThrice(shooter)).start()
+                new Thread(()->flicker.flickThrice(shooter)).start()
         );
         Toggleable singleFlick = new Toggleable(()->
                 new Thread(()->flicker.singleFlick()).start()
@@ -153,27 +151,36 @@ public class Teleop extends LinearOpMode {
     }
 
     void drivetrain_controls(){
+        double targetDir = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x);
+        double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
+
+        if(gamepad1.left_bumper) // relative turning mode
+            pathing.turn_relative(gamepad1.left_stick_x * 0.15);
+        else                     // turn to heading mode
+            pathing.turn_to_heading_PID(targetDir, magnitude);
+    }
+
+    void drivetrain_controls_old(){
         double y = -gamepad1.right_stick_y;
         double x = gamepad1.right_stick_x;
 
-        double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
+        double targetDir = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
 
         if(Math.abs(targetDir) < Math.toRadians(20))
             targetDir = 0;
 
         double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
-        double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir + headingZero, Math.PI * 2);
-
+        double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
 
         if (gamepad1.left_bumper) {
-            turnPwr = gamepad1.left_stick_x;
+            turnPwr = gamepad1.left_stick_x/2;
             x *= 0.3;
         }
 
         if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)
             x *= 0.3;
 
-        DRIVE(y, x, magnitude > 0.5 ? -turnPwr : 0, drive);
+        DRIVE(y, x, magnitude > 0.5 ? turnPwr : 0, drive);
     }
 
 

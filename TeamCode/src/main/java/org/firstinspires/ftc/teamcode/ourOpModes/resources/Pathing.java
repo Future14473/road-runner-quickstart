@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.ourOpModes.resources;
 
+import com.acmerobotics.roadrunner.control.PIDFController;
+import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -49,6 +51,23 @@ public class Pathing {
         drive.followTrajectory(destination);
     }
 
+    PIDFController turn_PID = new PIDFController(SampleMecanumDrive.HEADING_PID);
+    public void turn_to_heading_PID(double dest_heading, double power_coeff){
+
+        double heading_delta = RotationUtil.turnLeftOrRight(
+                drive.getPoseEstimate().getHeading(), dest_heading, Math.PI/2);
+
+        turn_PID.setTargetPosition(heading_delta);
+        turn_PID.setTargetVelocity(0);
+
+        double heading_correction = turn_PID.update(0) * power_coeff;
+
+        drive.setDriveSignal(new DriveSignal(new Pose2d(0, 0, heading_correction)));
+    }
+
+    public void turn_relative(double angle_delta){
+        drive.setDriveSignal(new DriveSignal(new Pose2d(0, 0, angle_delta)));
+    }
 
     public void goToLineConstant(double x, double y, double heading){
         Pose2d p = drive.getPoseEstimate();

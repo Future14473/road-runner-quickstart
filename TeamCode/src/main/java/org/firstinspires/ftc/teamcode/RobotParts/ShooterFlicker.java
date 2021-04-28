@@ -46,11 +46,11 @@ public class ShooterFlicker {
             wait_until_speed(shooter);
 
             if(i==0)
-                delay(500);
+                delay(900);
             if(i==1)
-                delay(500);
+                delay(700);
             if(i==2)
-                delay(250);
+                delay(350);
 
             flickOut();
             delay(700);
@@ -61,7 +61,7 @@ public class ShooterFlicker {
     }
 
     void wait_until_speed(Shooter shooter){
-        while (opMode.opModeIsActive() && Math.abs(shooter.getShooterVelocity() - shooter.getTargetVelocity()) > 40){
+        while (opMode.opModeIsActive() && Math.abs(shooter.getShooterVelocity() - shooter.getTargetVelocity()) > 30){
 
         }
     }

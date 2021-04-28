@@ -42,10 +42,12 @@ public class QingAuto extends LinearOpMode {
             box_close_y = 49,
 
             box_medium_x = 46,
-            box_medium_y = 23,
+            box_medium_y = 26,
 
             box_far_x = 63,
             box_far_y = 47;
+
+    public static boolean fast = false;
 
     private void init_camera(){
         //setup RC for display
@@ -128,12 +130,17 @@ public class QingAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
-                    pathing.goToSplineHeading(-7, 24, Math.toRadians(24));
+                    pathing.goToSplineHeading(-3, 24, Math.toRadians(24));
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
 //                    flicker.flickThrice(shooter);
-                    flicker.fastTriFlick(shooter);
+                    if(fast){
+                        flicker.fastTriFlick(shooter);
+                    }
+                    else {
+                        flicker.flickThrice(shooter);
+                    }
                     current_state = state.BOXES;
                     break;
                 case BOXES:

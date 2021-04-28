@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 @Config
 public class Wobble_Arm {
 //    DcMotorEx angler;
+    Servo angler0, angler1;
+
     Servo gripper;
     Timing timer;
 
@@ -28,6 +30,9 @@ public class Wobble_Arm {
 //        angler.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(15, 3, 6, 0));
 //        angler.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
+        angler0 = hardwareMap.get(Servo.class, "angler0");
+        angler1 = hardwareMap.get(Servo.class, "angler1");
+
         gripper = hardwareMap.get(Servo.class, "wobble_gripper");
         timer = new Timing(opMode);
     }
@@ -35,6 +40,7 @@ public class Wobble_Arm {
     public void up(){
 //        angler.setTargetPosition(upPos);
 //        angler.setPower(0.6);
+        //angler0.setPosition();
     }
     // 0.44 goes all the way into the robot
 

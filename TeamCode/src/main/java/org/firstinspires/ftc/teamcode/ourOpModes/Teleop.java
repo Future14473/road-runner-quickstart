@@ -130,7 +130,11 @@ public class Teleop extends LinearOpMode {
             if (gamepad2.b)
                 wobble_arm.up();
 
-            drivetrain_controls();
+            // fix when @xuyang comes
+//            drivetrain_controls();
+
+
+            drivetrain_controls_old();
 
             drive.update();
 
@@ -176,12 +180,9 @@ public class Teleop extends LinearOpMode {
         double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
 
         if (gamepad1.left_bumper) {
-            turnPwr = gamepad1.left_stick_x/2;
-            x *= 0.3;
-        }
+            turnPwr = gamepad1.left_stick_x * 0.35;
 
-        if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)
-            x *= 0.3;
+        }
 
         DRIVE(y, x, magnitude > 0.5 ? turnPwr : 0, drive);
     }

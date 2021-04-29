@@ -52,21 +52,21 @@ public class Pathing {
     }
 
     PIDFController turn_PID = new PIDFController(SampleMecanumDrive.HEADING_PID);
-    public void turn_to_heading_PID(double dest_heading, double power_coeff){
+    public void turn_to_heading_PID(double dest_heading, double power_coeff, double forward, double left){
 
         double heading_delta = RotationUtil.turnLeftOrRight(
-                drive.getPoseEstimate().getHeading(), dest_heading, Math.PI/2);
+                drive.getPoseEstimate().getHeading(), dest_heading, Math.PI*2);
 
         turn_PID.setTargetPosition(heading_delta);
         turn_PID.setTargetVelocity(0);
 
         double heading_correction = turn_PID.update(0) * power_coeff;
 
-        drive.setDriveSignal(new DriveSignal(new Pose2d(0, 0, heading_correction)));
+        drive.setDriveSignal(new DriveSignal(new Pose2d(forward, left, heading_correction)));
     }
 
-    public void turn_relative(double angle_delta){
-        drive.setDriveSignal(new DriveSignal(new Pose2d(0, 0, angle_delta)));
+    public void turn_relative(double angle_delta, double forward, double left){
+        drive.setDriveSignal(new DriveSignal(new Pose2d(forward, left, angle_delta)));
     }
 
     public void goToLineConstant(double x, double y, double heading){

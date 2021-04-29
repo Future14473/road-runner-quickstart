@@ -104,7 +104,7 @@ public class Teleop extends LinearOpMode {
             speedDown.toggle(gamepad2.dpad_down);
             toggleShooter.toggle(gamepad1.right_stick_button);
             tripleFlick.toggle(gamepad2.left_bumper);
-            singleFlick.toggle(gamepad2.left_bumper);
+            singleFlick.toggle(gamepad2.a);
 
             if (debug_disable_shooter)
                 shooter.stopHard();
@@ -155,9 +155,9 @@ public class Teleop extends LinearOpMode {
         double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
 
         if(gamepad1.left_bumper) // relative turning mode
-            pathing.turn_relative(gamepad1.left_stick_x * 0.15);
+            pathing.turn_relative(gamepad1.left_stick_x * 0.15, gamepad1.right_stick_y, -gamepad1.right_stick_x);
         else                     // turn to heading mode
-            pathing.turn_to_heading_PID(targetDir, magnitude);
+            pathing.turn_to_heading_PID(targetDir, magnitude, gamepad1.right_stick_y, -gamepad1.right_stick_x);
     }
 
     void drivetrain_controls_old(){

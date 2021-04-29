@@ -179,9 +179,11 @@ public class Teleop extends LinearOpMode {
         double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
         double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
 
+        if (turnPwr < Math.toRadians(5)){
+            turnPwr = 0;
+        }
         if (gamepad1.left_bumper) {
-            turnPwr = gamepad1.left_stick_x * 0.35;
-
+            turnPwr = gamepad1.left_stick_x / 4;
         }
 
         DRIVE(y, x, magnitude > 0.5 ? turnPwr : 0, drive);

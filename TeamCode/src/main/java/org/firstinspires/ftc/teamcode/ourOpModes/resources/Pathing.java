@@ -53,7 +53,7 @@ public class Pathing {
         drive.followTrajectory(destination);
     }
 
-    PIDFController turn_PID = new PIDFController(new PIDCoefficients(3, 0, 0));
+    PIDFController turn_PID = new PIDFController(new PIDCoefficients(1, 0, 0));
     public void turn_to_heading_PID(double dest_heading, double power_coeff, double forward, double left){
 
         double heading_delta = RotationUtil.turnLeftOrRight(
@@ -63,14 +63,14 @@ public class Pathing {
         turn_PID.setTargetVelocity(0);
 
         double heading_correction = turn_PID.update(0) * power_coeff;
-        if(heading_delta < Math.toRadians(3))
+        if(Math.abs(heading_delta) < Math.toRadians(3))
             heading_correction = 0;
 
-        drive.setDriveSignal(new DriveSignal(new Pose2d(forward, left, heading_correction)));
+        drive.setDrivePower((new Pose2d(forward, left, heading_correction)));
     }
 
     public void turn_relative(double angle_delta, double forward, double left){
-        drive.setDriveSignal(new DriveSignal(new Pose2d(forward, left, angle_delta)));
+        drive.setDrivePower((new Pose2d(forward, left, angle_delta)));
     }
 
     public void goToLineConstant(double x, double y, double heading){

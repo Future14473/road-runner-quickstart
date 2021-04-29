@@ -156,7 +156,7 @@ public class Teleop extends LinearOpMode {
 
         if(gamepad1.left_bumper) // relative turning mode
             pathing.turn_relative(gamepad1.left_stick_x * 0.35, gamepad1.right_stick_y, -gamepad1.right_stick_x);
-        else                     // turn to heading mode
+        else if(magnitude > 0.2) // turn to heading mode
             pathing.turn_to_heading_PID(targetDir, magnitude, gamepad1.right_stick_y, -gamepad1.right_stick_x);
     }
 

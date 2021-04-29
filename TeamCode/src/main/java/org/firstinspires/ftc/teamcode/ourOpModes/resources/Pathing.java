@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.opencv.core.Mat;
 
 public class Pathing {
     SampleMecanumDrive drive;
@@ -62,6 +63,8 @@ public class Pathing {
         turn_PID.setTargetVelocity(0);
 
         double heading_correction = turn_PID.update(0) * power_coeff;
+        if(heading_delta < Math.toRadians(3))
+            heading_correction = 0;
 
         drive.setDriveSignal(new DriveSignal(new Pose2d(forward, left, heading_correction)));
     }

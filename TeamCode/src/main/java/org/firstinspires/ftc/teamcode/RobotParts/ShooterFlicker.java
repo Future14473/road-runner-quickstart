@@ -39,7 +39,7 @@ public class ShooterFlicker {
         return flicker.getPosition();
     }
 
-    int waitTime = 1000;
+    int waitTime = 500;
 
     public void flickThrice(Shooter shooter) {
         for (int i = 0; i < 3; i++) {

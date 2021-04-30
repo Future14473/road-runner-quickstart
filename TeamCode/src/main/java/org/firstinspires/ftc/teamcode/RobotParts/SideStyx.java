@@ -33,7 +33,7 @@ public class SideStyx {
 
     public static double down = -0.15, up = 0.5;
 
-    public static double down_long = 0.7, up_long = -0.15;
+    public static double down_long = 0.4, up_long = 0.1;
 
 
     private void shortDown(){

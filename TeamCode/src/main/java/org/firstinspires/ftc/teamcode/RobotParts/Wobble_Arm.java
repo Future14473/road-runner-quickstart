@@ -18,7 +18,7 @@ public class Wobble_Arm {
     public static double upPos = 0.4, downPos = 0.75, homePos = 0;
 //    public static int upPosBack = 0, downPosBack = 1, homePosBack = -1;
 
-    public static double grabPos = 0.3, unGrabPos = 1;
+    public static double grabPos = 0.32, unGrabPos = 1;
 
     public Wobble_Arm(HardwareMap hardwareMap, LinearOpMode opMode){
 //        angler = hardwareMap.get(DcMotorEx.class, "wobble_angler");

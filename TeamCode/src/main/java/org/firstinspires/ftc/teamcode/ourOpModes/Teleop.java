@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ourOpModes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -64,6 +65,7 @@ public class Teleop extends LinearOpMode {
 
         pathing = new Pathing(drive);
 
+
          toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
          toggleShooterIdle = new Toggleable(() -> shooterIdling = !shooterIdling);
          speedUp = new Toggleable(shooter::increaseSpeed);
@@ -80,7 +82,8 @@ public class Teleop extends LinearOpMode {
         controls_async.start();
 
         while (opModeIsActive()) {
-
+            if (Shooter.farShootHighGoalDebug)
+                shooter.setHighGoalFarSpeed();
 
             drivetrain_controls_old();
 

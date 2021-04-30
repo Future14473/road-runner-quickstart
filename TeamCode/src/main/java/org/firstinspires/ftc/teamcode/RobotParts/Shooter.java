@@ -14,10 +14,12 @@ import org.firstinspires.ftc.teamcode.ourOpModes.DirtyGlobalVariables;
 public class Shooter {
     DcMotorEx shooter_motor;
 
-    public static int powerShotSpeed = 1350, highGoalSpeed = 1390, highGoalSpeedTeleop = 1550;
+    public static int powerShotSpeed = 1350, highGoalSpeed = 1390, highGoalSpeedTeleop = 1550, highGoalFar = 1700;
     int tarVelocity = highGoalSpeed;
 
     public static PIDFCoefficients pidf = new PIDFCoefficients(10, 3,6, 0);
+
+    public static boolean farShootHighGoalDebug = false;
 
     public Shooter(HardwareMap hardwareMap){
         shooter_motor = hardwareMap.get(DcMotorEx.class, "shooter");
@@ -36,6 +38,10 @@ public class Shooter {
 
     public void setHighGoalSpeed(){
         tarVelocity = highGoalSpeed;
+    }
+
+    public void setHighGoalFarSpeed(){
+        tarVelocity = highGoalFar;
     }
 
     public void setHighGoalSpeedTeleop(){

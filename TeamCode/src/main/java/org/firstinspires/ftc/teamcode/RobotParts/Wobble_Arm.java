@@ -15,7 +15,7 @@ public class Wobble_Arm {
     Servo gripper;
     Timing timer;
 
-    public static double upPos = 0.4, downPos = 0.75, homePos = 0;
+    public static double upPos = 0.4, downPos = 0.72, homePos = 0;
 //    public static int upPosBack = 0, downPosBack = 1, homePosBack = -1;
 
     public static double grabPos = 0.26, unGrabPos = 1;

@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -26,6 +27,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class RegionalsAuto extends LinearOpMode {
 
     SampleMecanumDrive drive;
+    Pathing pathing;
+
     OpenCvCamera webcam;
     Detection detector;
     VuforiaPhone vuforiaPhone;
@@ -36,14 +39,17 @@ public class RegionalsAuto extends LinearOpMode {
     Shooter shooter;
 
     public static double
-            box_close_x = 16,
+            box_close_x = 19,
             box_close_y = 49,
 
-            box_medium_x = 46,
+            box_medium_x = 49,
             box_medium_y = 26,
 
-            box_far_x = 63,
-            box_far_y = 47;
+            box_far_x = 66,
+            box_far_y = 47,
+
+            wobble_grab_x = -26,
+            wobble_grab_y = 58;
 
     public static boolean fast = true;
 
@@ -100,12 +106,11 @@ public class RegionalsAuto extends LinearOpMode {
         // init drive
         drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pathing = new Pathing(drive);
 
         // init pose
         Pose2d startPose = new Pose2d(-54.5, 20, 0);
         drive.setPoseEstimate(startPose);
-
-        Pathing pathing = new Pathing(drive);
 
         waitForStart();
 
@@ -140,31 +145,30 @@ public class RegionalsAuto extends LinearOpMode {
                         flicker.flickThrice(shooter);
                     }
                     current_state = state.BOXES;
+                    shooter.stop();
                     break;
                 case BOXES:
                     boxes();
-                    current_state = state.PREWOBBLE;
+                    current_state = state.WOBBLE;
                     break;
                 case PARKING:
-                    pathing.goToLineConstant(17, 44, 0);
+                    pathing.goToLineConstant(17, 35, 0);
                     current_state = state.IDLE;
                     break;
-                case PREWOBBLE:
+//                case PREWOBBLE:
 //                    wobble_arm.down();
 //                    wobble_arm.unGrab();
 //                    pathing.goToSplineHeading(-35.5, 25, 0);
 //                    current_state = state.WOBBLE;
-                    break;
+//                    break;
                 case WOBBLE:
-                    pathing.goToLineConstant(-35.5, 39, Math.PI/2);
+                    pathing.goToLineWobbleDown(wobble_grab_x, wobble_grab_y, Math.PI/2, 0.5, wobble_arm);
+                    delay(300);
                     wobble_arm.grab();
-                    delay(500);
-                    wobble_arm.up();
-                    delay(1000);
                     current_state = state.BOXES_AGAIN;
                     break;
                 case BOXES_AGAIN:
-                    boxes();
+                    boxes2();
                     current_state = state.PARKING;
                     break;
                 case IDLE:
@@ -179,20 +183,43 @@ public class RegionalsAuto extends LinearOpMode {
     void boxes(){
         switch(detector.stack){
         case 0:
-            goTo(box_close_x,box_close_y, 0);
+            pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.5, wobble_arm);
             break;
         case 1:
-            goTo(box_medium_x, box_medium_y, 0);
+            pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.5, wobble_arm);
             break;
         default:
-            goTo(box_far_x, box_far_y, 0);
+            pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.5, wobble_arm);
             break;
         }
 
-        wobble_arm.down();
-        delay(1000);
-        wobble_arm.automaticReleaseWobble();
-        delay(1000);
+        wobble_arm.unGrab();
+        new Thread(()->{
+            delay(200);
+            wobble_arm.up();
+        }
+        ).start();
+    }
+
+    void boxes2(){
+        switch(detector.stack){
+            case 0:
+                pathing.goToLineWobbleDown(box_close_x-7,box_close_y, 0, 0.9, wobble_arm);
+                break;
+            case 1:
+                pathing.goToLineWobbleDown(box_medium_x-7,box_medium_y, 0, 0.9, wobble_arm);
+                break;
+            default:
+                pathing.goToLineWobbleDown(box_far_x-7,box_far_y, 0, 0.9, wobble_arm);
+                break;
+        }
+
+        wobble_arm.unGrab();
+        new Thread(()->{
+            delay(100);
+            wobble_arm.up();
+        }
+        ).start();
     }
 
     void goTo(double x, double y, double heading){

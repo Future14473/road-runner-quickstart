@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.opencv.core.Mat;
 
 public class Pathing {
@@ -80,6 +81,44 @@ public class Pathing {
         ;
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
                 .lineToConstantHeading(new Vector2d(x, y))
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
+    public void goToLine(double x, double y, double heading){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+        ;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .lineToLinearHeading(new Pose2d(x, y, heading))
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
+    public void goToLineWobbleDown(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+        ;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .lineToLinearHeading(new Pose2d(x, y, heading))
+                .addTemporalMarker(dropPoint, wobble_arm::down)
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
+    public void goToLineWobbleUp(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+        ;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .lineToLinearHeading(new Pose2d(x, y, heading))
+                .addTemporalMarker(dropPoint, wobble_arm::up)
                 .build();
 
         drive.followTrajectory(destination);

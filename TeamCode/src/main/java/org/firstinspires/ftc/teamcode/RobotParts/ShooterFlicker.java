@@ -16,7 +16,7 @@ public class ShooterFlicker {
     LinearOpMode opMode;
     Telemetry telemetry;
 
-    public static int flickbackdelay = 150, firstdelay = 615, seconddelay = 600;
+    public static int flickbackdelay = 150, firstdelay = 700, seconddelay = 780;
 
     public ShooterFlicker(HardwareMap hardwareMap, LinearOpMode opMode, Telemetry telemetry) {
         flicker = hardwareMap.get(Servo.class, "flicker");

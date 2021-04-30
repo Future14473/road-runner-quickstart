@@ -25,7 +25,8 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *//*
+
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
@@ -36,6 +37,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+*/
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -48,7 +50,8 @@ import com.qualcomm.robotcore.util.Range;
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
+ *//*
+
 
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
 @Disabled
@@ -59,9 +62,11 @@ public class BasicOpMode_Iterative extends OpMode
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
 
-    /*
+    */
+/*
      * Code to run ONCE when the driver hits INIT
-     */
+     *//*
+
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
@@ -81,24 +86,30 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
+    */
+/*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+     *//*
+
     @Override
     public void init_loop() {
     }
 
-    /*
+    */
+/*
      * Code to run ONCE when the driver hits PLAY
-     */
+     *//*
+
     @Override
     public void start() {
         runtime.reset();
     }
 
-    /*
+    */
+/*
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+     *//*
+
     @Override
     public void loop() {
         // Setup a variable for each drive wheel to save power level for telemetry
@@ -129,11 +140,14 @@ public class BasicOpMode_Iterative extends OpMode
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
     }
 
-    /*
+    */
+/*
      * Code to run ONCE after the driver hits STOP
-     */
+     *//*
+
     @Override
     public void stop() {
     }
 
 }
+*/

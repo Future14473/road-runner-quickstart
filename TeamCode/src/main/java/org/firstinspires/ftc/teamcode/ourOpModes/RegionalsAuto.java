@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.ourOpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -17,17 +16,19 @@ import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.IMU;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
+import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "AAA Qing Auto", group = "Autonomous")
+@Autonomous(name = "AAA Regionals Auto", group = "Autonomous")
 @Config
-public class QingAuto extends LinearOpMode {
+public class RegionalsAuto extends LinearOpMode {
 
     SampleMecanumDrive drive;
+    Pathing pathing;
+
     OpenCvCamera webcam;
     Detection detector;
     VuforiaPhone vuforiaPhone;
@@ -38,16 +39,19 @@ public class QingAuto extends LinearOpMode {
     Shooter shooter;
 
     public static double
-            box_close_x = 16,
+            box_close_x = 19,
             box_close_y = 49,
 
-            box_medium_x = 46,
+            box_medium_x = 49,
             box_medium_y = 26,
 
-            box_far_x = 63,
-            box_far_y = 47;
+            box_far_x = 66,
+            box_far_y = 47,
 
-    public static boolean fast = false;
+            wobble_grab_x = -26,
+            wobble_grab_y = 58;
+
+    public static boolean fast = true;
 
     private void init_camera(){
         //setup RC for display
@@ -78,7 +82,7 @@ public class QingAuto extends LinearOpMode {
 
     state current_state;
     enum state {
-        TO_HIGH_GOAL, SHOOTING, BOXES, PARKING, IDLE
+        TO_HIGH_GOAL, SHOOTING, BOXES, WOBBLE, PREWOBBLE, PARKING, BOXES_AGAIN, IDLE,
     }
 
     public void runOpMode() throws InterruptedException {
@@ -102,12 +106,11 @@ public class QingAuto extends LinearOpMode {
         // init drive
         drive = new SampleMecanumDrive(hardwareMap, telemetry);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pathing = new Pathing(drive);
 
         // init pose
         Pose2d startPose = new Pose2d(-54.5, 20, 0);
         drive.setPoseEstimate(startPose);
-
-        Pathing pathing = new Pathing(drive);
 
         waitForStart();
 
@@ -131,7 +134,6 @@ public class QingAuto extends LinearOpMode {
             switch (current_state) {
                 case TO_HIGH_GOAL:
                     pathing.goToSplineHeading(-3, 24, Math.toRadians(24));
-                    //todo start shooting sequence before reaching destination
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
@@ -143,20 +145,36 @@ public class QingAuto extends LinearOpMode {
                         flicker.flickThrice(shooter);
                     }
                     current_state = state.BOXES;
+                    shooter.stop();
                     break;
                 case BOXES:
                     boxes();
-                    current_state = state.PARKING;
+                    current_state = state.WOBBLE;
                     break;
                 case PARKING:
-                    pathing.goToLineConstant(17, 24, 0);
+                    pathing.goToLineConstant(17, 35, 0);
                     current_state = state.IDLE;
+                    break;
+//                case PREWOBBLE:
+//                    wobble_arm.down();
+//                    wobble_arm.unGrab();
+//                    pathing.goToSplineHeading(-35.5, 25, 0);
+//                    current_state = state.WOBBLE;
+//                    break;
+                case WOBBLE:
+                    pathing.goToLineWobbleDown(wobble_grab_x, wobble_grab_y, Math.PI/2, 0.5, wobble_arm);
+                    delay(300);
+                    wobble_arm.grab();
+                    current_state = state.BOXES_AGAIN;
+                    break;
+                case BOXES_AGAIN:
+                    boxes2();
+                    current_state = state.PARKING;
                     break;
                 case IDLE:
                     DirtyGlobalVariables.isInAuto = false;
                     wobble_arm.home();
                     shooter.stop();
-
                     return;
             }
         }
@@ -165,21 +183,43 @@ public class QingAuto extends LinearOpMode {
     void boxes(){
         switch(detector.stack){
         case 0:
-            goTo(box_close_x,box_close_y, 0);
+            pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.5, wobble_arm);
             break;
         case 1:
-            goTo(box_medium_x, box_medium_y, 0);
+            pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.5, wobble_arm);
             break;
         default:
-            goTo(box_far_x, box_far_y, 0);
+            pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.5, wobble_arm);
             break;
         }
 
-        //todo make wobble drop faster
-        wobble_arm.down();
-        delay(1000);
-        wobble_arm.automaticReleaseWobble();
-        delay(1000);
+        wobble_arm.unGrab();
+        new Thread(()->{
+            delay(200);
+            wobble_arm.up();
+        }
+        ).start();
+    }
+
+    void boxes2(){
+        switch(detector.stack){
+            case 0:
+                pathing.goToLineWobbleDown(box_close_x-7,box_close_y, 0, 0.9, wobble_arm);
+                break;
+            case 1:
+                pathing.goToLineWobbleDown(box_medium_x-7,box_medium_y, 0, 0.9, wobble_arm);
+                break;
+            default:
+                pathing.goToLineWobbleDown(box_far_x-7,box_far_y, 0, 0.9, wobble_arm);
+                break;
+        }
+
+        wobble_arm.unGrab();
+        new Thread(()->{
+            delay(100);
+            wobble_arm.up();
+        }
+        ).start();
     }
 
     void goTo(double x, double y, double heading){

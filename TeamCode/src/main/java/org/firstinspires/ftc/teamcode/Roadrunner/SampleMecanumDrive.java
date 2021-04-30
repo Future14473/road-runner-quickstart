@@ -62,7 +62,7 @@ import static org.firstinspires.ftc.teamcode.Roadrunner.DriveConstants.kV;
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 1);
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(4, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(3, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1.8;
@@ -399,10 +399,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        leftFront.setPower(1.3 * v);
+        leftRear.setPower(1.3 * v1);
+        rightRear.setPower(1.3 * v2);
+        rightFront.setPower(1.3 * v3);
     }
 
     @Override

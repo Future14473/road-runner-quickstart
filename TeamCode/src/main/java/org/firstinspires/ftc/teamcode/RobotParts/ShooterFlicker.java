@@ -16,7 +16,7 @@ public class ShooterFlicker {
     LinearOpMode opMode;
     Telemetry telemetry;
 
-    public static int flickbackdelay = 150, firstdelay = 615, seconddelay = 750;
+    public static int flickbackdelay = 150, firstdelay = 700, seconddelay = 780;
 
     public ShooterFlicker(HardwareMap hardwareMap, LinearOpMode opMode, Telemetry telemetry) {
         flicker = hardwareMap.get(Servo.class, "flicker");
@@ -39,7 +39,7 @@ public class ShooterFlicker {
         return flicker.getPosition();
     }
 
-    int waitTime = 1000;
+    int waitTime = 500;
 
     public void flickThrice(Shooter shooter) {
         for (int i = 0; i < 3; i++) {
@@ -68,23 +68,16 @@ public class ShooterFlicker {
 
     public void fastTriFlick(Shooter shooter){
         for (int i = 0; i < 3; i++) {
-            if(i == 0){
-                DirtyGlobalVariables.telemetry.addData("first shot", shooter.getShooterVelocity());
-            }
             if(i == 1){
-                shooter.increaseSpeed();
                 timer.safeDelay(firstdelay);
-                DirtyGlobalVariables.telemetry.addData("second shot", shooter.getShooterVelocity());
             }
             if(i == 2){
                 timer.safeDelay(seconddelay);
-                DirtyGlobalVariables.telemetry.addData("third shot", shooter.getShooterVelocity());
             }
             flickOut();
             timer.safeDelay(flickbackdelay);
             flickIn();
         }
-        shooter.decreaseSpeed();
     }
 
     public void singleFlick(){

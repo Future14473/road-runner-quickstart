@@ -34,6 +34,10 @@ public class Teleop extends LinearOpMode {
 
     boolean debug_disable_shooter = false;
 
+
+    Toggleable toggleShooter, speedUp, speedDown, tripleFlick, singleFlick, toggleShooterIdle;
+    boolean shooterIdling = false;
+
     public void runOpMode() throws InterruptedException {
 
         init_camera();
@@ -60,18 +64,36 @@ public class Teleop extends LinearOpMode {
 
         pathing = new Pathing(drive);
 
-        Toggleable toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
-        Toggleable speedUp = new Toggleable(shooter::increaseSpeed);
-        Toggleable speedDown = new Toggleable(shooter::decreaseSpeed);
-        Toggleable tripleFlick = new Toggleable(()->
-                new Thread(()->flicker.flickThrice(shooter)).start()
+         toggleShooter = new Toggleable(()-> debug_disable_shooter = !debug_disable_shooter);
+         toggleShooterIdle = new Toggleable(() -> shooterIdling = !shooterIdling);
+         speedUp = new Toggleable(shooter::increaseSpeed);
+         speedDown = new Toggleable(shooter::decreaseSpeed);
+         tripleFlick = new Toggleable(()->
+                new Thread(()->flicker.fastTriFlick(shooter)).start()
         );
-        Toggleable singleFlick = new Toggleable(()->
+        singleFlick = new Toggleable(()->
                 new Thread(()->flicker.singleFlick()).start()
         );
 
         waitForStart();
 
+        controls_async.start();
+
+        while (opModeIsActive()) {
+
+
+            drivetrain_controls_old();
+
+            drive.update();
+
+//            telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
+            telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
+
+            DirtyGlobalVariables.telemetry.update();
+        }
+    }
+
+    Thread controls_async = new Thread(()->{
         while (opModeIsActive()) {
             // High Goal
             if (gamepad1.dpad_up)
@@ -85,13 +107,13 @@ public class Teleop extends LinearOpMode {
                 goTo(-60.8, 16.92, Math.toRadians(0));
 
             // Power Shots
-            if(gamepad1.y)
+            if (gamepad1.y)
                 pathing.powerShot1();
 
-            if(gamepad1.x) // 11.5 degs
+            if (gamepad1.x) // 11.5 degs
                 pathing.powerShot2();
 
-            if(gamepad1.a) // 2.5 degs
+            if (gamepad1.a) // 2.5 degs
                 pathing.powerShot3();
 
             if (gamepad2.dpad_left)
@@ -118,32 +140,22 @@ public class Teleop extends LinearOpMode {
             else
                 styx.allDown();
 
-            if (gamepad2.a)
-                wobble_arm.down();
+            if(!gamepad1.start && !gamepad2.start) {
+                if (gamepad2.a)
+                    wobble_arm.down();
 
-            if (gamepad2.x)
-                wobble_arm.grab();
+                if (gamepad2.x)
+                    wobble_arm.grab();
 
-            if (gamepad2.y)
-                wobble_arm.unGrab();
+                if (gamepad2.y)
+                    wobble_arm.unGrab();
 
-            if (gamepad2.b)
-                wobble_arm.up();
-
-            // fix when @xuyang comes
-//            drivetrain_controls();
-
-
-            drivetrain_controls_old();
-
-            drive.update();
-
-//            telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
-            telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
-
-            DirtyGlobalVariables.telemetry.update();
+                if (gamepad2.b)
+                    wobble_arm.up();
+            }
         }
     }
+    );
 
     void init_camera(){
         int cameraMonitorViewId = hardwareMap.appContext.getResources().
@@ -171,22 +183,24 @@ public class Teleop extends LinearOpMode {
         double y = -gamepad1.right_stick_y;
         double x = gamepad1.right_stick_x;
 
-        double targetDir = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
+        double targetDir = -Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 2;
 
         if(Math.abs(targetDir) < Math.toRadians(20))
             targetDir = 0;
 
-        double magnitude = Math.hypot(gamepad1.left_stick_y, gamepad1.left_stick_x);
+        double magnitude = Math.abs(gamepad1.left_stick_x);
         double turnPwr = RotationUtil.turnLeftOrRight(imu.getHeading(), targetDir, Math.PI * 2);
 
-        if (turnPwr < Math.toRadians(5)){
-            turnPwr = 0;
-        }
+        // turn out drivers never use absolutre turning
+        turnPwr = gamepad1.left_stick_x;
         if (gamepad1.left_bumper) {
-            turnPwr = gamepad1.left_stick_x / 4;
+            x *= 0.3;
         }
 
-        DRIVE(y, x, magnitude > 0.5 ? turnPwr : 0, drive);
+        if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)
+            x *= 0.3;
+
+        DRIVE(y, x, magnitude > 0.1 ? turnPwr : 0, drive);
     }
 
 

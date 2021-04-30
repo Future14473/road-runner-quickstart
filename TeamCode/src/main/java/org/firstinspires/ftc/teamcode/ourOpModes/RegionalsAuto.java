@@ -165,6 +165,8 @@ public class RegionalsAuto extends LinearOpMode {
                     pathing.goToLineWobbleDown(wobble_grab_x, wobble_grab_y, Math.PI/2, 0.5, wobble_arm);
                     delay(300);
                     wobble_arm.grab();
+                    delay(300);
+                    wobble_arm.up();
                     current_state = state.BOXES_AGAIN;
                     break;
                 case BOXES_AGAIN:

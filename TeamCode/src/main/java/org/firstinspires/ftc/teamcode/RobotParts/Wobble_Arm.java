@@ -39,7 +39,7 @@ public class Wobble_Arm {
 //        angler.setTargetPosition(upPos);
 //        angler.setPower(0.6);
         //angler0.setPosition();
-        anglerBack.setPosition(upPos);
+        new Thread(() -> { anglerBack.setPosition(upPos);}).start();
         anglerFront.setPosition(upPos);
     }
     // 0.44 goes all the way into the robot
@@ -47,14 +47,14 @@ public class Wobble_Arm {
     public void home(){
 //        angler.setTargetPosition(-50);
 //        angler.setPower(0.6);
-        anglerBack.setPosition(homePos);
+        new Thread(() -> { anglerBack.setPosition(homePos);}).start();
         anglerFront.setPosition(homePos);
     }
 
     public void down(){
 //        angler.setTargetPosition(downPos);
 //        angler.setPower(0.6);
-        anglerBack.setPosition(downPos);
+        new Thread(() -> { anglerBack.setPosition(downPos);}).start();
         anglerFront.setPosition(downPos);
     }
 

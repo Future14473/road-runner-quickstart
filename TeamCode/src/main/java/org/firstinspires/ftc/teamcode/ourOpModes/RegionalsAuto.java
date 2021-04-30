@@ -45,7 +45,7 @@ public class RegionalsAuto extends LinearOpMode {
             box_far_x = 63,
             box_far_y = 47;
 
-    public static boolean fast = false;
+    public static boolean fast = true;
 
     private void init_camera(){
         //setup RC for display
@@ -150,13 +150,13 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.IDLE;
                     break;
                 case PREWOBBLE:
-                    wobble_arm.down();
-                    wobble_arm.unGrab();
-                    pathing.goToSplineHeading(-35.5, 25, 0);
-                    current_state = state.WOBBLE;
+//                    wobble_arm.down();
+//                    wobble_arm.unGrab();
+//                    pathing.goToSplineHeading(-35.5, 25, 0);
+//                    current_state = state.WOBBLE;
                     break;
                 case WOBBLE:
-                    pathing.goToLineConstant(-35.5, 39, 0);
+                    pathing.goToLineConstant(-35.5, 39, Math.PI/2);
                     wobble_arm.grab();
                     delay(500);
                     wobble_arm.up();

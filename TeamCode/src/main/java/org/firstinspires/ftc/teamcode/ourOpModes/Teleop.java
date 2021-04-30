@@ -69,7 +69,7 @@ public class Teleop extends LinearOpMode {
          speedUp = new Toggleable(shooter::increaseSpeed);
          speedDown = new Toggleable(shooter::decreaseSpeed);
          tripleFlick = new Toggleable(()->
-                new Thread(()->flicker.flickThrice(shooter)).start()
+                new Thread(()->flicker.fastTriFlick(shooter)).start()
         );
         singleFlick = new Toggleable(()->
                 new Thread(()->flicker.singleFlick()).start()

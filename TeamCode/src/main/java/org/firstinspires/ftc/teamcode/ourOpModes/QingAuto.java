@@ -131,6 +131,7 @@ public class QingAuto extends LinearOpMode {
             switch (current_state) {
                 case TO_HIGH_GOAL:
                     pathing.goToSplineHeading(-3, 24, Math.toRadians(24));
+                    //todo start shooting sequence before reaching destination
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
@@ -174,6 +175,7 @@ public class QingAuto extends LinearOpMode {
             break;
         }
 
+        //todo make wobble drop faster
         wobble_arm.down();
         delay(1000);
         wobble_arm.automaticReleaseWobble();

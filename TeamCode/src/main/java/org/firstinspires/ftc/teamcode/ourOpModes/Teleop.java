@@ -195,11 +195,8 @@ public class Teleop extends LinearOpMode {
         // turn out drivers never use absolutre turning
         turnPwr = gamepad1.left_stick_x;
         if (gamepad1.left_bumper) {
-            x *= 0.3;
+            turnPwr *= 0.3;
         }
-
-        if (gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0)
-            x *= 0.3;
 
         DRIVE(y, x, magnitude > 0.1 ? turnPwr : 0, drive);
     }

@@ -46,11 +46,11 @@ public class RegionalsAuto extends LinearOpMode {
             box_medium_x = 49,
             box_medium_y = 26,
 
-            box_far_x = 66,
+            box_far_x = 68,
             box_far_y = 47,
 
             recollect_x = -33.5,
-            recollect_y = 32,
+            recollect_y = 35,
 
             wobble_grab_x = -26,
             wobble_grab_y = 58;
@@ -86,7 +86,7 @@ public class RegionalsAuto extends LinearOpMode {
 
     state current_state;
     enum state {
-        TO_HIGH_GOAL, SHOOTING, BOXES, WOBBLE, RECOLLECT, PARKING, BOXES_AGAIN, IDLE,
+        TO_HIGH_GOAL, SHOOTING, BOXES, WOBBLE, RECOLLECT, PARKING, BOXES_AGAIN, IDLE, SHOOT_AGAIN,
     }
 
     public void runOpMode() throws InterruptedException {
@@ -166,8 +166,20 @@ public class RegionalsAuto extends LinearOpMode {
                     break;
                 case RECOLLECT:
                     collector.collect(1);
+                    shooter.setHighGoalSpeed(); //get ready for second shoot
                     pathing.goToLine(recollect_x, recollect_y, 0);
+
+                    if (detector.stack == 0){
+                        current_state = state.BOXES_AGAIN;
+                    } else {
+                        current_state = state.SHOOT_AGAIN;
+                    }
+                    break;
+                case SHOOT_AGAIN:
+                    pathing.goToLine(-3, 24, Math.toRadians(24));
+                    flicker.fastTriFlick(shooter);
                     current_state = state.BOXES_AGAIN;
+                    shooter.stop();
                     break;
                 case BOXES_AGAIN:
                     boxes2();
@@ -217,7 +229,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x-7,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x-7,box_far_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.9, wobble_arm);
                 break;
         }
 
@@ -233,7 +245,6 @@ public class RegionalsAuto extends LinearOpMode {
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineToSplineHeading(new Pose2d(x, y, heading), heading)
                 .build();
-
         drive.followTrajectory(destination);
     }
 

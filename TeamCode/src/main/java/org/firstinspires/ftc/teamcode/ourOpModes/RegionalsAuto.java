@@ -49,7 +49,7 @@ public class RegionalsAuto extends LinearOpMode {
             box_far_x = 68,
             box_far_y = 47,
 
-            pre_collect_x = -30.5,
+            pre_collect_x = -33.5,
             pre_collect_y = 20,
 
 
@@ -57,8 +57,8 @@ public class RegionalsAuto extends LinearOpMode {
             wobble_grab_x = pre_collect_x,
             wobble_grab_y = 38,
 
-            recollect_x = -17.5,
-            recollect_y = 42;
+            recollect_x = -13.5,
+            recollect_y = 45;
     public static boolean fast = true;
 
     private void init_camera(){
@@ -240,7 +240,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x-3,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 2,box_far_y, 0, 0.9, wobble_arm);
                 break;
         }
 

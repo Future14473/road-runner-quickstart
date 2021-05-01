@@ -25,7 +25,7 @@ public class ShooterFlicker {
         this.telemetry = telemetry;
     }
 
-    public double flickIn = 0.52, flickOut = 0.36;
+    public double flickIn = 0.52, flickOut = 0.36, flickBigOut = 0.2;
 
     public void flickIn() { // left bumper
         flicker.setPosition(flickIn);
@@ -33,6 +33,10 @@ public class ShooterFlicker {
 
     public void flickOut() { // right bumper
         flicker.setPosition(flickOut);
+    }
+
+    public void flickOutBig() { // right bumper
+        flicker.setPosition(flickBigOut);
     }
 
     public double getPosition() {
@@ -77,6 +81,28 @@ public class ShooterFlicker {
             flickOut();
             timer.safeDelay(flickbackdelay);
             flickIn();
+        }
+    }
+
+    public void fastBigTriFlick(Shooter shooter){
+        for (int i = 0; i < 3; i++) {
+            if (i == 0){
+                flickOutBig();
+                timer.safeDelay(flickbackdelay);
+                flickIn();
+            }
+            if(i == 1){
+                timer.safeDelay(firstdelay);
+                flickOut();
+                timer.safeDelay(flickbackdelay);
+                flickIn();
+            }
+            if(i == 2){
+                timer.safeDelay(seconddelay);
+                flickOut();
+                timer.safeDelay(flickbackdelay);
+                flickIn();
+            }
         }
     }
 

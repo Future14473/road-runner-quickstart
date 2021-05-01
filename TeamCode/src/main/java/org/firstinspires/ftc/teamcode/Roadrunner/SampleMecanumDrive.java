@@ -72,7 +72,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double OMEGA_WEIGHT = 1;
 
     public static double defaultSpeedMultiplier = 1.3;
-    public static double slowSpeedMultiplier = 0.3;
+    public static double slowSpeedMultiplier = 0.6;
 
     static double targetSpeedMultiplier = defaultSpeedMultiplier;
 

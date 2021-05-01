@@ -45,8 +45,8 @@ public class RegionalsAuto extends LinearOpMode {
             box_medium_x = 54,
             box_medium_y = 26,
 
-            box_far_x = 68,
-            box_far_y = 47,
+            box_far_x = 63,
+            box_far_y = 50,
 
             pre_collect_x = -33.5,
             pre_collect_y = 20,
@@ -57,10 +57,14 @@ public class RegionalsAuto extends LinearOpMode {
             shoot_x_2 = -3,
             shoot_y_2 = 30,
 
+            high_goal_x = -3,
+            high_goal_y = 24,
+            high_Goal_heading = 28,
+
             wobble_grab_x = -36.5,
             wobble_grab_y = 40,
 
-            recollect_x = -8.5, //-13.5
+            recollect_x = -11.5, //-13.5
             recollect_y = 50;
     public static boolean fast = true;
 
@@ -147,13 +151,14 @@ public class RegionalsAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
-
-                    if (detector.stack == 0 || detector.stack == 1)
-                        collector.collect(1);
-                    else {
-                        styx.shortUp(); // short up and down are switched don't ask me why
-                    }
-                    pathing.goToLine(-3, 24, Math.toRadians(24));
+                    new Thread( () -> {
+                        if (detector.stack == 0 || detector.stack == 1)
+                            collector.collect(1);
+                        else {
+                            styx.shortUp(); // short up and down are switched don't ask me why
+                        }
+                    }).start();
+                    pathing.goToLine(high_goal_x, high_goal_y, Math.toRadians(high_Goal_heading));
 
                     current_state = state.SHOOTING;
                     break;
@@ -167,7 +172,7 @@ public class RegionalsAuto extends LinearOpMode {
                         flicker.flickThrice(shooter);
                     }
                     current_state = state.BOXES;
-                    shooter.stop();
+//                    shooter.stop();
                     break;
                 case BOXES:
                     boxes();
@@ -200,8 +205,13 @@ public class RegionalsAuto extends LinearOpMode {
 //                    } else {
 //                        current_state = state.SHOOT_AGAIN;
 //                    }
+//                    if (detector.stack == 0 || detector.stack == 1)
+//                        current_state = state.SHOOT_AGAIN;
+//                    else
+//                        current_state = state.BOXES_AGAIN;
+//                    break;
+
                     current_state = state.SHOOT_AGAIN;
-                    break;
                 case SHOOT_AGAIN:
                     pathing.goToLine(shoot_x_2, shoot_y_2, Math.toRadians(24));
                     flicker.fastBigTriFlick(shooter);
@@ -213,7 +223,10 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.PARKING;
                     break;
                 case PARKING:
-                    pathing.goToLineConstant(17, 35, 0);
+                    if (detector.stack == 0 || detector.stack ==1)
+                        pathing.goToLineConstant(17, 35, 0);
+                    else
+                        drive.setDrivePower(new Pose2d(0,10, 0));
                     current_state = state.IDLE;
                     break;
                 case IDLE:
@@ -221,6 +234,8 @@ public class RegionalsAuto extends LinearOpMode {
                     collector.stop();
                     wobble_arm.home();
                     shooter.stop();
+                    styx.allUp();
+                    styx.longDown(); // it just works I think don't ask
                     return;
             }
         }
@@ -256,7 +271,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x - 6.5 ,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x + 2,box_far_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 4,box_far_y - 4, -Math.PI/4, 0.9, wobble_arm);
                 break;
         }
 

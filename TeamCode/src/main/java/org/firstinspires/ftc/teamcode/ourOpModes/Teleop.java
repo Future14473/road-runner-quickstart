@@ -89,13 +89,18 @@ public class Teleop extends LinearOpMode {
 
 //            telemetry.addData("wobble arm pos", wobble_arm.getAnglerPosition());
             telemetry.addData("Shooter Velocity", shooter.getShooterVelocity());
-
+            telemetry.addData("Long Styx Pose: ", styx.longStyx.getPosition());
+            telemetry.addData("Short Styx Pose: ", styx.shortStyx.getPosition());
+            telemetry.addData("FOoo", "bar");
+            telemetry.update();
             DirtyGlobalVariables.telemetry.update();
         }
     }
 
     Thread controls_async = new Thread(()->{
         while (opModeIsActive()) {
+
+
             // High Goal
             if (gamepad1.dpad_up)
                 pathing.highGoal();

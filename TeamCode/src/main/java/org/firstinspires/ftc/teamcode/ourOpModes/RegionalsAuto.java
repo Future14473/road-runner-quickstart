@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -52,8 +51,8 @@ public class RegionalsAuto extends LinearOpMode {
             pre_collect_x = -33.5,
             pre_collect_y = 20,
 
-            pre_collect_x_4 = -50.5,
-            pre_collect_y_4 = 12,
+            knock_4_stack_x = -6.5,
+            knock4_stack_y = 36,
 
             wobble_grab_x = -33.5,
             wobble_grab_y = 38,
@@ -129,6 +128,8 @@ public class RegionalsAuto extends LinearOpMode {
 
         current_state = state.TO_HIGH_GOAL;
         while (opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("Long Styx Pose: ", styx.longStyx.getPosition());
+            telemetry.addData("Short Styx Pose: ", styx.shortStyx.getPosition());
 
             Pathing.startTeleopPosition = drive.getPoseEstimate();
             telemetry.addData("Teleop Start Position", Pathing.startTeleopPosition);
@@ -143,13 +144,16 @@ public class RegionalsAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
+                    styx.shortUp(); // short up and down are switched don't ask me why
                     if (detector.stack == 0 || detector.stack == 1)
                         collector.collect(1);
                     pathing.goToLine(-3, 24, Math.toRadians(24));
+
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
 //                    flicker.flickThrice(shooter);
+                    styx.shortDown();// short up and down are switched don't ask me why
                     if(fast){
                         flicker.fastTriFlick(shooter);
                     }
@@ -172,7 +176,6 @@ public class RegionalsAuto extends LinearOpMode {
 //                    }
                     pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
                     pathing.goToLine(wobble_grab_x, wobble_grab_y, 0);
-                    delay(300);
                     wobble_arm.grab();
 //                    delay(300);
 //                    wobble_arm.up();

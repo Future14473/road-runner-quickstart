@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 
 @Config
 public class SideStyx {
-    Servo shortStyx;
-    Servo longStyx;
+    public Servo shortStyx;
+    public Servo longStyx;
     LinearOpMode opMode;
     Telemetry telemetry;
 
@@ -31,21 +31,21 @@ public class SideStyx {
         longDown();
     }
 
-    public static double down = -0.15, up = 0.5;
+    public static double down = 1, up = -0.3;
 
-    public static double down_long = 0.4, up_long = 0.1;
+    public static double  down_long = 0.4, up_long = 0.1;
 
 
-    private void shortDown(){
-        shortStyx.setPosition(0.5);
+    public void shortDown(){
+        shortStyx.setPosition(down);
     }
 
-    private void shortUp(){ shortStyx.setPosition(-0.15); }
+    public void shortUp(){ shortStyx.setPosition(up); }
 
-    private void longDown(){
+    public void longDown(){
         longStyx.setPosition(down_long);
     }
 
-    private void longUp(){ longStyx.setPosition(up_long); }
+    public void longUp(){ longStyx.setPosition(up_long); }
 }
 

@@ -71,6 +71,11 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
+    public static double defaultSpeedMultiplier = 1.3;
+    public static double slowSpeedMultiplier = 0.3;
+
+    static double targetSpeedMultiplier = defaultSpeedMultiplier;
+
     public static int POSE_HISTORY_LIMIT = 100;
 
     public enum Mode {
@@ -397,12 +402,19 @@ public class SampleMecanumDrive extends MecanumDrive {
         return wheelVelocities;
     }
 
+    public void setDefaultSpeedMultiplier(){
+        targetSpeedMultiplier = defaultSpeedMultiplier;
+    }
+
+    public void setSlowSpeedMultiplier(){
+        targetSpeedMultiplier = slowSpeedMultiplier;
+    }
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(1.3 * v);
-        leftRear.setPower(1.3 * v1);
-        rightRear.setPower(1.3 * v2);
-        rightFront.setPower(1.3 * v3);
+        leftFront.setPower(targetSpeedMultiplier * v);
+        leftRear.setPower(targetSpeedMultiplier * v1);
+        rightRear.setPower(targetSpeedMultiplier * v2);
+        rightFront.setPower(targetSpeedMultiplier * v3);
     }
 
     @Override

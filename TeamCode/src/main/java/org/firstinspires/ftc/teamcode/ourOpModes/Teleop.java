@@ -82,8 +82,6 @@ public class Teleop extends LinearOpMode {
         controls_async.start();
 
         while (opModeIsActive()) {
-            if (Shooter.farShootHighGoalDebug)
-                shooter.setHighGoalFarSpeed();
 
             drivetrain_controls_old();
 

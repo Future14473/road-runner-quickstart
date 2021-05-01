@@ -19,5 +19,9 @@ public class RingCollector {
         taco.setPower(speed);
     }
 
+    public void stop(){
+        collect(0);
+    }
+
 }
 

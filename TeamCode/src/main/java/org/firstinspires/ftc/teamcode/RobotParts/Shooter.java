@@ -40,10 +40,6 @@ public class Shooter {
         tarVelocity = highGoalSpeed;
     }
 
-    public void setHighGoalFarSpeed(){
-        tarVelocity = highGoalFar;
-    }
-
     public void setHighGoalSpeedTeleop(){
         tarVelocity = highGoalSpeedTeleop;
     }

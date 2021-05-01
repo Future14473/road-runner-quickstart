@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.Detection;
 import org.firstinspires.ftc.teamcode.Roadrunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.RobotParts.RingCollector;
 import org.firstinspires.ftc.teamcode.RobotParts.Shooter;
 import org.firstinspires.ftc.teamcode.RobotParts.ShooterFlicker;
 import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
@@ -39,7 +40,7 @@ public class RegionalsAuto extends LinearOpMode {
     Shooter shooter;
 
     public static double
-            box_close_x = 19,
+            box_close_x = 25,
             box_close_y = 49,
 
             box_medium_x = 49,
@@ -47,6 +48,9 @@ public class RegionalsAuto extends LinearOpMode {
 
             box_far_x = 66,
             box_far_y = 47,
+
+            recollect_x = -33.5,
+            recollect_y = 32,
 
             wobble_grab_x = -26,
             wobble_grab_y = 58;
@@ -82,7 +86,7 @@ public class RegionalsAuto extends LinearOpMode {
 
     state current_state;
     enum state {
-        TO_HIGH_GOAL, SHOOTING, BOXES, WOBBLE, PREWOBBLE, PARKING, BOXES_AGAIN, IDLE,
+        TO_HIGH_GOAL, SHOOTING, BOXES, WOBBLE, RECOLLECT, PARKING, BOXES_AGAIN, IDLE,
     }
 
     public void runOpMode() throws InterruptedException {
@@ -93,6 +97,7 @@ public class RegionalsAuto extends LinearOpMode {
         init_camera();
 
         // init hardware objects
+        RingCollector collector = new RingCollector(hardwareMap);
         wobble_arm = new Wobble_Arm(hardwareMap, this);
         flicker = new ShooterFlicker(hardwareMap, this, telemetry);
         styx = new SideStyx(hardwareMap, telemetry);
@@ -157,6 +162,11 @@ public class RegionalsAuto extends LinearOpMode {
                     wobble_arm.grab();
 //                    delay(300);
 //                    wobble_arm.up();
+                    current_state = state.RECOLLECT;
+                    break;
+                case RECOLLECT:
+                    collector.collect(1);
+                    pathing.goToLine(recollect_x, recollect_y, 0);
                     current_state = state.BOXES_AGAIN;
                     break;
                 case BOXES_AGAIN:
@@ -169,6 +179,7 @@ public class RegionalsAuto extends LinearOpMode {
                     break;
                 case IDLE:
                     DirtyGlobalVariables.isInAuto = false;
+                    collector.stop();
                     wobble_arm.home();
                     shooter.stop();
                     return;

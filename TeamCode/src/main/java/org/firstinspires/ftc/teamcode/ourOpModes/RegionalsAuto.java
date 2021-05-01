@@ -54,6 +54,9 @@ public class RegionalsAuto extends LinearOpMode {
             knock_4_stack_x = -6.5,
             knock4_stack_y = 36,
 
+            shoot_x_2 = -3,
+            shoot_y_2 = 30,
+
             wobble_grab_x = -36.5,
             wobble_grab_y = 40,
 
@@ -200,7 +203,7 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.SHOOT_AGAIN;
                     break;
                 case SHOOT_AGAIN:
-                    pathing.goToLine(-3, 24, Math.toRadians(24));
+                    pathing.goToLine(shoot_x_2, shoot_y_2, Math.toRadians(24));
                     flicker.fastBigTriFlick(shooter);
                     current_state = state.BOXES_AGAIN;
                     shooter.stop();
@@ -229,10 +232,10 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.5, wobble_arm);
                 break;
             case 1:
-                pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.5, wobble_arm);
+                pathing.goToLineWobbleDown(box_medium_x, box_medium_y, 0, 0.5, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.5, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 1,box_far_y + 6, 0, 0.5, wobble_arm);
                 break;
         }
 

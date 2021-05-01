@@ -142,6 +142,8 @@ public class RegionalsAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
+                    if (detector.stack == 0 || detector.stack == 1)
+                        collector.collect(1);
                     pathing.goToSplineHeading(-3, 24, Math.toRadians(24));
                     current_state = state.SHOOTING;
                     break;
@@ -172,7 +174,7 @@ public class RegionalsAuto extends LinearOpMode {
                     break;
                 case RECOLLECT:
                     collector.collect(1);
-                    pathing.goToLine(recollect_x, recollect_y, 0);
+//                    pathing.goToLine(recollect_x, recollect_y, 0);
 
                     if (detector.stack == 0){
                         current_state = state.BOXES_AGAIN;
@@ -181,7 +183,7 @@ public class RegionalsAuto extends LinearOpMode {
                     }
                     break;
                 case SHOOT_AGAIN:
-                    pathing.goToLine(-3, 24, Math.toRadians(24));
+                    pathing.goToSplineHeading(-3, 24, Math.toRadians(24));
                     flicker.fastTriFlick(shooter);
                     current_state = state.BOXES_AGAIN;
                     shooter.stop();
@@ -228,7 +230,7 @@ public class RegionalsAuto extends LinearOpMode {
     void boxes2(){
         switch(detector.stack){
             case 0:
-                pathing.goToLineWobbleDown(box_close_x-5,box_close_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_close_x-3,box_close_y, 0, 0.9, wobble_arm);
                 break;
             case 1:
                 pathing.goToLineWobbleDown(box_medium_x-3,box_medium_y, 0, 0.9, wobble_arm);

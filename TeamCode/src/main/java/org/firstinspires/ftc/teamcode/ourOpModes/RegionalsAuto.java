@@ -57,8 +57,8 @@ public class RegionalsAuto extends LinearOpMode {
             wobble_grab_x = pre_collect_x,
             wobble_grab_y = 38,
 
-            recollect_x = -23.5,
-            recollect_y = 40;
+            recollect_x = -20.5,
+            recollect_y = 42;
     public static boolean fast = true;
 
     private void init_camera(){
@@ -228,7 +228,7 @@ public class RegionalsAuto extends LinearOpMode {
     void boxes2(){
         switch(detector.stack){
             case 0:
-                pathing.goToLineWobbleDown(box_close_x-7,box_close_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_close_x-5,box_close_y, 0, 0.9, wobble_arm);
                 break;
             case 1:
                 pathing.goToLineWobbleDown(box_medium_x-3,box_medium_y, 0, 0.9, wobble_arm);

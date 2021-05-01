@@ -49,12 +49,16 @@ public class RegionalsAuto extends LinearOpMode {
             box_far_x = 68,
             box_far_y = 47,
 
-            recollect_x = -33.5,
-            recollect_y = 35,
+            pre_collect_x = -33.5,
+            pre_collect_y = 20,
 
-            wobble_grab_x = -26,
-            wobble_grab_y = 58;
 
+
+            wobble_grab_x = pre_collect_x,
+            wobble_grab_y = 38,
+
+            recollect_x = -23.5,
+            recollect_y = 40;
     public static boolean fast = true;
 
     private void init_camera(){
@@ -157,7 +161,9 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.WOBBLE;
                     break;
                 case WOBBLE:
-                    pathing.goToLineWobbleDown(wobble_grab_x, wobble_grab_y, Math.PI/2, 0.5, wobble_arm);
+                    pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
+                    pathing.goToLine(wobble_grab_x, wobble_grab_y, 0);
+                    shooter.setHighGoalSpeed(); //get ready for second shoot
                     delay(300);
                     wobble_arm.grab();
 //                    delay(300);
@@ -166,7 +172,6 @@ public class RegionalsAuto extends LinearOpMode {
                     break;
                 case RECOLLECT:
                     collector.collect(1);
-                    shooter.setHighGoalSpeed(); //get ready for second shoot
                     pathing.goToLine(recollect_x, recollect_y, 0);
 
                     if (detector.stack == 0){
@@ -226,7 +231,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_close_x-7,box_close_y, 0, 0.9, wobble_arm);
                 break;
             case 1:
-                pathing.goToLineWobbleDown(box_medium_x-7,box_medium_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_medium_x-3,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
                 pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.9, wobble_arm);

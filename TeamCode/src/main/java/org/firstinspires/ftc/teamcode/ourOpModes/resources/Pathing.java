@@ -107,6 +107,26 @@ public class Pathing {
         drive.followTrajectory(destination);
     }
 
+    public void goToLineSlow(double x, double y, double heading){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+
+//        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+//                .lineToLinearHeading(new Pose2d(x, y, heading))
+//                .build();
+
+//        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), false)
+//                // This spline is limited to 15 in/s and will be slower
+//                .splineTo(
+//                        new Vector2d(30, 30), 0,
+//                        SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+//                )
+
+        drive.followTrajectory(destination);
+    }
+
     public void goToLineWobbleDown(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
         Pose2d p = drive.getPoseEstimate();
         double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;

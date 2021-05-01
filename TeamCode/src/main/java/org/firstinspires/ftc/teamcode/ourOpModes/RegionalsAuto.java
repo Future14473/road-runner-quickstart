@@ -18,7 +18,6 @@ import org.firstinspires.ftc.teamcode.RobotParts.SideStyx;
 import org.firstinspires.ftc.teamcode.RobotParts.VuforiaPhone;
 import org.firstinspires.ftc.teamcode.RobotParts.Wobble_Arm;
 import org.firstinspires.ftc.teamcode.ourOpModes.resources.Pathing;
-import org.firstinspires.ftc.teamcode.ourOpModes.resources.Timing;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -38,27 +37,27 @@ public class RegionalsAuto extends LinearOpMode {
     ShooterFlicker flicker;
     SideStyx styx;
     Shooter shooter;
-// Pose2d startPose = new Pose2d(-54.5, 20, 0);
+    // Pose2d startPose = new Pose2d(-54.5, 20, 0);
     public static double
             box_close_x = 25,
             box_close_y = 49,
 
-            box_medium_x = 49,
+    box_medium_x = 49,
             box_medium_y = 26,
 
-            box_far_x = 68,
+    box_far_x = 68,
             box_far_y = 47,
 
-            pre_collect_x = -33.5,
+    pre_collect_x = -33.5,
             pre_collect_y = 20,
 
-            pre_collect_x_4 = -50.5,
-            pre_collect_y_4 = 12,
+    knock_4_stack_x = -6.5,
+            knock4_stack_y = 36,
 
-            wobble_grab_x = -33.5,
+    wobble_grab_x = -33.5,
             wobble_grab_y = 38,
 
-            recollect_x = -10.5, //-13.5
+    recollect_x = -10.5, //-13.5
             recollect_y = 45;
     public static boolean fast = true;
 
@@ -129,6 +128,8 @@ public class RegionalsAuto extends LinearOpMode {
 
         current_state = state.TO_HIGH_GOAL;
         while (opModeIsActive() && !isStopRequested()) {
+            telemetry.addData("Long Styx Pose: ", styx.longStyx.getPosition());
+            telemetry.addData("Short Styx Pose: ", styx.shortStyx.getPosition());
 
             Pathing.startTeleopPosition = drive.getPoseEstimate();
             telemetry.addData("Teleop Start Position", Pathing.startTeleopPosition);
@@ -143,13 +144,16 @@ public class RegionalsAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
+                    styx.shortUp(); // short up and down are switched don't ask me why
                     if (detector.stack == 0 || detector.stack == 1)
                         collector.collect(1);
                     pathing.goToLine(-3, 24, Math.toRadians(24));
+
                     current_state = state.SHOOTING;
                     break;
                 case SHOOTING:
 //                    flicker.flickThrice(shooter);
+                    styx.shortDown();// short up and down are switched don't ask me why
                     if(fast){
                         flicker.fastTriFlick(shooter);
                     }
@@ -172,7 +176,6 @@ public class RegionalsAuto extends LinearOpMode {
 //                    }
                     pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
                     pathing.goToLine(wobble_grab_x, wobble_grab_y, 0);
-                    delay(300);
                     wobble_arm.grab();
 //                    delay(300);
 //                    wobble_arm.up();
@@ -219,15 +222,15 @@ public class RegionalsAuto extends LinearOpMode {
 
     void boxes(){
         switch(detector.stack){
-        case 0:
-            pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.5, wobble_arm);
-            break;
-        case 1:
-            pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.5, wobble_arm);
-            break;
-        default:
-            pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.5, wobble_arm);
-            break;
+            case 0:
+                pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.5, wobble_arm);
+                break;
+            case 1:
+                pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.5, wobble_arm);
+                break;
+            default:
+                pathing.goToLineWobbleDown(box_far_x,box_far_y, 0, 0.5, wobble_arm);
+                break;
         }
 
         wobble_arm.unGrab();

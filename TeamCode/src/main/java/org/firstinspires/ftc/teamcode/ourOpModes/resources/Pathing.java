@@ -54,6 +54,15 @@ public class Pathing {
         drive.followTrajectory(destination);
     }
 
+    public void goToTwoSplineHeading(double x, double y, double heading, double x2, double y2, double heading2){
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineToSplineHeading(new Pose2d(x, y, heading), heading)
+                .splineToSplineHeading(new Pose2d(x2, y2), heading2)
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
     PIDFController turn_PID = new PIDFController(new PIDCoefficients(1, 0, 0));
     public void turn_to_heading_PID(double dest_heading, double power_coeff, double forward, double left){
 

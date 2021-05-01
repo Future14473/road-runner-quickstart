@@ -151,27 +151,21 @@ public class RegionalsAuto extends LinearOpMode {
                     boxes();
                     current_state = state.WOBBLE;
                     break;
-                case PARKING:
-                    pathing.goToLineConstant(17, 35, 0);
-                    current_state = state.IDLE;
-                    break;
-//                case PREWOBBLE:
-//                    wobble_arm.down();
-//                    wobble_arm.unGrab();
-//                    pathing.goToSplineHeading(-35.5, 25, 0);
-//                    current_state = state.WOBBLE;
-//                    break;
                 case WOBBLE:
                     pathing.goToLineWobbleDown(wobble_grab_x, wobble_grab_y, Math.PI/2, 0.5, wobble_arm);
                     delay(300);
                     wobble_arm.grab();
-                    delay(300);
-                    wobble_arm.up();
+//                    delay(300);
+//                    wobble_arm.up();
                     current_state = state.BOXES_AGAIN;
                     break;
                 case BOXES_AGAIN:
                     boxes2();
                     current_state = state.PARKING;
+                    break;
+                case PARKING:
+                    pathing.goToLineConstant(17, 35, 0);
+                    current_state = state.IDLE;
                     break;
                 case IDLE:
                     DirtyGlobalVariables.isInAuto = false;

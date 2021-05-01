@@ -60,7 +60,7 @@ public class RegionalsAuto extends LinearOpMode {
             wobble_grab_x = -36.5,
             wobble_grab_y = 40,
 
-            recollect_x = -10.5, //-13.5
+            recollect_x = -8.5, //-13.5
             recollect_y = 50;
     public static boolean fast = true;
 
@@ -193,7 +193,7 @@ public class RegionalsAuto extends LinearOpMode {
 //                    break;
                 case RECOLLECT:
                     collector.collect(1);
-                    pathing.goToLine(recollect_x, recollect_y, 0);
+                    pathing.goToLineSlow(recollect_x, recollect_y, 0);
 
 //                    if (detector.stack == 0){
 //                        current_state = state.BOXES_AGAIN;
@@ -235,7 +235,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x, box_medium_y, 0, 0.5, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x + 1,box_far_y + 6, 0, 0.5, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 4,box_far_y + 6, 0, 0.5, wobble_arm);
                 break;
         }
 

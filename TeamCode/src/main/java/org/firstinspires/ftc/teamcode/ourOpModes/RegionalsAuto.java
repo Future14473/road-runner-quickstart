@@ -38,7 +38,7 @@ public class RegionalsAuto extends LinearOpMode {
     ShooterFlicker flicker;
     SideStyx styx;
     Shooter shooter;
-
+// Pose2d startPose = new Pose2d(-54.5, 20, 0);
     public static double
             box_close_x = 25,
             box_close_y = 49,
@@ -52,12 +52,13 @@ public class RegionalsAuto extends LinearOpMode {
             pre_collect_x = -33.5,
             pre_collect_y = 20,
 
+            pre_collect_x_4 = -50.5,
+            pre_collect_y_4 = 12,
 
-
-            wobble_grab_x = pre_collect_x,
+            wobble_grab_x = -33.5,
             wobble_grab_y = 38,
 
-            recollect_x = -13.5,
+            recollect_x = -10.5, //-13.5
             recollect_y = 45;
     public static boolean fast = true;
 
@@ -164,6 +165,11 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.WOBBLE;
                     break;
                 case WOBBLE:
+//                    if (detector.stack != 0){
+//                        pathing.goToLineDoubleWobbleDown(pre_collect_x_4, pre_collect_y_4, 0, pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
+//                    }else{
+//                        pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
+//                    }
                     pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
                     pathing.goToLine(wobble_grab_x, wobble_grab_y, 0);
                     delay(300);
@@ -180,11 +186,12 @@ public class RegionalsAuto extends LinearOpMode {
                     collector.collect(1);
                     pathing.goToLine(recollect_x, recollect_y, 0);
 
-                    if (detector.stack == 0){
-                        current_state = state.BOXES_AGAIN;
-                    } else {
-                        current_state = state.SHOOT_AGAIN;
-                    }
+//                    if (detector.stack == 0){
+//                        current_state = state.BOXES_AGAIN;
+//                    } else {
+//                        current_state = state.SHOOT_AGAIN;
+//                    }
+                    current_state = state.SHOOT_AGAIN;
                     break;
                 case SHOOT_AGAIN:
                     pathing.goToLine(-3, 24, Math.toRadians(24));
@@ -234,10 +241,10 @@ public class RegionalsAuto extends LinearOpMode {
     void boxes2(){
         switch(detector.stack){
             case 0:
-                pathing.goToLineWobbleDown(box_close_x-3,box_close_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.9, wobble_arm);
                 break;
             case 1:
-                pathing.goToLineWobbleDown(box_medium_x-3,box_medium_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
                 pathing.goToLineWobbleDown(box_far_x + 2,box_far_y, 0, 0.9, wobble_arm);

@@ -135,11 +135,37 @@ public class Pathing {
         drive.followTrajectory(destination);
     }
 
-    public void goToLineWobbleUp(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
+    public void goToSplineWobbleDown(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
         Pose2d p = drive.getPoseEstimate();
         double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
         boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
         ;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .splineToLinearHeading(new Pose2d(x, y), heading)
+                .addTemporalMarker(dropPoint, wobble_arm::down)
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
+    public void goToLineDoubleWobbleDown(double x, double y, double heading, double x2, double y2, double heading2, double dropPoint, Wobble_Arm wobble_arm){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
+        Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
+                .splineTo(new Vector2d(x, y), heading)
+                .addTemporalMarker(dropPoint, wobble_arm::down)
+//                .splineToConstantHeading(new Vector2d(x2, y2), heading2)
+                .lineToLinearHeading(new Pose2d(x2, y2, heading2))
+                .build();
+
+        drive.followTrajectory(destination);
+    }
+
+    public void goToLineWobbleUp(double x, double y, double heading, double dropPoint, Wobble_Arm wobble_arm){
+        Pose2d p = drive.getPoseEstimate();
+        double pnAngle = p.getHeading() <= Math.PI ? p.getHeading(): p.getHeading() - 2* Math.PI;
+        boolean reverse = Math.abs(pnAngle) < Math.PI / 2 && drive.getPoseEstimate().getX() > x;
         Trajectory destination = drive.trajectoryBuilder(drive.getPoseEstimate(), reverse)
                 .lineToLinearHeading(new Pose2d(x, y, heading))
                 .addTemporalMarker(dropPoint, wobble_arm::up)

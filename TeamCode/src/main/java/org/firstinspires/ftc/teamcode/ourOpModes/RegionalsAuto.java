@@ -49,7 +49,7 @@ public class RegionalsAuto extends LinearOpMode {
             box_far_x = 68,
             box_far_y = 47,
 
-            pre_collect_x = -33.5,
+            pre_collect_x = -30.5,
             pre_collect_y = 20,
 
 
@@ -57,7 +57,7 @@ public class RegionalsAuto extends LinearOpMode {
             wobble_grab_x = pre_collect_x,
             wobble_grab_y = 38,
 
-            recollect_x = -20.5,
+            recollect_x = -17.5,
             recollect_y = 42;
     public static boolean fast = true;
 
@@ -160,12 +160,12 @@ public class RegionalsAuto extends LinearOpMode {
                     break;
                 case BOXES:
                     boxes();
+                    shooter.setHighGoalSpeed(); //get ready for second shoot
                     current_state = state.WOBBLE;
                     break;
                 case WOBBLE:
                     pathing.goToLineWobbleDown(pre_collect_x, pre_collect_y, 0, 0.5, wobble_arm);
                     pathing.goToLine(wobble_grab_x, wobble_grab_y, 0);
-                    shooter.setHighGoalSpeed(); //get ready for second shoot
                     delay(300);
                     wobble_arm.grab();
 //                    delay(300);

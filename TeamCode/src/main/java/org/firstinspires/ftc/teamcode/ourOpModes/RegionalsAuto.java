@@ -42,23 +42,23 @@ public class RegionalsAuto extends LinearOpMode {
             box_close_x = 25,
             box_close_y = 49,
 
-    box_medium_x = 49,
+            box_medium_x = 49,
             box_medium_y = 26,
 
-    box_far_x = 68,
+            box_far_x = 68,
             box_far_y = 47,
 
-    pre_collect_x = -33.5,
+            pre_collect_x = -33.5,
             pre_collect_y = 20,
 
-    knock_4_stack_x = -6.5,
+            knock_4_stack_x = -6.5,
             knock4_stack_y = 36,
 
-    wobble_grab_x = -33.5,
-            wobble_grab_y = 38,
+            wobble_grab_x = -36.5,
+            wobble_grab_y = 40,
 
-    recollect_x = -10.5, //-13.5
-            recollect_y = 45;
+            recollect_x = -10.5, //-13.5
+            recollect_y = 50;
     public static boolean fast = true;
 
     private void init_camera(){
@@ -144,9 +144,12 @@ public class RegionalsAuto extends LinearOpMode {
 
             switch (current_state) {
                 case TO_HIGH_GOAL:
-                    styx.shortUp(); // short up and down are switched don't ask me why
+
                     if (detector.stack == 0 || detector.stack == 1)
                         collector.collect(1);
+                    else {
+                        styx.shortUp(); // short up and down are switched don't ask me why
+                    }
                     pathing.goToLine(-3, 24, Math.toRadians(24));
 
                     current_state = state.SHOOTING;
@@ -244,10 +247,10 @@ public class RegionalsAuto extends LinearOpMode {
     void boxes2(){
         switch(detector.stack){
             case 0:
-                pathing.goToLineWobbleDown(box_close_x,box_close_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_close_x - 2, box_close_y, 0, 0.9, wobble_arm);
                 break;
             case 1:
-                pathing.goToLineWobbleDown(box_medium_x,box_medium_y, 0, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_medium_x - 2 ,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
                 pathing.goToLineWobbleDown(box_far_x + 2,box_far_y, 0, 0.9, wobble_arm);

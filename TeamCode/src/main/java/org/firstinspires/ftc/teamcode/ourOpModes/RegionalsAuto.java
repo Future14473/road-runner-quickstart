@@ -215,6 +215,7 @@ public class RegionalsAuto extends LinearOpMode {
                 case SHOOT_AGAIN:
                     pathing.goToLine(shoot_x_2, shoot_y_2, Math.toRadians(24));
                     flicker.fastBigTriFlick(shooter);
+                    collector.stop();
                     current_state = state.BOXES_AGAIN;
                     shooter.stop();
                     break;
@@ -223,19 +224,20 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.PARKING;
                     break;
                 case PARKING:
-                    if (detector.stack == 0 || detector.stack ==1)
-                        pathing.goToLineConstant(17, 35, 0);
-                    else
-                        drive.setDrivePower(new Pose2d(0,10, 0));
+//                    if (detector.stack == 0 || detector.stack ==1)
+//                        pathing.goToLineConstant(17, 35, 0);
+//                    else
+//                        drive.setDrivePower(new Pose2d(0,10, 0));
+                    pathing.goToLineConstant(17, 35, 0);
                     current_state = state.IDLE;
                     break;
                 case IDLE:
                     DirtyGlobalVariables.isInAuto = false;
-                    collector.stop();
+
                     wobble_arm.home();
                     shooter.stop();
                     styx.allUp();
-                    styx.longDown(); // it just works I think don't ask
+//                    styx.longDown(); // it just works I think don't ask
                     return;
             }
         }
@@ -250,7 +252,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x, box_medium_y, 0, 0.5, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x + 4,box_far_y + 6, 0, 0.5, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 4,box_far_y + 9, 0, 0.5, wobble_arm);
                 break;
         }
 
@@ -271,7 +273,7 @@ public class RegionalsAuto extends LinearOpMode {
                 pathing.goToLineWobbleDown(box_medium_x - 6.5 ,box_medium_y, 0, 0.9, wobble_arm);
                 break;
             default:
-                pathing.goToLineWobbleDown(box_far_x + 4,box_far_y - 4, -Math.PI/4, 0.9, wobble_arm);
+                pathing.goToLineWobbleDown(box_far_x + 8,box_far_y - 4, -Math.PI/4, 0.9, wobble_arm);
                 break;
         }
 

@@ -232,10 +232,11 @@ public class RegionalsAuto extends LinearOpMode {
                     current_state = state.IDLE;
                     break;
                 case IDLE:
+                    shooter.stop();
                     DirtyGlobalVariables.isInAuto = false;
 
                     wobble_arm.home();
-                    shooter.stop();
+
                     styx.allUp();
 //                    styx.longDown(); // it just works I think don't ask
                     return;

@@ -419,6 +419,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         // Rotate about the z axis is the default assuming your REV Hub/Control Hub is laying
         // flat on a surface
 
-        return (double) imu.getAngularVelocity().yRotationRate;
+        return (double) imu.getAngularVelocity().zRotationRate;
     }
 }

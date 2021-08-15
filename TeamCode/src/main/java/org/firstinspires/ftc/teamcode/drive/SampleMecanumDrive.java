@@ -168,6 +168,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightRear.setDirection(DcMotorEx.Direction.REVERSE);
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -353,6 +355,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             double denom = VX_WEIGHT * Math.abs(drivePower.getX())
                     + VY_WEIGHT * Math.abs(drivePower.getY())
                     + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
+
 
             vel = new Pose2d(
                     VX_WEIGHT * drivePower.getX(),

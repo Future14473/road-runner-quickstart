@@ -81,7 +81,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     }
 
     @NonNull
-    @Override
+            @Override
     public List<Double> getWheelPositions() {
         return Arrays.asList(
                 encoderTicksToInches(parallelEncoder.getCurrentPosition()),

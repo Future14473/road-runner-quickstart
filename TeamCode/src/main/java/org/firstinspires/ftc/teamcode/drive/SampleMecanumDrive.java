@@ -77,7 +77,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         FOLLOW_TRAJECTORY
     }
 
-    public ArrayList<Pose2d> arrError = new ArrayList<>();
+    public ArrayList<Double> arrErrorHeading = new ArrayList<>();
+    public ArrayList<Double> arrErrorX = new ArrayList<>();
+    public ArrayList<Double> arrErrorY = new ArrayList<>();
     private FtcDashboard dashboard;
     private NanoClock clock;
 
@@ -230,7 +232,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     }
 
     public void resetArrError(){
-        arrError.clear();
+        arrErrorHeading.clear();
     }
 
     public void update() {
@@ -259,7 +261,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         packet.put("headingError (deg)", Math.toDegrees(lastError.getHeading()));
 
         // for GradDe
-        arrError.add(lastError);
+        arrErrorHeading.add(lastError.getHeading());
+        arrErrorX.add(lastError.getX());
+        arrErrorY.add(lastError.getY());
 
         switch (mode) {
             case IDLE:

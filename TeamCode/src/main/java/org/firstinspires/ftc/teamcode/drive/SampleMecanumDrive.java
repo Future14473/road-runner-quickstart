@@ -77,6 +77,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         FOLLOW_TRAJECTORY
     }
 
+    public ArrayList<Pose2d> arrError = new ArrayList<>();
     private FtcDashboard dashboard;
     private NanoClock clock;
 
@@ -211,6 +212,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         mode = Mode.FOLLOW_TRAJECTORY;
     }
 
+    public void followTrajectoryAsyncRecordLoss(Trajectory trajectory){
+        follower.followTrajectory(trajectory);
+        mode = Mode.FOLLOW_TRAJECTORY;
+        arrError.add(getLastError());
+    }
+
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
@@ -226,6 +233,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                 return new Pose2d();
         }
         throw new AssertionError();
+    }
+
+    public void resetArrError(){
+        arrError.clear();
     }
 
     public void update() {
@@ -320,6 +331,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             update();
         }
     }
+
 
     public boolean isBusy() {
         return mode != Mode.IDLE;

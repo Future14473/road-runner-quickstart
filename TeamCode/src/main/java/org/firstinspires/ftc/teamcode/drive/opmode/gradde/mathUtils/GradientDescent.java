@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.gradde.mathUtils;
 
+import java.nio.DoubleBuffer;
+import java.util.ArrayList;
+
 public class GradientDescent {
     double learningRate, currentTunerVar;
     double lastCostVal, currentCostVal, lastTunerVar;
@@ -26,7 +29,7 @@ public class GradientDescent {
      */
 
     /*possibly add Gradient Descent with momentum in the future*/
-    public void getNextTunerVar(double[] loss, double learningRate){
+    public void getNextTunerVar(ArrayList<Double> loss){
         //data and cost done in AS later
         currentCostVal = getCost(loss);
         double dCost = (currentCostVal - lastCostVal) / (currentTunerVar - lastTunerVar); // derivative of cost fn at current point in time
@@ -37,7 +40,7 @@ public class GradientDescent {
         lastCostVal = currentCostVal;
     }
 
-    public double getCost(double[] loss){
+    public double getCost(ArrayList<Double> loss){
         return StandardDev.getStandardDev(loss);
     }
 

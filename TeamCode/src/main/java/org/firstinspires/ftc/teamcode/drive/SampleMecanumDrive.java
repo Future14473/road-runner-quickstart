@@ -212,12 +212,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         mode = Mode.FOLLOW_TRAJECTORY;
     }
 
-    public void followTrajectoryAsyncRecordLoss(Trajectory trajectory){
-        follower.followTrajectory(trajectory);
-        mode = Mode.FOLLOW_TRAJECTORY;
-        arrError.add(getLastError());
-    }
-
     public void followTrajectory(Trajectory trajectory) {
         followTrajectoryAsync(trajectory);
         waitForIdle();
@@ -263,6 +257,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         packet.put("xError", lastError.getX());
         packet.put("yError", lastError.getY());
         packet.put("headingError (deg)", Math.toDegrees(lastError.getHeading()));
+
+        // for GradDe
+        arrError.add(lastError);
 
         switch (mode) {
             case IDLE:

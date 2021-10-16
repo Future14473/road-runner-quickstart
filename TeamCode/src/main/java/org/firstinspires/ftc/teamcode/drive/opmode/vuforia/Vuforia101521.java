@@ -34,11 +34,11 @@ public class Vuforia101521 extends LinearOpMode
     private OpenGLMatrix lastKnownLocation;
     private OpenGLMatrix phoneLocation;
 
-    private static final String VUFORIA_KEY = "\"AZBucJv/////AAABmS1HLxudp06FtvHEcplAgzMDBD5hZJTgmbmRRNw3a5sMahUVYeOMv7vtcCVaJ+ZQLwrS\" +\n" +
-            "                    \"1h/0Fdff6vRIgHL37MM68mKI+fZ65OGeS+y2VnnLypejXhEP0QpNrL3GoIr/Sid5HrOqc1H0wQQho\" +\n" +
-            "                    \"gTqBsNptuddJQcQOINzZNHMrrs5zoBZQBTyWWCG+FCJ+P2/3wV7UCeTQ5PZOgpW12GCV2QcWdsmn8\" +\n" +
-            "                    \"8ItDLWTXl9zdBxUDlIQtq3zjbV12tBlI8vH1Bn4+qUvpEdrRBMhaEzPvoBHZdwDiABtxThuDH/Drc4\" +\n" +
-            "                    \"A7zMjvMkFqp6ejgTphRuQdWhTKtsVNJyFg5WReY/HE3YcamHenFH8DSSYzvhenwt\""; // Insert your own key here
+    private static final String VUFORIA_KEY = "AZBucJv/////AAABmS1HLxudp06FtvHEcplAgzMDBD5hZJTgmbmRRNw3a5sMahUVYeOMv7vtcCVaJ+ZQLwrS" +
+            "1h/0Fdff6vRIgHL37MM68mKI+fZ65OGeS+y2VnnLypejXhEP0QpNrL3GoIr/Sid5HrOqc1H0wQQho" +
+            "gTqBsNptuddJQcQOINzZNHMrrs5zoBZQBTyWWCG+FCJ+P2/3wV7UCeTQ5PZOgpW12GCV2QcWdsmn8" +
+            "8ItDLWTXl9zdBxUDlIQtq3zjbV12tBlI8vH1Bn4+qUvpEdrRBMhaEzPvoBHZdwDiABtxThuDH/Drc4" +
+            "A7zMjvMkFqp6ejgTphRuQdWhTKtsVNJyFg5WReY/HE3YcamHenFH8DSSYzvhenwt"; // Insert your own key here
 
     private float robotX = 0;
     private float robotY = 0;

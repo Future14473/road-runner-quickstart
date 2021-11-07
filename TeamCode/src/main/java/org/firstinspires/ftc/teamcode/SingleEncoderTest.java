@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @TeleOp(group = "linearSlidesTest")
 @Config
 public class SingleEncoderTest extends LinearOpMode {
-    public static int velocity = 1220;
+    public static int velocity = 2021;
     public static int deltaMovement = 100;
     DcMotorEx linearSlide;
     DcMotorEx linearSlide2;
@@ -39,8 +39,8 @@ public class SingleEncoderTest extends LinearOpMode {
         linearSlide2.setTargetPosition(-290);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setVelocity(1000);
-        linearSlide2.setVelocity(1000);
+        linearSlide.setVelocity(velocity);
+        linearSlide2.setVelocity(velocity);
 
         while(opModeIsActive() && linearSlide.isBusy()){
             telemetry.addData("velocity", linearSlide.getVelocity());
@@ -57,8 +57,8 @@ public class SingleEncoderTest extends LinearOpMode {
         linearSlide2.setTargetPosition(0);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setVelocity(1000);
-        linearSlide2.setVelocity(1000);
+        linearSlide.setVelocity(velocity);
+        linearSlide2.setVelocity(velocity);
 
         while(opModeIsActive()){
             telemetry.addData("velocity", linearSlide.getVelocity());

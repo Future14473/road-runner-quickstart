@@ -39,8 +39,27 @@ public class SingleEncoderTest extends LinearOpMode {
         linearSlide2.setTargetPosition(-290);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        linearSlide.setVelocity(200);
-        linearSlide2.setVelocity(200);
+        linearSlide.setVelocity(1000);
+        linearSlide2.setVelocity(1000);
+
+        while(opModeIsActive() && linearSlide.isBusy()){
+            telemetry.addData("velocity", linearSlide.getVelocity());
+            telemetry.addData("position", linearSlide.getCurrentPosition());
+            telemetry.addData("is at target", !linearSlide.isBusy());
+            telemetry.addData("velocity", linearSlide2.getVelocity());
+            telemetry.addData("position", linearSlide2.getCurrentPosition());
+            telemetry.addData("is at target", !linearSlide2.isBusy());
+            telemetry.update();
+        }
+        sleep(1000);
+
+        linearSlide.setTargetPosition(0);
+        linearSlide2.setTargetPosition(0);
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setVelocity(1000);
+        linearSlide2.setVelocity(1000);
+
         while(opModeIsActive()){
             telemetry.addData("velocity", linearSlide.getVelocity());
             telemetry.addData("position", linearSlide.getCurrentPosition());

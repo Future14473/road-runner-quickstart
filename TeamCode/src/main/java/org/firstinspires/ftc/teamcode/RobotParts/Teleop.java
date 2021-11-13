@@ -38,14 +38,16 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper){
-                if (intake.isSlideOut){
                     intake.slideIn();
                     telemetry.addData("Slide Status", "Sliding In");
-                } else{
-                    intake.slideOut();
-                    telemetry.addData("Slide Status", "Sliding Out");
                 }
-            }
+             if (gamepad1.left_bumper) {
+                     intake.slideOut();
+                     telemetry.addData("Slide Status", "Sliding Out");
+                 }
+
+
+
 
             telemetry.addData("Intake Slide Pos", intake.getSlidePosition());
             telemetry.addData("Retracter Position ", intake.getRetracterPosition());

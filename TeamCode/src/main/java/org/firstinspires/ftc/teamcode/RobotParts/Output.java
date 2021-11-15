@@ -21,11 +21,23 @@ public class Output {
     }
     public void flipInDumper() {
         bottomDumper.setPosition(bottomDumperInPos);
+        bottomDumper.setDirection(Servo.Direction.REVERSE);
         topDumper.setPosition(topDumperInPos);
+        topDumper.setDirection(Servo.Direction.REVERSE);
     }
     public void flipOutDumper() {
-        bottomDumper.setPosition(bottomDumperInPos);
+        bottomDumper.setPosition(bottomDumperOutPos);
+        bottomDumper.setDirection(Servo.Direction.REVERSE);
         topDumper.setPosition(topDumperOutPos);
+        topDumper.setDirection(Servo.Direction.REVERSE);
+
+    }
+
+    public double getTopDumperPos() {
+        return topDumper.getPosition();
+    }
+    public double getBottomDumperPos () {
+        return bottomDumper.getPosition();
     }
 }
 

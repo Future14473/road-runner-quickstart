@@ -8,6 +8,7 @@ public class Teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Intake intake = new Intake(hardwareMap);
+        Output output = new Output(hardwareMap);
         waitForStart();
 
         while (opModeIsActive()){
@@ -45,6 +46,15 @@ public class Teleop extends LinearOpMode {
                      intake.slideOut();
                      telemetry.addData("Slide Status", "Sliding Out");
                  }
+            if (gamepad1.dpad_up) {
+                 output.flipInDumper();
+                 telemetry.addData("Dumper status", "Flipped in");
+             }
+            if (gamepad1.dpad_down) {
+                output.flipOutDumper();
+                telemetry.addData("Dumper status", "Flipped out");
+            }
+
 
 
 

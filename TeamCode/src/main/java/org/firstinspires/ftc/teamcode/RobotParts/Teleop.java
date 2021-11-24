@@ -46,14 +46,15 @@ public class Teleop extends LinearOpMode {
                      intake.slideOut();
                      telemetry.addData("Slide Status", "Sliding Out");
                  }
-            if (gamepad1.dpad_up) {
-                 output.flipInDumper();
-                 telemetry.addData("Dumper status", "Flipped in");
-             }
-            if (gamepad1.dpad_down) {
-                output.flipOutDumper();
-                telemetry.addData("Dumper status", "Flipped out");
-            }
+//             need new FFM Cable first
+//            if (gamepad1.dpad_up) {
+//                 output.flipInDumper();
+//                 telemetry.addData("Dumper status", "Flipped in");
+//             }
+//            if (gamepad1.dpad_down) {
+//                output.flipOutDumper();
+//                telemetry.addData("Dumper status", "Flipped out");
+//            }
 
 
 

@@ -9,6 +9,8 @@ public class Teleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Intake intake = new Intake(hardwareMap);
         Output output = new Output(hardwareMap);
+        Duck duck = new Duck(hardwareMap);
+        RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);
         waitForStart();
 
         while (opModeIsActive()){
@@ -40,21 +42,50 @@ public class Teleop extends LinearOpMode {
 
             if (gamepad1.right_bumper){
                     intake.slideIn();
+                    intake.stopNoodles();
                     telemetry.addData("Slide Status", "Sliding In");
                 }
              if (gamepad1.left_bumper) {
                      intake.slideOut();
+                     intake.inNoodles();
                      telemetry.addData("Slide Status", "Sliding Out");
                  }
+            if (gamepad1.dpad_up){
+                retractableOdo.upOdo();
+                telemetry.addData("Retractable Odo Status ", "Up");
+            }
+            if (gamepad1.dpad_down){
+                retractableOdo.downOdo();
+                telemetry.addData("Retractable Odo Status ", "Down");
+            }
+            if (gamepad1.dpad_right){
+                duck.setBlueSpeed();
+                telemetry.addData("Duck Status", "Blue");
+            }
+
+            if (gamepad1.dpad_left){
+                duck.setRedSpeed();
+                telemetry.addData("Duck Status", "Red");
+            }
+
+            if (gamepad1.right_stick_button){
+                output.extend();
+                telemetry.addData("Output Status", "Extending");
+            }
+            if(gamepad1.left_stick_button){
+                output.retract();
+                telemetry.addData("Output Status", "Retracting");
+            }
+
 //             need new FFM Cable first
-//            if (gamepad1.dpad_up) {
-//                 output.flipInDumper();
-//                 telemetry.addData("Dumper status", "Flipped in");
-//             }
-//            if (gamepad1.dpad_down) {
-//                output.flipOutDumper();
-//                telemetry.addData("Dumper status", "Flipped out");
-//            }
+            if (gamepad1.dpad_up) {
+                 output.flipInDumper();
+                 telemetry.addData("Dumper status", "Flipped in");
+             }
+            if (gamepad1.dpad_down) {
+                output.flipOutDumper();
+                telemetry.addData("Dumper status", "Flipped out");
+            }
 
 
 

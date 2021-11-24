@@ -54,6 +54,7 @@ public class Intake {
     public void outNoodles(){
         noodles.setPower(-1.0);
     }
+    public void stopNoodles() {noodles.setPower(0);}
 
     public void flipIn(){
         retracter.setPosition(retractInPos);

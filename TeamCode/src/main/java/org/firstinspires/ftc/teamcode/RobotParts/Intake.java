@@ -18,12 +18,10 @@ public class Intake {
     public static double retractInPos = 0;
     public static double retractOutPos = 1.0;
     public static double transferIntakePos = 0;
-    public static double transferOutputPos = 1.0;
+    public static double transferOutputPos = 0.8;
     public static int slideInPos = 0;
-    public static int slideOutPos = 170;
-    public static int maxVelocity = 100;
-    public boolean isSlideOut = false;
-    public boolean isSlideIn = false;
+    public static int slideOutPos = 1000;
+    public static int maxVelocity = 6000;
 
 
 
@@ -35,6 +33,9 @@ public class Intake {
         slides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slides.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        slides.setTargetPosition(slideInPos);
+        slides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         retracter = hardwareMap.get(Servo.class, "retracter");
         retracter.setDirection(Servo.Direction.REVERSE);
 
@@ -44,7 +45,7 @@ public class Intake {
         rightTransfer.setDirection(Servo.Direction.REVERSE);
     }
 
-    void setNoodlePower(double power){
+    public void setNoodlePower(double power){
         noodles.setPower(power);
     }
 
@@ -56,6 +57,11 @@ public class Intake {
     }
     public void stopNoodles() {noodles.setPower(0);}
 
+    public void slideOutInNoodles(){
+        inNoodles();
+        slideOut();
+    }
+
     public void flipIn(){
         retracter.setPosition(retractInPos);
     }
@@ -65,19 +71,18 @@ public class Intake {
     }
 
     public void slideIn(){
-        isSlideOut = false;
         slides.setTargetPosition(slideInPos);
-        slides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slides.setVelocity(maxVelocity);
     }
 
     public void slideOut(){
-        isSlideOut = true;
         slides.setTargetPosition(slideOutPos);
-        slides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slides.setVelocity(maxVelocity);
     }
 
+    public void setSlideSpeed(double speed) {
+        slides.setPower(speed);
+    }
     //goes to the intake transfer position
     public void transferIntake(){
         leftTransfer.setPosition(transferIntakePos);

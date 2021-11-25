@@ -52,6 +52,11 @@ public class Output {
         linearSlide2.setVelocity(velocity);
     }
 
+    public void retractFlipIn(){
+        flipInDumper();
+        retract();
+    }
+
     public double getTopDumperPos() {
         return dumper.getPosition();
     }

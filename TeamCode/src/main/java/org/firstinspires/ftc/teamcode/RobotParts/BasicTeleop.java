@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(group = "1 Teleop")
-public class Teleop extends LinearOpMode {
+public class BasicTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Intake intake = new Intake(hardwareMap);
@@ -89,11 +89,11 @@ public class Teleop extends LinearOpMode {
             }
 
 //             need new FFM Cable first
-            if (gamepad1.dpad_up) {
+            if (gamepad2.dpad_up) {
                  output.flipInDumper();
                  telemetry.addData("Dumper status", "Flipped in");
              }
-            if (gamepad1.dpad_down) {
+            if (gamepad2.dpad_down) {
                 output.flipOutDumper();
                 telemetry.addData("Dumper status", "Flipped out");
             }

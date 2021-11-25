@@ -12,8 +12,8 @@ public class Output {
     DcMotorEx linearSlide;
     DcMotorEx linearSlide2;
 
-    public static double dumperOutPos = -1.0;
-    public static double dumperInPos = 1.0;
+    public static double dumperOutPos = 0.36;
+    public static double dumperInPos = 0;
     public static int velocity = 1000;
 
     public Output(HardwareMap hardwareMap) {

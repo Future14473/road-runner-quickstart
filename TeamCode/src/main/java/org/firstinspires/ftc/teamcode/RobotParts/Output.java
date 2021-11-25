@@ -8,20 +8,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Output {
-    Servo bottomDumper;
-    Servo topDumper;
+    Servo dumper;
     DcMotorEx linearSlide;
     DcMotorEx linearSlide2;
 
-    public static double bottomDumperOutPos = -1.0;
-    public static double bottomDumperInPos = 1.0;
-    public static double topDumperOutPos = -1.0;
-    public static double topDumperInPos = 1.0;
+    public static double dumperOutPos = -1.0;
+    public static double dumperInPos = 1.0;
     public static int velocity = 1000;
 
     public Output(HardwareMap hardwareMap) {
-        bottomDumper = hardwareMap.get(Servo.class, "bottomDumper");
-        topDumper = hardwareMap.get(Servo.class, "topDumper");
+        dumper = hardwareMap.get(Servo.class, "dumper");
 
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
         linearSlide2 = hardwareMap.get(DcMotorEx.class, "linearSlide2");
@@ -36,12 +32,10 @@ public class Output {
 
     }
     public void flipInDumper() {
-        bottomDumper.setPosition(bottomDumperInPos);
-        topDumper.setPosition(topDumperInPos);
+        dumper.setPosition(dumperInPos);
     }
     public void flipOutDumper() {
-        bottomDumper.setPosition(bottomDumperOutPos);
-        topDumper.setPosition(topDumperOutPos);
+        dumper.setPosition(dumperOutPos);
     }
 
     public void extend() {
@@ -59,10 +53,10 @@ public class Output {
     }
 
     public double getTopDumperPos() {
-        return topDumper.getPosition();
+        return dumper.getPosition();
     }
     public double getBottomDumperPos () {
-        return bottomDumper.getPosition();
+        return dumper.getPosition();
     }
 }
 

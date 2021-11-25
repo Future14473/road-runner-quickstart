@@ -50,6 +50,7 @@ public class Teleop extends LinearOpMode {
                      intake.inNoodles();
                      telemetry.addData("Slide Status", "Sliding Out");
                  }
+
             if (gamepad1.dpad_up){
                 retractableOdo.upOdo();
                 telemetry.addData("Retractable Odo Status ", "Up");
@@ -58,15 +59,18 @@ public class Teleop extends LinearOpMode {
                 retractableOdo.downOdo();
                 telemetry.addData("Retractable Odo Status ", "Down");
             }
+
+            duck.setStopSpeed();
             if (gamepad1.dpad_right){
                 duck.setBlueSpeed();
                 telemetry.addData("Duck Status", "Blue");
             }
-
             if (gamepad1.dpad_left){
                 duck.setRedSpeed();
                 telemetry.addData("Duck Status", "Red");
             }
+            duck.moveDuck();
+
 
             if (gamepad1.right_stick_button){
                 output.extend();
@@ -75,6 +79,13 @@ public class Teleop extends LinearOpMode {
             if(gamepad1.left_stick_button){
                 output.retract();
                 telemetry.addData("Output Status", "Retracting");
+            }
+
+            if(gamepad2.x){
+                output.flipOutDumper();
+            }
+            if(gamepad2.y){
+                output.flipInDumper();
             }
 
 //             need new FFM Cable first

@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Duck {
     CRServo duckTop, duckBottom;
+    double duckSpeed;
 
     public Duck (HardwareMap hardwareMap){
         duckTop = hardwareMap.get(CRServo.class, "duckTop");
@@ -18,13 +19,20 @@ public class Duck {
 
     // the blue duck station is to your right if you stand facing the shelf
     public void setBlueSpeed(){
-        duckTop.setPower(1.0);
-        duckBottom.setPower(1.0);
+        duckSpeed = 1.0;
     }
 
     public void setRedSpeed(){
-        duckTop.setPower(-1.0);
-        duckBottom.setPower(-1.0);
+        duckSpeed = -1.0;
+    }
+
+    public void setStopSpeed(){
+        duckSpeed = 0;
+    }
+
+    public void moveDuck(){
+        duckTop.setPower(duckSpeed);
+        duckBottom.setPower(duckSpeed);
     }
 
 }

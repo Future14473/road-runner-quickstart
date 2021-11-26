@@ -20,7 +20,7 @@ public class Intake {
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 0.8;
     public static int slideInPos = 0;
-    public static int slideOutPos = 1000;
+    public static int slideOutPos = 172;
     public static int maxVelocity = 6000;
 
 

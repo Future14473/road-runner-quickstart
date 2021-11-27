@@ -69,7 +69,6 @@ public class BasicTeleop extends LinearOpMode {
                 duck.setRedSpeed();
                 telemetry.addData("Duck Status", "Red");
             }
-            duck.moveDuck();
 
 
             if (gamepad1.right_stick_button){

@@ -47,7 +47,6 @@ public class AdvancedTeleop extends LinearOpMode {
                 duck.setRedSpeed();
                 telemetry.addData("Duck Status", "Red");
             }
-            duck.moveDuck();
 
             if (gamepad1.dpad_up){
                 retractableOdo.upOdo();

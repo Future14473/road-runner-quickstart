@@ -13,6 +13,7 @@ public class Output {
     DcMotorEx linearSlide2;
 
     public static double dumperOutPos = 0.36;
+    public static double dumperOutPosHalf = 0.18;
     public static double dumperInPos = 0;
     public static int velocity = 1000;
 
@@ -34,9 +35,13 @@ public class Output {
     public void flipInDumper() {
         dumper.setPosition(dumperInPos);
     }
+    public void flipHalfDumper() {
+        dumper.setPosition(dumperOutPosHalf);
+    }
     public void flipOutDumper() {
         dumper.setPosition(dumperOutPos);
     }
+
 
     public void extend() {
         linearSlide.setTargetPosition(-303);

@@ -11,47 +11,35 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class AdvancedTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Intake intake = new Intake(hardwareMap);
-        Output output = new Output(hardwareMap);
         Capstone capstone = new Capstone(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Cycler automaticDumper = new Cycler(intake, output, this);
-
+        Cycler cycler = new Cycler(new Intake(hardwareMap), new Output(hardwareMap), this);
         Duck duck = new Duck(hardwareMap);
         RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);
-        DcMotor noodles;
-        noodles = hardwareMap.get(DcMotor.class, "noodles");
-
 
         waitForStart();
         retractableOdo.upOdo();
         while (opModeIsActive()){
 
-//            intake.setNoodlePower(gamepad2.right_trigger - gamepad2.left_trigger);
-
-
-            if (gamepad2.a){
-                intake.slideOut();
-                intake.inNoodles();
-
+            //TOP DRIVER
+            //____________________________________________________
+            if(gamepad2.x){
+                cycler.intakeOut();
             }
-            if (gamepad2.b){
-                intake.slideIn();
-                intake.stopNoodles();
-                intake.transferOutake();
-                intake.transferIntake();
-            }
-            if (gamepad2.x){
-                output.extend();
-                output.flipHalfDumper();
-            }
+
             if (gamepad2.y){
-                output.retract();
-                output.flipInDumper();
+                cycler.retractIntakeTransfer();
             }
-            if (gamepad2.dpad_down){
-                output.flipInDumper();
+
+            if(gamepad2.b){
+                cycler.dumperOutPrep();
             }
+
+            if(gamepad2.a){
+                cycler.dumpRetract();
+            }
+
+            // DUCK _________________________________________________________________
             duck.setStopSpeed();
             if (gamepad2.dpad_right){
                 duck.setBlueSpeed();
@@ -61,6 +49,8 @@ public class AdvancedTeleop extends LinearOpMode {
                 duck.setRedSpeed();
                 telemetry.addData("Duck Status", "Red");
             }
+
+            // CAPSTONE______________________________________________________________
             if (gamepad2.dpad_up){
                 capstone.grab();
             }
@@ -68,7 +58,7 @@ public class AdvancedTeleop extends LinearOpMode {
                 capstone.place();
             }
 
-
+            //BOTTOM DRIVER____________________________________________________________
             drive.setWeightedDrivePower(
                     new Pose2d(
                             -gamepad1.left_stick_y,

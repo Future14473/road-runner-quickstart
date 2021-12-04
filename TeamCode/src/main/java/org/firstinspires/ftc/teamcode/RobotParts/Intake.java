@@ -18,11 +18,10 @@ public class Intake {
     public static double retractInPos = 0;
     public static double retractOutPos = 1.0;
     public static double transferIntakePos = 0;
-    public static double transferOutputPos = 0.8;
+    public static double transferOutputPos = 1.8;
     public static int slideInPos = 0;
     public static int slideOutPos = 172;
     public static int maxVelocity = 6000;
-
 
 
     public Intake(HardwareMap hardwareMap){
@@ -60,6 +59,10 @@ public class Intake {
     public void slideOutInNoodles(){
         inNoodles();
         slideOut();
+    }
+    public void slideInOutNoodles(){
+        stopNoodles();
+        slideIn();
     }
 
     public void flipIn(){

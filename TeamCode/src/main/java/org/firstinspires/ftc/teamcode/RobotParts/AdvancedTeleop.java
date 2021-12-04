@@ -27,27 +27,29 @@ public class AdvancedTeleop extends LinearOpMode {
 
 //            intake.setNoodlePower(gamepad2.right_trigger - gamepad2.left_trigger);
 
-            if (gamepad2.right_bumper){
-                intake.slideOutInNoodles();
-                if (noodles.getCurrentPosition() > 1){
-                    intake.slideIn();
-                }
-            }
 
-            if(gamepad2.left_bumper){
-                automaticDumper.retractDump();
-            }
+            if (gamepad2.a){
+                intake.slideOut();
+                intake.inNoodles();
 
-            if (gamepad2.y){
-                output.flipOutDumper();
+            }
+            if (gamepad2.b){
+                intake.slideIn();
+                intake.stopNoodles();
+                intake.transferOutake();
+                intake.transferIntake();
             }
             if (gamepad2.x){
+                output.extend();
                 output.flipHalfDumper();
             }
-            if(gamepad2.a){
-                output.retractFlipIn();
+            if (gamepad2.y){
+                output.retract();
+                output.flipInDumper();
             }
-
+            if (gamepad2.dpad_down){
+                output.flipInDumper();
+            }
             duck.setStopSpeed();
             if (gamepad2.dpad_right){
                 duck.setBlueSpeed();

@@ -44,8 +44,8 @@ public class Output {
 
 
     public void extend() {
-        linearSlide.setTargetPosition(-303);
-        linearSlide2.setTargetPosition(-303);
+        linearSlide.setTargetPosition(-415);
+        linearSlide2.setTargetPosition(-415);
         linearSlide.setVelocity(velocity);
         linearSlide2.setVelocity(velocity);
     }

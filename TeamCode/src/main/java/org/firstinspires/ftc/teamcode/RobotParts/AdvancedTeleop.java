@@ -13,16 +13,18 @@ public class AdvancedTeleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Intake intake = new Intake(hardwareMap);
         Output output = new Output(hardwareMap);
+        Capstone capstone = new Capstone(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         AutomaticDumper automaticDumper = new AutomaticDumper(intake, output);
 
         Duck duck = new Duck(hardwareMap);
         RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);
         DcMotor noodles;
+        noodles = hardwareMap.get(DcMotor.class, "noodles");
+
 
         waitForStart();
         retractableOdo.upOdo();
-        noodles = hardwareMap.get(DcMotor.class, "noodles");
         while (opModeIsActive()){
 
 //            intake.setNoodlePower(gamepad2.right_trigger - gamepad2.left_trigger);
@@ -59,7 +61,12 @@ public class AdvancedTeleop extends LinearOpMode {
                 duck.setRedSpeed();
                 telemetry.addData("Duck Status", "Red");
             }
-
+            if (gamepad2.dpad_up){
+                capstone.grab();
+            }
+            if (gamepad2.dpad_down) {
+                capstone.place();
+            }
 
 
             drive.setWeightedDrivePower(

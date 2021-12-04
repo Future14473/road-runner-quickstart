@@ -15,7 +15,7 @@ public class AdvancedTeleop extends LinearOpMode {
         Output output = new Output(hardwareMap);
         Capstone capstone = new Capstone(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        AutomaticDumper automaticDumper = new AutomaticDumper(intake, output);
+        Cycler automaticDumper = new Cycler(intake, output);
 
         Duck duck = new Duck(hardwareMap);
         RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);

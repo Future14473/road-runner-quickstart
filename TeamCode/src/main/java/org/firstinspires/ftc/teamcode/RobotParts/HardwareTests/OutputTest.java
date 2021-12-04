@@ -19,6 +19,10 @@ public class OutputTest extends LinearOpMode {
                 telemetry.addData("Dumper Status", "Flip In");
             }
 
+            if (gamepad1.b){
+                output.flipHalfDumper();
+                telemetry.addData("Dumper Status", "Flip In");
+            }
             if(gamepad1.y){
                 output.flipOutDumper();
                 telemetry.addData("Dumper Status", "Flip Out");

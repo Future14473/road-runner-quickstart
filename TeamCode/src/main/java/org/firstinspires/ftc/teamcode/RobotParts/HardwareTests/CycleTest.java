@@ -13,7 +13,7 @@ public class CycleTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         Output output = new Output(hardwareMap);
         Intake intake = new Intake(hardwareMap);
-        Cycler cycler = new Cycler(intake, output);
+        Cycler cycler = new Cycler(intake, output, this);
         waitForStart();
 
         while (opModeIsActive()){

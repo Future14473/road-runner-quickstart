@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.util.Timer;
+
 public class Cycler {
     Intake intake;
     Output output;
+    Timer timer;
 
-    public Cycler(Intake intake, Output output){
+    public Cycler(Intake intake, Output output, LinearOpMode opMode){
         this.intake = intake;
         this.output = output;
+        timer = new Timer(opMode);
     }
 
     public void intakeOut(){
@@ -29,6 +35,7 @@ public class Cycler {
 
     public void dumpRetract(){
         output.flipOutDumper();
+        timer.safeDelay(500);
         output.flipInDumper();
         output.retract();
     }

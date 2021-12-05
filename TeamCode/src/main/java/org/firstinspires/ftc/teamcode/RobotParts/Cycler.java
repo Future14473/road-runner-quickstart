@@ -16,12 +16,14 @@ public class Cycler {
     }
 
     public void intakeOut(){
+        intake.flipOut();
         intake.inNoodles();
         intake.slideOut();
     }
 
     public void retractIntakeTransfer(){
         intake.stopNoodles();
+        intake.flipIn();
         intake.slideIn();
         intake.transferOutake();
     }

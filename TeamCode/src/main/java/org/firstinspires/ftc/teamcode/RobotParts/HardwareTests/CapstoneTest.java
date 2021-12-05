@@ -13,31 +13,31 @@ public class CapstoneTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            if (gamepad2.x){
+            if (gamepad2.dpad_left){
                 capstone.down();
                 telemetry.addData("Capstone Position", "grab");
             }
 
-            if (gamepad2.y){
-                capstone.highestLimit();
-                telemetry.addData("Capstone Position", "place");
-            }
+//            if (gamepad2.y){
+//                capstone.highestLimit();
+//                telemetry.addData("Capstone Position", "place");
+//            }
 
-            if (gamepad2.b){
-                capstone.cap();
-                telemetry.addData("Capstone Position", "cap");
-            }
-
-            if (gamepad2.a){
+            if (gamepad2.dpad_up){
                 capstone.holdUp();
                 telemetry.addData("Capstone Position", "hold Up");
             }
 
-
-            if (gamepad2.right_bumper){
+            if (gamepad2.dpad_right){
                 capstone.preCap();
                 telemetry.addData("Capstone Position", "preCap");
             }
+
+            if (gamepad2.dpad_down){
+                capstone.cap();
+                telemetry.addData("Capstone Position", "cap");
+            }
+
 
 
             telemetry.update();

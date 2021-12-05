@@ -47,6 +47,15 @@ public class Cycler {
         output.retract();
     }
 
+    public void dumpRetractExtendIntake(){
+        output.flipOutDumper();
+        intake.slideOut();
+        timer.safeDelay(500);
+        output.flipInDumper();
+        timer.safeDelay(500);
+        output.retract();
+    }
+
 
 
 

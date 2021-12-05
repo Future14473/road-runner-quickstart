@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(group = "1 Teleop")
-public class AdvancedTeleop extends LinearOpMode {
+public class AdvancedIntakeLongTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Intake intake = new Intake(hardwareMap);
@@ -56,7 +56,7 @@ public class AdvancedTeleop extends LinearOpMode {
             }
 
             if(gamepad2.a){
-                cycler.dumpRetract();
+                cycler.dumpRetractExtendIntake();
             }
 
             // DUCK _________________________________________________________________

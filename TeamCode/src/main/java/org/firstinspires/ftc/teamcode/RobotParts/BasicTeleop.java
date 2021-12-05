@@ -17,14 +17,14 @@ public class BasicTeleop extends LinearOpMode {
             intake.setNoodlePower(gamepad1.right_trigger - gamepad1.left_trigger);
 
             if (gamepad1.x){
-                intake.flipIn();
-                telemetry.addData("Retracter In Position ", Intake.retractInPos);
+                intake.flipInTeleop();
+                telemetry.addData("Retracter In Position ", Intake.retractInPosTeleop);
                 telemetry.addData("Flip Status", "in");
             }
 
             if (gamepad1.a) {
-                intake.flipOut();
-                telemetry.addData("Retracter In Position ", Intake.retractOutPos);
+                intake.flipOutTeleop();
+                telemetry.addData("Retracter In Position ", Intake.retractOutPosTeleop);
                 telemetry.addData("Flip Status", "out");
             }
 

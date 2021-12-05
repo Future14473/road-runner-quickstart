@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotParts.Intake;
-import org.firstinspires.ftc.teamcode.RobotParts.Output;
 
 @TeleOp(group = "1 Teleop")
 public class IntakeTest extends LinearOpMode {
@@ -35,11 +34,18 @@ public class IntakeTest extends LinearOpMode {
             }
 
             if (gamepad1.a){
-                intake.flipIn();
+                intake.flipInTeleop();
             }
 
             if (gamepad1.b){
-                intake.flipOut();
+                intake.flipOutTeleop();
+            }
+
+            if (gamepad1.dpad_up){
+                intake.flipInAuto();
+            }
+            if (gamepad1.dpad_down){
+                intake.flipOutAuto();
             }
 
             intake.setSlideSpeed(gamepad1.right_stick_y);

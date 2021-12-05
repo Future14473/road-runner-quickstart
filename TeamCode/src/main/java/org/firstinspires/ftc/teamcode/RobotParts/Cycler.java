@@ -13,17 +13,19 @@ public class Cycler {
         this.intake = intake;
         this.output = output;
         timer = new Timer(opMode);
+        intake.flipInTeleop();
     }
 
     public void intakeOut(){
-        intake.flipOut();
+        intake.flipOutTeleop();
+        timer.safeDelay(300);
         intake.inNoodles();
         intake.slideOut();
     }
 
     public void retractIntakeTransfer(){
         intake.stopNoodles();
-        intake.flipIn();
+        intake.flipInTeleop();
         intake.slideIn();
         intake.transferOutake();
     }
@@ -31,6 +33,7 @@ public class Cycler {
     public void dumperOutPrep(){
         output.flipInDumper();
         output.extend();
+        timer.safeDelay(500);
         output.flipHalfDumper();
         intake.transferIntake();
     }
@@ -39,6 +42,7 @@ public class Cycler {
         output.flipOutDumper();
         timer.safeDelay(500);
         output.flipInDumper();
+        timer.safeDelay(500);
         output.retract();
     }
 

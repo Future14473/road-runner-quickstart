@@ -15,8 +15,8 @@ public class Intake {
     Servo leftTransfer;
     Servo rightTransfer;
 
-    public static double retractInPosTeleop = 0;
-    public static double retractOutPosTeleop = 1.0;
+    public static double retractInPosTeleop = 0.35;
+    public static double retractOutPosTeleop = 0.52;
     public static double retractInPosAuto = 0;
     public static double retractOutPosAuto = 1.0;
     public static double transferIntakePos = 0;

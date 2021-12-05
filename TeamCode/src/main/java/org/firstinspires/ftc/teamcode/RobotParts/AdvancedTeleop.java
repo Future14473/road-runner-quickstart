@@ -10,9 +10,10 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 public class AdvancedTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
+        Intake intake = new Intake(hardwareMap);
         Capstone capstone = new Capstone(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        Cycler cycler = new Cycler(new Intake(hardwareMap), new Output(hardwareMap), this);
+        Cycler cycler = new Cycler(intake, new Output(hardwareMap), this);
         Duck duck = new Duck(hardwareMap);
         RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);
 
@@ -29,15 +30,18 @@ public class AdvancedTeleop extends LinearOpMode {
                                 gamepad1.right_bumper ? -gamepad1.left_stick_y * 0.5 : -gamepad1.left_stick_y,
                                 gamepad1.right_bumper ? -gamepad1.left_stick_x * 0.8: -gamepad1.left_stick_x,
                                 gamepad1.right_bumper ? -gamepad1.right_stick_x * 0.5: -gamepad1.right_stick_x
-
                         )
                 );
             }
         }).start();
 
         while (opModeIsActive()){
-
             //TOP DRIVER
+
+            //emergency transfer go back to intake in case the driver misses the cycler
+//            if (gamepad2.right_bumper){
+//                intake.transferIntake();
+//            }
             //____________________________________________________
             if(gamepad2.x){
                 cycler.intakeOut();
@@ -57,13 +61,15 @@ public class AdvancedTeleop extends LinearOpMode {
 
             // DUCK _________________________________________________________________
             duck.setStopSpeed();
-            if (gamepad2.dpad_right){
+
+            // right blue speed, left red speed
+            duck.setDuckPowerVar(gamepad2.left_trigger - gamepad2.right_trigger);
+//            telemetry.addData("Duck Speed", gamepad2.left_trigger - gamepad2.right_trigger);
+            if(gamepad2.right_bumper){
                 duck.setBlueSpeed();
-                telemetry.addData("Duck Status", "Blue");
             }
-            if (gamepad2.dpad_left){
+            if(gamepad2.left_bumper){
                 duck.setRedSpeed();
-                telemetry.addData("Duck Status", "Red");
             }
             duck.setSpeed();
 

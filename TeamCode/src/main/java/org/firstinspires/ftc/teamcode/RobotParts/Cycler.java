@@ -25,8 +25,9 @@ public class Cycler {
 
     public void retractIntakeTransfer(){
         intake.stopNoodles();
-        intake.flipInTeleop();
         intake.slideIn();
+        timer.safeDelay(500);
+        intake.flipInTeleop();
         intake.transferOutake();
     }
 

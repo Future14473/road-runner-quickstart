@@ -13,7 +13,7 @@ public class Output {
     DcMotorEx linearSlide2;
 
     public static double dumperOutPos = 0.83;
-    public static double dumperOutPosHalf = 0.7;
+    public static double dumperOutPosHalf = 0.67;
     public static double dumperInPos = 0.5;
     public static int velocity = 1000;
 

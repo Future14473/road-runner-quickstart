@@ -18,11 +18,11 @@ public class CycleTest extends LinearOpMode {
 
         while (opModeIsActive()){
             if(gamepad1.x){
-                cycler.intakeOut();
+                intake.inNoodlesUp();
             }
 
             if (gamepad1.y){
-                cycler.retractIntakeTransfer();
+                cycler.transferIntakeToDumper();
             }
 
             if(gamepad1.b){

@@ -13,12 +13,12 @@ public class IntakeTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            intake.setNoodlePower(gamepad1.right_trigger - gamepad1.left_trigger);
             if(gamepad1.right_bumper){
+                intake.inNoodlesUp();
             }
 
             if(gamepad1.left_bumper){
-                telemetry.addData("Transfer Status", "intake");
+                intake.outNoodlesUp();
             }
 
             if(gamepad1.x){

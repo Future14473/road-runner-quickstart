@@ -38,17 +38,25 @@ public class AdvancedTeleop extends LinearOpMode {
         while (opModeIsActive()){
             //TOP DRIVER
 
-            //emergency transfer go back to intake in case the driver misses the cycler
-//            if (gamepad2.right_bumper){
-//                intake.transferIntake();
-//            }
-            //____________________________________________________
+            //Cycler____________________________________________________
+            if(gamepad2.right_bumper){
+                intake.inNoodlesUp();
+            }
+            if (gamepad2.left_bumper){
+                intake.outNoodlesUp();
+            }
+            if((gamepad2.right_bumper == false) && (gamepad2.left_bumper == false)){
+                intake.flipInTeleop();
+            }
+            intake.moveNoodles();
+
+            //emergency move the transfer down
             if(gamepad2.x){
-                cycler.intakeOut();
+                intake.transferIntake();
             }
 
             if (gamepad2.y){
-                cycler.retractIntakeTransfer();
+                cycler.transferIntakeToDumper();
             }
 
             if(gamepad2.b){

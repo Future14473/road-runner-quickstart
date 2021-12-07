@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
     DcMotor noodles;
     DcMotorEx slides;
-    Servo retracter;
+    Servo flipper;
     Servo leftTransfer;
     Servo rightTransfer;
 
@@ -19,15 +19,15 @@ public class Intake {
     public static double retractOutPosTeleop = 0.42;
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 1.8;
-    public static int maxVelocity = 6000;
+    double noodlePower = 0;
 
 
     public Intake(HardwareMap hardwareMap){
         noodles = hardwareMap.get(DcMotor.class, "noodles");
         noodles.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        retracter = hardwareMap.get(Servo.class, "retracter");
-        retracter.setDirection(Servo.Direction.REVERSE);
+        flipper = hardwareMap.get(Servo.class, "retracter");
+        flipper.setDirection(Servo.Direction.REVERSE);
 
         leftTransfer = hardwareMap.get(Servo.class, "leftTransfer");
 
@@ -36,37 +36,35 @@ public class Intake {
     }
 
     public void inNoodlesUp(){
-        inNoodles();
-        flipInTeleop();
+        setInNoodlesSpeed();
+        flipOutTeleop();
     }
 
-    public void setNoodlePower(double power){
-        noodles.setPower(power);
+    public void outNoodlesUp(){
+        setOutNoodlesSpeed();
+        flipOutTeleop();
     }
 
-    public void inNoodles(){
-        noodles.setPower(1.0);
+    public void setInNoodlesSpeed(){
+        noodlePower = 1.0;
     }
-    public void outNoodles(){
-        noodles.setPower(-1.0);
+    public void setOutNoodlesSpeed(){
+        noodlePower = -1.0;
     }
-    public void stopNoodles() {noodles.setPower(0);}
 
-    public void slideOutInNoodles(){
-        inNoodles();
+    public void moveNoodles(){
+        noodles.setPower(noodlePower);
     }
-    public void slideInOutNoodles(){
-        stopNoodles();
-    }
+    public void setStopNoodlesSpeed() {noodlePower = 0;}
+
 
     public void flipInTeleop(){
-        retracter.setPosition(retractInPosTeleop);
+        flipper.setPosition(retractInPosTeleop);
     }
 
     public void flipOutTeleop(){
-        retracter.setPosition(retractOutPosTeleop);
+        flipper.setPosition(retractOutPosTeleop);
     }
-
 
     //goes to the intake transfer position
     public void transferIntake(){
@@ -78,11 +76,4 @@ public class Intake {
         leftTransfer.setPosition(transferOutputPos);
         rightTransfer.setPosition(transferOutputPos);
     }
-//    public void retract()
-
-    public double getRetracterPosition(){
-        return retracter.getPosition();
-    }
-
-    public int getSlidePosition(){return slides.getCurrentPosition();}
 }

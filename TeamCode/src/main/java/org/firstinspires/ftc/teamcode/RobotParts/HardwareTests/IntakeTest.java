@@ -14,7 +14,6 @@ public class IntakeTest extends LinearOpMode {
 
         while (opModeIsActive()){
             intake.setNoodlePower(gamepad1.right_trigger - gamepad1.left_trigger);
-            telemetry.addData("Intake Positions", intake.getSlidePosition());
             if(gamepad1.right_bumper){
             }
 

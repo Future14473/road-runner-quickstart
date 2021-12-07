@@ -25,7 +25,7 @@ public class AdvancedTeleop extends LinearOpMode {
                 //BOTTOM DRIVER____________________________________________________________
                 //In-Line if statement that slows down the drivetrain if right bumper pressed
 
-                drive.setWeightedDrivePower(
+                drive.setDrivePower(
                         new Pose2d(
                                 gamepad1.right_bumper ? -gamepad1.left_stick_y * 0.5 : -gamepad1.left_stick_y,
                                 gamepad1.right_bumper ? -gamepad1.left_stick_x * 0.8: -gamepad1.left_stick_x,

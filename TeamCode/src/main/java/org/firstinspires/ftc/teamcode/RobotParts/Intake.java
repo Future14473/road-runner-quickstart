@@ -19,8 +19,6 @@ public class Intake {
     public static double retractOutPosTeleop = 0.42;
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 1.8;
-    public static int slideInPos = 0;
-    public static int slideOutPos = 172;
     public static int maxVelocity = 6000;
 
 
@@ -35,6 +33,11 @@ public class Intake {
 
         rightTransfer = hardwareMap.get(Servo.class, "rightTransfer");
         rightTransfer.setDirection(Servo.Direction.REVERSE);
+    }
+
+    public void inNoodlesUp(){
+        inNoodles();
+        flipInTeleop();
     }
 
     public void setNoodlePower(double power){
@@ -54,7 +57,6 @@ public class Intake {
     }
     public void slideInOutNoodles(){
         stopNoodles();
-        slideIn();
     }
 
     public void flipInTeleop(){
@@ -63,11 +65,6 @@ public class Intake {
 
     public void flipOutTeleop(){
         retracter.setPosition(retractOutPosTeleop);
-    }
-
-    public void slideIn(){
-        slides.setTargetPosition(slideInPos);
-        slides.setVelocity(maxVelocity);
     }
 
 

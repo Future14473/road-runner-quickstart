@@ -38,13 +38,6 @@ public class IntakeTest extends LinearOpMode {
                 intake.flipOutTeleop();
             }
 
-            if (gamepad1.dpad_up){
-                intake.flipInAuto();
-            }
-            if (gamepad1.dpad_down){
-                intake.flipOutAuto();
-            }
-
             telemetry.addData("slidePower", gamepad1.right_stick_y);
 
             telemetry.update();

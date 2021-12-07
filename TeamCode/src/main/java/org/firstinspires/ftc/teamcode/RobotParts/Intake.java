@@ -30,13 +30,6 @@ public class Intake {
         noodles = hardwareMap.get(DcMotor.class, "noodles");
         noodles.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        slides = hardwareMap.get(DcMotorEx.class, "intakeSlides");
-        slides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        slides.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        slides.setTargetPosition(slideInPos);
-        slides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         retracter = hardwareMap.get(Servo.class, "retracter");
         retracter.setDirection(Servo.Direction.REVERSE);
 
@@ -60,7 +53,6 @@ public class Intake {
 
     public void slideOutInNoodles(){
         inNoodles();
-        slideOut();
     }
     public void slideInOutNoodles(){
         stopNoodles();
@@ -87,14 +79,7 @@ public class Intake {
         slides.setVelocity(maxVelocity);
     }
 
-    public void slideOut(){
-        slides.setTargetPosition(slideOutPos);
-        slides.setVelocity(maxVelocity);
-    }
 
-    public void setSlideSpeed(double speed) {
-        slides.setPower(speed);
-    }
     //goes to the intake transfer position
     public void transferIntake(){
         leftTransfer.setPosition(transferIntakePos);

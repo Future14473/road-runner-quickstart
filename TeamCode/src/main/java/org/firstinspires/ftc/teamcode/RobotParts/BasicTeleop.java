@@ -41,12 +41,10 @@ public class BasicTeleop extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper){
-                    intake.slideIn();
                     intake.stopNoodles();
                     telemetry.addData("Slide Status", "Sliding In");
                 }
              if (gamepad1.left_bumper) {
-                     intake.slideOut();
                      intake.inNoodles();
                      telemetry.addData("Slide Status", "Sliding Out");
                  }

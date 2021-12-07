@@ -16,11 +16,9 @@ public class IntakeTest extends LinearOpMode {
             intake.setNoodlePower(gamepad1.right_trigger - gamepad1.left_trigger);
             telemetry.addData("Intake Positions", intake.getSlidePosition());
             if(gamepad1.right_bumper){
-                intake.slideOut();
             }
 
             if(gamepad1.left_bumper){
-                intake.slideIn();
                 telemetry.addData("Transfer Status", "intake");
             }
 
@@ -48,7 +46,6 @@ public class IntakeTest extends LinearOpMode {
                 intake.flipOutAuto();
             }
 
-            intake.setSlideSpeed(gamepad1.right_stick_y);
             telemetry.addData("slidePower", gamepad1.right_stick_y);
 
             telemetry.update();

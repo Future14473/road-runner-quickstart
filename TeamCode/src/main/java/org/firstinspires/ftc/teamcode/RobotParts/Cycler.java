@@ -20,12 +20,10 @@ public class Cycler {
         intake.flipOutTeleop();
         timer.safeDelay(300);
         intake.inNoodles();
-        intake.slideOut();
     }
 
     public void retractIntakeTransfer(){
         intake.stopNoodles();
-        intake.slideIn();
         timer.safeDelay(500);
         intake.flipInTeleop();
         intake.transferOutake();
@@ -49,7 +47,6 @@ public class Cycler {
 
     public void dumpRetractExtendIntake(){
         output.flipOutDumper();
-        intake.slideOut();
         timer.safeDelay(500);
         output.flipInDumper();
         timer.safeDelay(500);

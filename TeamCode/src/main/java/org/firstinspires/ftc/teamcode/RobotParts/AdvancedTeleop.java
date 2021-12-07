@@ -47,6 +47,7 @@ public class AdvancedTeleop extends LinearOpMode {
             }
             if((gamepad2.right_bumper == false) && (gamepad2.left_bumper == false)){
                 intake.flipInTeleop();
+                intake.setStopNoodlesSpeed();
             }
             intake.moveNoodles();
 

@@ -15,8 +15,8 @@ public class Intake {
     Servo leftTransfer;
     Servo rightTransfer;
 
-    public static double retractInPosTeleop = 0.2;
-    public static double retractOutPosTeleop = 0.42;
+    public static double retractInPosTeleop = 0;
+    public static double retractOutPosTeleop = 0.47;
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 1.8;
     double noodlePower = 0;
@@ -26,7 +26,7 @@ public class Intake {
         noodles = hardwareMap.get(DcMotor.class, "noodles");
         noodles.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        flipper = hardwareMap.get(Servo.class, "retracter");
+        flipper = hardwareMap.get(Servo.class, "intakeFlipper");
         flipper.setDirection(Servo.Direction.REVERSE);
 
         leftTransfer = hardwareMap.get(Servo.class, "leftTransfer");

@@ -1,0 +1,27 @@
+package org.firstinspires.ftc.teamcode.FF_OpenCV;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+
+@Autonomous(group = "AAA")
+public class TestCV extends LinearOpMode {
+    OpenCvCamera phoneCam;
+    @Override
+    public void runOpMode() throws InterruptedException {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().
+                getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        phoneCam = OpenCvCameraFactory.getInstance().
+                createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        CapDetector capDetector = new CapDetector(telemetry);
+        phoneCam.setPipeline(capDetector);
+        phoneCam.openCameraDeviceAsync( () -> {
+            phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+        });
+    }
+}

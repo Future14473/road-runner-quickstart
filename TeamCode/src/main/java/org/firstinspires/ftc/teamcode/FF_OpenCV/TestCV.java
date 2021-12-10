@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.FF_OpenCV;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -20,8 +21,26 @@ public class TestCV extends LinearOpMode {
 
         CapDetector capDetector = new CapDetector(telemetry);
         phoneCam.setPipeline(capDetector);
-        phoneCam.openCameraDeviceAsync( () -> {
-            phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+//        phoneCam.openCameraDeviceAsync( () -> {
+//            phoneCam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+//        });
+
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                phoneCam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+
         });
+        FtcDashboard.getInstance().startCameraStream(phoneCam, 0);
+        waitForStart();
+        while (opModeIsActive()){
+            telemetry.addData("running", true);
+        }
     }
 }

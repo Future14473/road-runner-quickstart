@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.FF_OpenCV;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -9,6 +11,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 public class CapDetector extends OpenCvPipeline {
 
     Telemetry telemetry;
@@ -19,20 +22,21 @@ public class CapDetector extends OpenCvPipeline {
     Mat matStream = new Mat();
 
     // only if the value is between this range will it be onsidered "blue"
-    Scalar colorHigh = new Scalar(184,94,92); //TODO tune
-    Scalar colorLow = new Scalar(180, 78, 84); // TODO tune
+    public static Scalar colorHigh = new Scalar(0,94,92); //TODO tune
+    public static Scalar colorLow = new Scalar(180, 78, 84); // TODO tune
 
-    Scalar capColor = new Scalar(255,0,0);
-    Scalar notCapColor = new Scalar(0,255,0);
-    static final Rect leftROI = new Rect(new Point(0,0),
+    public static Scalar capColor = new Scalar(255,0,0);
+    public static Scalar notCapColor = new Scalar(0,255,0);
+
+    public static final Rect leftROI = new Rect(new Point(0,0),
                                         new Point(0,100));
 
-    static final Rect middleROI = new Rect(new Point(-100,0),
-                                            new Point(20,330));
-    static final Rect rightROI = new Rect(new Point(5,62),
-                                            new Point(321,40));
+    public static final Rect middleROI = new Rect(new Point(100,0),
+                                            new Point(20,310));
+    public static final Rect rightROI = new Rect(new Point(5,62),
+                                            new Point(200,40));
 
-    static double percentColorThreshold = 0.4;
+    public static double percentColorThreshold = 0.4;
 
     public enum Location{
         LEFT,
@@ -52,9 +56,9 @@ public class CapDetector extends OpenCvPipeline {
         Core.inRange(matStream, colorLow, colorHigh, matStream);
 
         //extrat ROI from image
-        Mat left = matStream.submat(leftROI),
-                right = matStream.submat(rightROI),
-                middle = matStream.submat(middleROI);
+        Mat left = matStream.submat(leftROI);
+        Mat right = matStream.submat(rightROI);
+        Mat middle = matStream.submat(middleROI);
 
         //see percentage of matrix becomes white
         //first because only 1 channel in grayscalle image

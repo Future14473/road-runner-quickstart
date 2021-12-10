@@ -42,5 +42,6 @@ public class TestCV extends LinearOpMode {
         while (opModeIsActive()){
             telemetry.addData("running", true);
         }
+        phoneCam.stopStreaming();
     }
 }

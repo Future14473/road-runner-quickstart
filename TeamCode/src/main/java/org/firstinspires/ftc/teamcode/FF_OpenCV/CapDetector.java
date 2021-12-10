@@ -22,19 +22,18 @@ public class CapDetector extends OpenCvPipeline {
     Mat matStream = new Mat();
 
     // only if the value is between this range will it be onsidered "blue"
-    public static Scalar colorHigh = new Scalar(23,50,70); //TODO tune
-    public static Scalar colorLow = new Scalar(2,255,255); // TODO tune
+
 
     public static Scalar capColor = new Scalar(23,50,70);
     public static Scalar notCapColor = new Scalar(32,255,255);
 
-    public static Rect leftROI = new Rect(new Point(0,0),
-                                        new Point(0,100));
+    public static Rect leftROI = new Rect(new Point(60, 35),
+            new Point(120, 75));
 
-    public static Rect middleROI = new Rect(new Point(100,0),
-                                            new Point(20,310));
+    public static Rect middleROI = new Rect(new Point(140, 35),
+            new Point(200, 75));
     public static Rect rightROI = new Rect(new Point(5,62),
-                                            new Point(200,40));
+                                            new Point(30,40));
 
     public static double percentColorThreshold = 0.4;
 
@@ -51,7 +50,8 @@ public class CapDetector extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         // process Frame gets the camera stream and allows you to add annotations too]
         Imgproc.cvtColor(input, matStream, Imgproc.COLOR_RGB2HSV );
-
+        Scalar colorHigh = new Scalar(23,50,70); //TODO tune
+        Scalar colorLow = new Scalar(32,255,255); // TODO tune
         //matrix becomes grayscale (within range = white, out of range = black)
         Core.inRange(matStream, colorLow, colorHigh, matStream);
 
@@ -93,9 +93,12 @@ public class CapDetector extends OpenCvPipeline {
         //draw rectangles to visualize
         Imgproc.cvtColor(matStream, matStream, Imgproc.COLOR_GRAY2RGB);
 
-        Imgproc.rectangle(matStream, leftROI, (location == Location.LEFT) ? capColor: notCapColor);
-        Imgproc.rectangle(matStream, middleROI, (location == Location.MIDDLE) ? capColor: notCapColor);
-        Imgproc.rectangle(matStream, rightROI, (location == Location.RIGHT) ? capColor: notCapColor);
+        Scalar colorStone = new Scalar(255, 0, 0);
+        Scalar colorSkystone = new Scalar(0, 255, 0);
+
+        Imgproc.rectangle(matStream, leftROI, (location == Location.LEFT) ? colorSkystone:colorStone);
+        Imgproc.rectangle(matStream, middleROI, (location == Location.MIDDLE) ? colorSkystone:colorStone);
+        Imgproc.rectangle(matStream, rightROI, (location == Location.RIGHT) ? colorSkystone:colorStone);
         return matStream;
     }
 }

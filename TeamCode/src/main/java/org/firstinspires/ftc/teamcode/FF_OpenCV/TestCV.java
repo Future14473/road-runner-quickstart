@@ -37,7 +37,7 @@ public class TestCV extends LinearOpMode {
             }
 
         });
-        FtcDashboard.getInstance().startCameraStream(phoneCam, 0);
+//        FtcDashboard.getInstance().startCameraStream(phoneCam, 0);
         waitForStart();
         while (opModeIsActive()){
             telemetry.addData("running", true);

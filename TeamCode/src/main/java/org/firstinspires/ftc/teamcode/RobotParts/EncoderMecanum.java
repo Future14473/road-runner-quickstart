@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotParts;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -31,10 +30,13 @@ public class EncoderMecanum {
         rightFront.setTargetPosition(forward - strafe - turn);
         rightRear.setTargetPosition(forward + strafe - turn);
 
+
         leftFront.setVelocity(drivetrainSpeed);
         leftRear.setVelocity(drivetrainSpeed);
         rightFront.setVelocity(drivetrainSpeed);
         rightRear.setVelocity(drivetrainSpeed);
+
+
     }
 
     public int inToEncoders(double inches){

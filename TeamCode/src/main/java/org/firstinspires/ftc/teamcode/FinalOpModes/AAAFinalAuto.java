@@ -34,7 +34,6 @@ import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
 import org.firstinspires.ftc.teamcode.Mechanisms.RetractableOdo;
-import org.firstinspires.ftc.teamcode.z_drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -49,7 +48,9 @@ public class AAAFinalAuto extends LinearOpMode
 
     public static double
             duck1Y = 12.5, duck1X = -4,
-            wobbleX = -40,
+            wobbleX_HIGH = -43,
+            wobbleX_MIDDLE = -40,
+            wobbleX_LOW = -40,
             wobbleY_HIGH = -7,
             wobbleY_MIDDLE = -7.5,
             wobbleY_LOW = -1.5,
@@ -117,21 +118,21 @@ public class AAAFinalAuto extends LinearOpMode
         switch (location){
             case LEFT:
                 cycler.dumperOutPrepLow();
-                encoderMecanum.moveInchesConstantHeading(wobbleY_LOW, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY_LOW, wobbleX_LOW);
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();
-                encoderMecanum.moveInchesConstantHeading(wobbleY_MIDDLE, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY_MIDDLE, wobbleX_MIDDLE);
                 break;
             case RIGHT:
                 cycler.dumperOutPrepHigh();
-                encoderMecanum.moveInchesConstantHeading(wobbleY_HIGH, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY_HIGH, wobbleX_HIGH);
                 break;
         }
         cycler.dumpRetractAuto();
 
         // Pre PARK ____________________
-        encoderMecanum.moveInchesConstantHeading(preParkY, wobbleX);
+        encoderMecanum.moveInchesConstantHeading(preParkY, wobbleX_HIGH);
         encoderMecanum.moveInchesConstantHeading(preParkY, preParkX);
 //        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
 

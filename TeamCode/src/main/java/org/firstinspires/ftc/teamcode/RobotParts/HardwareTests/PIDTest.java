@@ -10,14 +10,14 @@ import org.firstinspires.ftc.teamcode.RobotParts.EncoderMecanum;
 @Config
 @TeleOp (group = "aaa")
 
-public class PID_test extends LinearOpMode {
+public class PIDTest extends LinearOpMode {
     public static double forwardIn = 1;
     public static double strafeIn = 0;
     public static double turnDegrees = 0;
     @Override
     public void runOpMode() throws InterruptedException {
 
-        EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap);
+        EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap, telemetry);
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("PIDF - lF",drivetrain.leftFront.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));

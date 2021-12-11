@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.RobotParts.EncoderMecanum;
 
 @Config
-@TeleOp (group = "aaa")
+@TeleOp (group = "!")
 
-public class EncoderTest extends LinearOpMode {
+public class EncoderTestNoMove extends LinearOpMode {
     public static double forwardIn = 1;
     public static double strafeIn = 0;
     public static double turnDegrees = 0;
@@ -18,7 +18,7 @@ public class EncoderTest extends LinearOpMode {
 
         EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap, telemetry);
         waitForStart();
-        drivetrain.moveInches(forwardIn,strafeIn,turnDegrees);
+//        drivetrain.moveInches(forwardIn,strafeIn,turnDegrees);
         while (opModeIsActive()) {
             drivetrain.telemetryEncoderPositions();
             telemetry.update();

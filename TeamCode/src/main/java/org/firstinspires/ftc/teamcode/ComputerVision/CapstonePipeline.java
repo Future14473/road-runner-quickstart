@@ -24,7 +24,7 @@ public class CapstonePipeline extends OpenCvPipeline {
         NOT_FOUND,
         UNINITIALIZED
     }
-    private Location location = Location.UNINITIALIZED;
+    private Location location;
 
     static final Rect LEFT_ROI = new Rect(
             new Point(60, 35),
@@ -32,9 +32,7 @@ public class CapstonePipeline extends OpenCvPipeline {
     static final Rect RIGHT_ROI = new Rect(
             new Point(140, 35),
             new Point(200, 75));
-    static final Rect MIDDLE_ROI = new Rect(
-            new Point(140, 35),
-            new Point(100, 75));
+
     static double PERCENT_COLOR_THRESHOLD = 0.4;
 
     public static int lowH = 90, lowS = 90, lowV = 120;
@@ -57,41 +55,30 @@ public class CapstonePipeline extends OpenCvPipeline {
 
         Mat left = mat.submat(LEFT_ROI);
         Mat right = mat.submat(RIGHT_ROI);
-        Mat middle = mat.submat(MIDDLE_ROI);
 
         double leftValue = Core.sumElems(left).val[0] / LEFT_ROI.area() / 255;
-        double middleValue = Core.sumElems(middle).val[0] / MIDDLE_ROI.area() / 255;
         double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI.area() / 255;
 
         left.release();
         right.release();
-        middle.release();
 
         telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
-        telemetry.addData("Middle raw value", (int) Core.sumElems(middle).val[0]);
         telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
         telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
-        telemetry.addData("Middle percentage", Math.round(middleValue * 100) + "%");
         telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
 
-        boolean stoneLeft = leftValue > PERCENT_COLOR_THRESHOLD;
-        boolean stoneMiddle = middleValue > PERCENT_COLOR_THRESHOLD;
-        boolean stoneRight = rightValue > PERCENT_COLOR_THRESHOLD;
+        boolean capMiddle = leftValue > PERCENT_COLOR_THRESHOLD;
+        boolean capRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
-        if (stoneLeft && stoneRight && stoneMiddle) {
-            location = Location.NOT_FOUND;
-            telemetry.addData("Capstone Location", "not found");
-        }
-        else if (stoneLeft) {
-            location = Location.RIGHT;
-            telemetry.addData("Capstone Location", "right");
-        } else if (stoneMiddle){
+        if (capMiddle) {
             location = Location.MIDDLE;
-            telemetry.addData("Capstone Location", "middle");
-        }
-        else {
+            telemetry.addData("Capstone Location", "Middle");
+        } else if (capRight){
+            location = Location.RIGHT;
+            telemetry.addData("Capstone Location", "Right");
+        } else {
             location = Location.LEFT;
-            telemetry.addData("Capstone Location", "left");
+            telemetry.addData("Capstone Location", "Left");
         }
         telemetry.update();
 
@@ -101,7 +88,6 @@ public class CapstonePipeline extends OpenCvPipeline {
         Scalar detectedColor = new Scalar(0, 255, 0);
 
         Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
-        Imgproc.rectangle(mat, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
         Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
 
         return mat;

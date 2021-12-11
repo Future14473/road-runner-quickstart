@@ -142,7 +142,7 @@ public class AAAFinalAuto extends LinearOpMode
         timer.safeDelay(endParkTimeWait);
         encoderMecanum.movePower(0,0,0);
         encoderMecanum.setMotorsToEncoderMode();
-        encoderMecanum.moveInches(0,0,135);
+        encoderMecanum.moveInches(0,0,-135);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
 

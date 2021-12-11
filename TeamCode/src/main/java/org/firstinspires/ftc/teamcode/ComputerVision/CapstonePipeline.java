@@ -18,9 +18,10 @@ public class CapstonePipeline extends OpenCvPipeline {
         LEFT,
         RIGHT,
         MIDDLE,
-        NOT_FOUND
+        NOT_FOUND,
+        UNINITIALIZED
     }
-    private Location location;
+    private Location location = Location.UNINITIALIZED;
 
     static final Rect LEFT_ROI = new Rect(
             new Point(60, 35),

@@ -123,6 +123,9 @@ public class AAAFinalAuto extends LinearOpMode
         cycler.dumpRetractAuto();
 
         // PARK ____________________
+        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 0);
         encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
+        telemetry.addData("Path Status", "Done");
+        telemetry.update();
     }
 }

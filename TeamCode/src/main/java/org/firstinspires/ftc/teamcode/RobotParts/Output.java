@@ -17,6 +17,12 @@ public class Output {
     public static double dumperInPos = 0;
     public static int velocity = 1000;
 
+    public static int retractInPos = 0;
+    public static int highGoal = -415;
+    public static int midGoal = -290;
+    public static int lowGoal = -175;
+
+
     public Output(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");
 
@@ -43,16 +49,30 @@ public class Output {
     }
 
 
-    public void extend() {
-        linearSlide.setTargetPosition(-415);
-        linearSlide2.setTargetPosition(-415);
+    public void extendHigh() {
+        linearSlide.setTargetPosition(highGoal);
+        linearSlide2.setTargetPosition(highGoal);
+        linearSlide.setVelocity(velocity);
+        linearSlide2.setVelocity(velocity);
+    }
+
+    public void extendMid(){
+        linearSlide.setTargetPosition(midGoal);
+        linearSlide2.setTargetPosition(midGoal);
+        linearSlide.setVelocity(velocity);
+        linearSlide2.setVelocity(velocity);
+    }
+
+    public void extendLow(){
+        linearSlide.setTargetPosition(lowGoal);
+        linearSlide2.setTargetPosition(lowGoal);
         linearSlide.setVelocity(velocity);
         linearSlide2.setVelocity(velocity);
     }
 
     public void retract(){
-        linearSlide.setTargetPosition(0);
-        linearSlide2.setTargetPosition(0);
+        linearSlide.setTargetPosition(retractInPos);
+        linearSlide2.setTargetPosition(retractInPos);
         linearSlide.setVelocity(velocity);
         linearSlide2.setVelocity(velocity);
     }

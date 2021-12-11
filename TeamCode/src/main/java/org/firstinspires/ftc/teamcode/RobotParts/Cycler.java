@@ -24,7 +24,7 @@ public class Cycler {
 
     public void dumperOutPrep(){
         output.flipInDumper();
-        output.extend();
+        output.extendHigh();
         timer.safeDelay(500);
         output.flipHalfDumper();
         intake.transferIntake();

@@ -125,13 +125,12 @@ public class EncoderMecanum {
 
     public void setMotorsToEncoderMode(){
         for (DcMotorEx motor : motors){
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 
     public void movePower(double forward, double strafe, double turn){
-
-
         leftFront.setPower(forward + strafe + turn);
         leftRear.setPower(forward - strafe + turn);
         rightFront.setPower(forward - strafe - turn);

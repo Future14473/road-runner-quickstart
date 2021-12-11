@@ -14,7 +14,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
-public class CapstonePipeline extends OpenCvPipeline {
+public class    CapstonePipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
     public enum Location {
@@ -88,7 +88,7 @@ public class CapstonePipeline extends OpenCvPipeline {
         Scalar notDetectedColor = new Scalar(255, 0, 0);
         Scalar detectedColor = new Scalar(0, 255, 0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
+        Imgproc.rectangle(mat, LEFT_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
         Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
 
         return mat;

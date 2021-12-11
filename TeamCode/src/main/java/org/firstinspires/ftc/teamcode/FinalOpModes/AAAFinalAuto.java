@@ -50,10 +50,12 @@ public class AAAFinalAuto extends LinearOpMode
     public static double
             duck1Y = 12.5, duck1X = -4,
             wobbleX = -40, wobbleY = -5,
+            wobbleXMidOffset = -1,
             wobbleHighYOffset = -2,
             wobbleLowYOffset = 2,
-            wobbleMidYOffset = -1,
-            preParkX = -20;
+            wobbleMidYOffset = -5.5,
+            preParkX = -23;
+    public static long endParkTimeWait = 2000;
 
     @Override
     public void runOpMode() {
@@ -115,7 +117,7 @@ public class AAAFinalAuto extends LinearOpMode
         switch (location){
             case LEFT:
                 cycler.dumperOutPrepLow();
-                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleMidYOffset, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleMidYOffset , wobbleX);
                 break;
             case RIGHT:
                 cycler.dumperOutPrepHigh();
@@ -123,19 +125,24 @@ public class AAAFinalAuto extends LinearOpMode
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();
-                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleLowYOffset, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleLowYOffset+wobbleXMidOffset, wobbleX);
                 break;
         }
         cycler.dumpRetractAuto();
 
         // PARK ____________________
+        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset+3, wobbleX, 0);
         encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 0);
 //        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
         encoderMecanum.setMotorsToPowerMode();
         encoderMecanum.movePower(-1,0,0);
-        timer.safeDelay(3000);
+        timer.safeDelay(endParkTimeWait);
+        encoderMecanum.movePower(0,0,0);
+        encoderMecanum.setMotorsToEncoderMode();
+        encoderMecanum.moveInches(0,0,90);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
-        encoderMecanum.setMotorsToEncoderMode();
+
+
     }
 }

@@ -83,7 +83,10 @@ public class AdvancedTeleop extends LinearOpMode {
             duck.setStopSpeed();
 
             // right blue speed, left red speed
-            duck.setDuckPowerVar(gamepad2.left_trigger - gamepad2.right_trigger);
+//            duck.setDuckPowerVar(gamepad2.left_trigger - gamepad2.right_trigger);
+            if (gamepad2.right_trigger != 0){
+                duck.setAutoSpeed();
+            }
             duck.setSpeed();
 
             // CAPSTONE______________________________________________________________

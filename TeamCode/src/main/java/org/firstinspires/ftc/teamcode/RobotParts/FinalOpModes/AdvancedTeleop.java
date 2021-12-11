@@ -1,9 +1,15 @@
-package org.firstinspires.ftc.teamcode.RobotParts;
+package org.firstinspires.ftc.teamcode.RobotParts.FinalOpModes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.RobotParts.Capstone;
+import org.firstinspires.ftc.teamcode.RobotParts.Cycler;
+import org.firstinspires.ftc.teamcode.RobotParts.Duck;
+import org.firstinspires.ftc.teamcode.RobotParts.Intake;
+import org.firstinspires.ftc.teamcode.RobotParts.Output;
+import org.firstinspires.ftc.teamcode.RobotParts.RetractableOdo;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @TeleOp(group = "1 Teleop")

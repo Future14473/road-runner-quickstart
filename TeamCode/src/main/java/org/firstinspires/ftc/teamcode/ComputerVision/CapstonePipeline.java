@@ -27,7 +27,7 @@ public class CapstonePipeline extends OpenCvPipeline {
     public static int leftX1 = 30, leftX2 = 120, rightX1 = 190, rightX2 = 270;
     public static int  height1 = 15,  height2 = 145;
 
-    static double PERCENT_COLOR_THRESHOLD = 0.4;
+    public static double PERCENT_COLOR_THRESHOLD = 0.3;
 
     public static int lowH = 90, lowS = 90, lowV = 120;
     public static int highH = 255, highS = 255, highV = 255;

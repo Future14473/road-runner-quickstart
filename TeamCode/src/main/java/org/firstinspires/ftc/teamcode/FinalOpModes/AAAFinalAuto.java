@@ -30,7 +30,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
+import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
+import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -41,17 +43,20 @@ import org.firstinspires.ftc.teamcode.util.Timer;
 
 @Autonomous
 @Config
-public class FinalAuto extends LinearOpMode
+public class AAAFinalAuto extends LinearOpMode
 {
     OpenCvWebcam webcam;
     EncoderMecanum encoderMecanum;
 
-    public static Pose2d alignDuck1 = new Pose2d(0,-5,0),
-        alignDuck2 = new Pose2d(11,0,0);
+    public static double duck1Y = 12.2, duck1X = -4,
+    wobbleX = -30.5, wobbleY = -7;
 
 
     @Override
     public void runOpMode() {
+        Duck duck = new Duck(hardwareMap);
+        Timer timer = new Timer(this);
+        Intake intake = new Intake(hardwareMap, timer);
 
         //Hardware Setup
         encoderMecanum = new EncoderMecanum(hardwareMap, telemetry);
@@ -79,11 +84,22 @@ public class FinalAuto extends LinearOpMode
         });
 
 
-
+        intake.flipOutAuto();
         waitForStart();
-        encoderMecanum.moveInches(alignDuck1);
-        encoderMecanum.moveInches(alignDuck2);
+//        encoderMecanum.moveInchesConstantHeading(0, duck1X);
+//        encoderMecanum.moveInchesConstantHeading(duck1Y, duck1X);
 
+        //remember it is forward, strafe so Y,X
+        encoderMecanum.moveInchesConstantHeading(duck1Y, duck1X);
+
+        // Duck
+        duck.setAutoSpeed();
+        duck.setSpeed();
+        timer.safeDelay(Duck.autoDelayTime);
         //webcam.stopStreaming();
+        duck.setStopSpeed();
+        duck.setSpeed();
+
+        encoderMecanum.moveInchesConstantHeading(wobbleY, wobbleX);
     }
 }

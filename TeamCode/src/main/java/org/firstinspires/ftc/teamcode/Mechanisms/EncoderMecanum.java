@@ -22,7 +22,7 @@ public class EncoderMecanum {
 //            DriveConstants.getMotorVelocityF(
 //                    DriveConstants.MAX_RPM / 60 * DriveConstants.TICKS_PER_REV)
 //            );
-    public static int drivetrainSpeed = 2000;
+    public static int drivetrainSpeed = 500;
 
     //Drivetrain Specs
     public static double ENCODERS_PER_INCHES = 31.08;
@@ -106,6 +106,14 @@ public class EncoderMecanum {
 
     public void moveInches(Pose2d m){
         moveEncoders(inToEncoders(m.getX()), inToEncoders(m.getY()), degreesToEncoders(m.getHeading()));
+    }
+
+    public void moveInches(double forward, double strafe, double turn){
+        moveEncoders(inToEncoders(forward), inToEncoders(strafe), degreesToEncoders(turn));
+    }
+
+    public void moveInchesConstantHeading(double forward, double strafe){
+        moveEncoders(inToEncoders(forward), inToEncoders(strafe), degreesToEncoders(0));
     }
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {

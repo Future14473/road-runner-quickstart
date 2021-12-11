@@ -8,7 +8,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Duck {
     CRServo duck;
     double duckPower = 0;
-    public static double tempspeed = 0.8;
+    public static double tempspeed = 0.65;
+    public static long autoDelayTime = 5000;
     public Duck (HardwareMap hardwareMap){
         duck = hardwareMap.get(CRServo.class, "duck");
     }
@@ -20,6 +21,9 @@ public class Duck {
     }
 
     public void setBlueSpeed(){
+        duckPower = tempspeed;
+    }
+    public void setAutoSpeed(){
         duckPower = tempspeed;
     }
 

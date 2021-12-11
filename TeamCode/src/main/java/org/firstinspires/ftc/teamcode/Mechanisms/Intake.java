@@ -20,7 +20,7 @@ public class Intake {
 
     public static double retractInPosTeleop = 0;
     public static double retractOutPosTeleop = 0.47;
-    public static double retractMidPosAuto = 0.22;
+    public static double retractMidPosAuto = 1.0;
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 1.8;
     double noodlePower = 0;
@@ -77,8 +77,6 @@ public class Intake {
 
     public void flipOutAuto(){
         flipper.setPosition(retractMidPosAuto);
-        timer.safeDelay(1000);
-        flipper.setPosition(retractOutPosTeleop);
     }
 
     //goes to the intake transfer position

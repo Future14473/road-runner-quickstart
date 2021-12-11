@@ -5,12 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.util.Timer;
+
+import java.sql.Time;
 
 @TeleOp(group = "A Hardware Tests")
 public class IntakeTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Intake intake = new Intake(hardwareMap);
+        Intake intake = new Intake(hardwareMap, new Timer(this));
         waitForStart();
 
         while (opModeIsActive()){
@@ -37,6 +40,10 @@ public class IntakeTest extends LinearOpMode {
 
             if (gamepad1.b){
                 intake.flipOutTeleop();
+            }
+
+            if (gamepad1.dpad_up){
+                intake.flipOutAuto();
             }
 
             telemetry.addData("slidePower", gamepad1.right_stick_y);

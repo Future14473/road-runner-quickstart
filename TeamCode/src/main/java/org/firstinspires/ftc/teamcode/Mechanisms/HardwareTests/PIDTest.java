@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 
 @Config
-@TeleOp (group = "aaa")
+@TeleOp(group = "B Hardware Tests")
 
 public class PIDTest extends LinearOpMode {
     public static double forwardIn = 1;

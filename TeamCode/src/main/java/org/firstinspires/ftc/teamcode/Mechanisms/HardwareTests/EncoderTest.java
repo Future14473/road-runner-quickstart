@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 
 @Config
-@TeleOp (group = "aaa")
-
+@TeleOp(group = "Hardware Tests")
 public class EncoderTest extends LinearOpMode {
     public static double forwardIn = 1;
     public static double strafeIn = 0;

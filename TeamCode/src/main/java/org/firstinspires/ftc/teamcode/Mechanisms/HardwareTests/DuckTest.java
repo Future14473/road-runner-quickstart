@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 
-@TeleOp(group = "1 Teleop")
+@TeleOp(group = "A Hardware Tests")
 public class DuckTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

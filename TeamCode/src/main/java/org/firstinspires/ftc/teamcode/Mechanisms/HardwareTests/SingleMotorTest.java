@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
-@TeleOp(group = "!")
+@TeleOp(group = "B Hardware Tests")
 public class SingleMotorTest extends LinearOpMode {
     public static String motorName = "output";
     public static int velocity = 1000;

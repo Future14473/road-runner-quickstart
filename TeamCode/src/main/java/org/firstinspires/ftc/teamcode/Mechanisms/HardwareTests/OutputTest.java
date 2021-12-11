@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
 
-@TeleOp(group = "1 Teleop")
+@TeleOp(group = "A ardware Tests")
 public class OutputTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

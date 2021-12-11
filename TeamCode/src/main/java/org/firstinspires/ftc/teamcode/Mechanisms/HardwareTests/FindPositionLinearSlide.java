@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@TeleOp(group = "linearSlidesTest")
+@TeleOp(group = "B Hardware Tests")
 @Config
 public class FindPositionLinearSlide extends LinearOpMode {
     public static int velocity = 1220;

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@TeleOp(group = "!")
+@TeleOp(group = "B Hardware Tests")
 public class findMecanumPos extends LinearOpMode{
     public static int lfpos;
     public static int rfpos;

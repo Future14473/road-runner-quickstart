@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Cycler;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
 
-@TeleOp(group = "1 Teleop")
+@TeleOp(group = "A Hardware Tests")
 public class CycleTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

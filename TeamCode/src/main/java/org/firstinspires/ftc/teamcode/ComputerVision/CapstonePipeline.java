@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.ComputerVision;
 
 
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -11,6 +13,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+@Config
 public class CapstonePipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
@@ -34,13 +37,21 @@ public class CapstonePipeline extends OpenCvPipeline {
             new Point(100, 75));
     static double PERCENT_COLOR_THRESHOLD = 0.4;
 
+    public static int lowH = 90, lowS = 90, lowV = 120;
+    public static int highH = 255, highS = 255, highV = 255;
+
     public CapstonePipeline(Telemetry t) { telemetry = t; }
 
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
-        Scalar lowHSV = new Scalar(23, 50, 70);
-        Scalar highHSV = new Scalar(32, 255, 255);
+        // For Yellow only
+//        Scalar lowHSV = new Scalar(23, 50, 70);
+//        Scalar highHSV = new Scalar(32, 255, 255);
+
+        // For Blue
+        Scalar lowHSV = new Scalar(lowH, lowS, lowV);
+        Scalar highHSV = new Scalar(highH, highS, highV);
 
         Core.inRange(mat, lowHSV, highHSV, mat);
 

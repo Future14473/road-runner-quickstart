@@ -26,13 +26,16 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
+import org.firstinspires.ftc.teamcode.Mechanisms.Cycler;
 import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
+import org.firstinspires.ftc.teamcode.Mechanisms.Output;
 import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -48,8 +51,8 @@ public class AAAFinalAuto extends LinearOpMode
     OpenCvWebcam webcam;
     EncoderMecanum encoderMecanum;
 
-    public static double duck1Y = 12.2, duck1X = -4,
-    wobbleX = -30.5, wobbleY = -7;
+    public static double duck1Y = 12.5, duck1X = -4,
+    wobbleX = -40, wobbleY = -7;
 
 
     @Override
@@ -57,6 +60,7 @@ public class AAAFinalAuto extends LinearOpMode
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap, timer);
+        Cycler cycler = new Cycler(intake, new Output(hardwareMap), this);
 
         //Hardware Setup
         encoderMecanum = new EncoderMecanum(hardwareMap, telemetry);
@@ -86,8 +90,7 @@ public class AAAFinalAuto extends LinearOpMode
 
         intake.flipOutAuto();
         waitForStart();
-//        encoderMecanum.moveInchesConstantHeading(0, duck1X);
-//        encoderMecanum.moveInchesConstantHeading(duck1Y, duck1X);
+        webcam.stopStreaming();
 
         //remember it is forward, strafe so Y,X
         encoderMecanum.moveInchesConstantHeading(duck1Y, duck1X);
@@ -96,10 +99,14 @@ public class AAAFinalAuto extends LinearOpMode
         duck.setAutoSpeed();
         duck.setSpeed();
         timer.safeDelay(Duck.autoDelayTime);
-        //webcam.stopStreaming();
         duck.setStopSpeed();
         duck.setSpeed();
 
+        // Wobble
+        cycler.dumperOutPrep();
         encoderMecanum.moveInchesConstantHeading(wobbleY, wobbleX);
+        // wobble dum
+
+        cycler.dumpRetract();
     }
 }

@@ -33,7 +33,7 @@ public class CapstonePipeline extends OpenCvPipeline {
             new Point(100, 75));
     static double PERCENT_COLOR_THRESHOLD = 0.4;
 
-    public CapstoneDetectorCopy(Telemetry t) { telemetry = t; }
+    public CapstonePipeline(Telemetry t) { telemetry = t; }
 
     @Override
     public Mat processFrame(Mat input) {
@@ -85,12 +85,12 @@ public class CapstonePipeline extends OpenCvPipeline {
 
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGB);
 
-        Scalar colorStone = new Scalar(255, 0, 0);
-        Scalar colorSkystone = new Scalar(0, 255, 0);
+        Scalar notDetectedColor = new Scalar(255, 0, 0);
+        Scalar detectedColor = new Scalar(0, 255, 0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? colorSkystone:colorStone);
-        Imgproc.rectangle(mat, MIDDLE_ROI, location == Location.MIDDLE? colorSkystone:colorStone);
-        Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? colorSkystone:colorStone);
+        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
+        Imgproc.rectangle(mat, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
+        Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
 
         return mat;
     }

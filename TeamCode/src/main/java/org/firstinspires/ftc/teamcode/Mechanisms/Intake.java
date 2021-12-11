@@ -41,9 +41,6 @@ public class Intake {
         this.timer = timer;
     }
 
-    public Intake(HardwareMap hardwareMap) {
-    }
-
     public void inNoodlesUp(){
         setInNoodlesSpeed();
         flipOutTeleop();

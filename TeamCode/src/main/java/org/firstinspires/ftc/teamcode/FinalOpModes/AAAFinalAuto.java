@@ -52,7 +52,7 @@ public class AAAFinalAuto extends LinearOpMode
             wobbleX_MIDDLE = -40,
             wobbleX_LOW = -40,
             wobbleY_HIGH = -7,
-            wobbleY_MIDDLE = -7.5,
+            wobbleY_MIDDLE = -5.5,
             wobbleY_LOW = -1.5,
             preParkY = -2,
             preParkX = -23;
@@ -142,7 +142,7 @@ public class AAAFinalAuto extends LinearOpMode
         timer.safeDelay(endParkTimeWait);
         encoderMecanum.movePower(0,0,0);
         encoderMecanum.setMotorsToEncoderMode();
-        encoderMecanum.moveInches(0,0,-135);
+        encoderMecanum.moveInches(0,0,135);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
 

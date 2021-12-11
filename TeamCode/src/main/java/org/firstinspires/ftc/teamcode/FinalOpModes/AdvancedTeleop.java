@@ -10,13 +10,15 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
 import org.firstinspires.ftc.teamcode.Mechanisms.RetractableOdo;
+import org.firstinspires.ftc.teamcode.util.Timer;
 import org.firstinspires.ftc.teamcode.z_drive.SampleMecanumDrive;
 
 @TeleOp(group = "1 Teleop")
 public class AdvancedTeleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        Intake intake = new Intake(hardwareMap);
+        Timer timer = new Timer(this);
+        Intake intake = new Intake(hardwareMap, timer);
         Capstone capstone = new Capstone(hardwareMap);
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         Cycler cycler = new Cycler(intake, new Output(hardwareMap), this);
@@ -33,9 +35,9 @@ public class AdvancedTeleop extends LinearOpMode {
 
                 drive.setDrivePower(
                         new Pose2d(
-                                gamepad1.right_bumper ? -gamepad1.left_stick_y * 0.5 : -gamepad1.left_stick_y,
-                                gamepad1.right_bumper ? -gamepad1.left_stick_x * 0.8: -gamepad1.left_stick_x,
-                                gamepad1.right_bumper ? -gamepad1.right_stick_x * 0.5: -gamepad1.right_stick_x
+                                gamepad1.right_bumper ? gamepad1.left_stick_y * 0.5 : gamepad1.left_stick_y,
+                                gamepad1.right_bumper ? gamepad1.left_stick_x * 0.8: gamepad1.left_stick_x,
+                                gamepad1.right_bumper ? gamepad1.right_stick_x * 0.5: gamepad1.right_stick_x
                         )
                 );
             }

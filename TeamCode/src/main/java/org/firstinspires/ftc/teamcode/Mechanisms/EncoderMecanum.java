@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Mechanisms;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -21,7 +22,7 @@ public class EncoderMecanum {
 //            DriveConstants.getMotorVelocityF(
 //                    DriveConstants.MAX_RPM / 60 * DriveConstants.TICKS_PER_REV)
 //            );
-    public static int drivetrainSpeed = 1000;
+    public static int drivetrainSpeed = 2000;
 
     //Drivetrain Specs
     public static double ENCODERS_PER_INCHES = 31.08;
@@ -65,7 +66,19 @@ public class EncoderMecanum {
 
     }
 
-    public void moveEncoders(int forward, int strafe, int turn){
+     void moveEncoders(int forward, int strafe, int turn){
+        moveEncodersAsync(forward, strafe, turn);
+        for(DcMotorEx motor : motors){
+            while (motor.isBusy()){
+                telemetry.addData("motor target ", motor.getTargetPosition());
+                telemetry.addData("motor current ", motor.getCurrentPosition());
+                telemetry.addData("is busy?", motor.isBusy());
+            }
+        }
+
+    }
+
+    void moveEncodersAsync(int forward, int strafe, int turn){
         leftFront.setTargetPosition(forward + strafe + turn);
         leftRear.setTargetPosition(forward - strafe + turn);
         rightFront.setTargetPosition(forward - strafe - turn);
@@ -91,9 +104,8 @@ public class EncoderMecanum {
         return (int)(degrees * ENCODERS_PER_DEGREES);
     }
 
-    public void moveInches(double forwardInches, double strafeInches, double turnDegrees){
-        moveEncoders(inToEncoders(forwardInches), inToEncoders(strafeInches), degreesToEncoders(turnDegrees));
-
+    public void moveInches(Pose2d m){
+        moveEncoders(inToEncoders(m.getX()), inToEncoders(m.getY()), degreesToEncoders(m.getHeading()));
     }
 
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {

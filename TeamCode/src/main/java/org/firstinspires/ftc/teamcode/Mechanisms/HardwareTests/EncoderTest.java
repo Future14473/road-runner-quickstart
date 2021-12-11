@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Mechanisms.HardwareTests;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,7 +18,7 @@ public class EncoderTest extends LinearOpMode {
 
         EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap, telemetry);
         waitForStart();
-        drivetrain.moveInches(forwardIn,strafeIn,turnDegrees);
+        drivetrain.moveInches(new Pose2d(forwardIn, strafeIn, turnDegrees));
         while (opModeIsActive()) {
             drivetrain.telemetryEncoderPositions();
             telemetry.update();

@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.util.Timer;
+
 @Config
 public class Intake {
     DcMotor noodles;
@@ -14,15 +16,17 @@ public class Intake {
     Servo flipper;
     Servo leftTransfer;
     Servo rightTransfer;
+    Timer timer;
 
     public static double retractInPosTeleop = 0;
     public static double retractOutPosTeleop = 0.47;
+    public static double retractMidPosAuto = 0.22;
     public static double transferIntakePos = 0;
     public static double transferOutputPos = 1.8;
     double noodlePower = 0;
 
 
-    public Intake(HardwareMap hardwareMap){
+    public Intake(HardwareMap hardwareMap, Timer timer){
         noodles = hardwareMap.get(DcMotor.class, "noodles");
         noodles.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -33,6 +37,11 @@ public class Intake {
 
         rightTransfer = hardwareMap.get(Servo.class, "rightTransfer");
         rightTransfer.setDirection(Servo.Direction.REVERSE);
+
+        this.timer = timer;
+    }
+
+    public Intake(HardwareMap hardwareMap) {
     }
 
     public void inNoodlesUp(){
@@ -63,6 +72,12 @@ public class Intake {
     }
 
     public void flipOutTeleop(){
+        flipper.setPosition(retractOutPosTeleop);
+    }
+
+    public void flipOutAuto(){
+        flipper.setPosition(retractMidPosAuto);
+        timer.safeDelay(1000);
         flipper.setPosition(retractOutPosTeleop);
     }
 

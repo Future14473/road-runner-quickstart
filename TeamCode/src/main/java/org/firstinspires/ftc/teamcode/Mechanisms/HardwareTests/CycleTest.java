@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Mechanisms.Cycler;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
+import org.firstinspires.ftc.teamcode.util.Timer;
 
 @TeleOp(group = "A Hardware Tests")
 public class CycleTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Output output = new Output(hardwareMap);
-        Intake intake = new Intake(hardwareMap);
+        Intake intake = new Intake(hardwareMap, new Timer(this));
         Cycler cycler = new Cycler(intake, output, this);
         waitForStart();
 

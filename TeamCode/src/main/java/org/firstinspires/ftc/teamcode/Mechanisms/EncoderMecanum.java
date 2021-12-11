@@ -26,7 +26,7 @@ public class EncoderMecanum {
 
     //Drivetrain Specs
     public static double ENCODERS_PER_INCHES = 31.08;
-    public static double ENCODERS_PER_DEGREES = 1;
+    public static double ENCODERS_PER_RADIANS = 370;//8.6 * ENCODERS_PER_INCHES; //radius = 8.6
     private VoltageSensor batteryVoltageSensor;
     private List<DcMotorEx> motors;
 
@@ -101,7 +101,8 @@ public class EncoderMecanum {
     }
 
     public int degreesToEncoders (double degrees){
-        return (int)(degrees * ENCODERS_PER_DEGREES);
+        return (int)(
+                Math.toRadians(degrees) * ENCODERS_PER_RADIANS);
     }
 
     public void moveInches(Pose2d m){

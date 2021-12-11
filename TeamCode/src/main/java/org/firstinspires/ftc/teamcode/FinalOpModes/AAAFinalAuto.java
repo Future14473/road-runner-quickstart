@@ -47,7 +47,11 @@ public class AAAFinalAuto extends LinearOpMode
 
     public static double
             duck1Y = 12.5, duck1X = -4,
-            wobbleX = -40, wobbleY = -7;
+            wobbleX = -40, wobbleY = -5,
+            wobbleHighYOffset = -2,
+            wobbleLowYOffset = 2,
+            wobbleMidYOffset = -1,
+            preParkX = -20;
 
     @Override
     public void runOpMode() {
@@ -81,11 +85,12 @@ public class AAAFinalAuto extends LinearOpMode
                  */
             }
         });
-        CapstonePipeline.Location location = capstonePipeline.getLocation();
-
+        telemetry.addData("DO NOT ", "INITIALIZE YET");
+        telemetry.update();
         intake.flipOutAuto();
 
         waitForStart();
+        CapstonePipeline.Location location = capstonePipeline.getLocation();
 
         webcam.stopStreaming();
 
@@ -104,15 +109,20 @@ public class AAAFinalAuto extends LinearOpMode
         switch (location){
             case LEFT:
                 cycler.dumperOutPrepLow();
+                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleMidYOffset, wobbleX);
                 break;
             case RIGHT:
                 cycler.dumperOutPrepHigh();
+                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleHighYOffset, wobbleX);
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();
+                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleLowYOffset, wobbleX);
                 break;
         }
-        encoderMecanum.moveInchesConstantHeading(wobbleY, wobbleX);
-        cycler.dumpRetract();
+        cycler.dumpRetractAuto();
+
+        // PARK ____________________
+        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
     }
 }

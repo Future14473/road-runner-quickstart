@@ -18,7 +18,7 @@ public class EncoderTest extends LinearOpMode {
 
         EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap, telemetry);
         waitForStart();
-        drivetrain.moveInches(new Pose2d(forwardIn, strafeIn, turnDegrees));
+        drivetrain.moveInches(0,0,180);
         while (opModeIsActive()) {
             drivetrain.telemetryEncoderPositions();
             telemetry.update();

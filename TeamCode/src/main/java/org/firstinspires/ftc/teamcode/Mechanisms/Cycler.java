@@ -54,4 +54,12 @@ public class Cycler {
         output.retract();
     }
 
+    public void dumpRetractAuto(){
+        output.flipOutDumper();
+        timer.safeDelay(3000);
+        output.flipInDumper();
+        timer.safeDelay(500);
+        output.retract();
+    }
+
 }

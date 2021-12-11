@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
 @Autonomous(group="Auto")
-public class CapstoneOpMode extends LinearOpMode {
+public class PhoneCapstoneOpMode extends LinearOpMode {
     OpenCvCamera phoneCam;
     @Override
     public void runOpMode() throws InterruptedException {

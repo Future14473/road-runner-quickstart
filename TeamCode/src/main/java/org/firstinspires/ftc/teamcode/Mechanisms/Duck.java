@@ -9,7 +9,7 @@ public class Duck {
     CRServo duck;
     double duckPower = 0;
     public static double tempspeed = 0.65;
-    public static long autoDelayTime = 5000;
+    public static long autoDelayTime = 2500;
     public Duck (HardwareMap hardwareMap){
         duck = hardwareMap.get(CRServo.class, "duck");
     }

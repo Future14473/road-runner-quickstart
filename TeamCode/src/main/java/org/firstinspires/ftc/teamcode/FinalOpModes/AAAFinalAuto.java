@@ -103,10 +103,10 @@ public class AAAFinalAuto extends LinearOpMode
         // Wobble__________________________
         switch (location){
             case LEFT:
-                cycler.dumperOutPrepHigh();
+                cycler.dumperOutPrepLow();
                 break;
             case RIGHT:
-                cycler.dumperOutPrepLow();
+                cycler.dumperOutPrepHigh();
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();

@@ -9,18 +9,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class Output {
     Servo dumper;
-    Servo dumper2;
     DcMotorEx linearSlide;
     DcMotorEx linearSlide2;
 
-    public static double dumperOutPos = 0.3;
+    public static double dumperOutPos = 0.35;
     public static double dumperOutPosHalf = 0.17;
     public static double dumperInPos = 0;
     public static int velocity = 1000;
 
     public Output(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");
-        dumper2 = hardwareMap.get(Servo.class, "dumper2");
 
         linearSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
         linearSlide2 = hardwareMap.get(DcMotorEx.class, "linearSlide2");
@@ -36,15 +34,12 @@ public class Output {
     }
     public void flipInDumper() {
         dumper.setPosition(dumperInPos);
-        dumper2.setPosition(dumperInPos);
     }
     public void flipHalfDumper() {
         dumper.setPosition(dumperOutPosHalf);
-        dumper2.setPosition(dumperOutPosHalf);
     }
     public void flipOutDumper() {
         dumper.setPosition(dumperOutPos);
-        dumper2.setPosition(dumperOutPos);
     }
 
 

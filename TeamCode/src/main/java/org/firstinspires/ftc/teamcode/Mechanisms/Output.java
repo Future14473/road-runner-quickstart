@@ -20,7 +20,7 @@ public class Output {
     public static int retractInPos = 0;
     public static int highGoal = -415;
     public static int midGoal = -290;
-    public static int lowGoal = -175;
+    public static int lowGoal = -200;
 
 
     public Output(HardwareMap hardwareMap) {

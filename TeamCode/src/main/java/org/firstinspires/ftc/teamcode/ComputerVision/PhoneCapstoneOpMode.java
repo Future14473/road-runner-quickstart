@@ -42,7 +42,7 @@ public class PhoneCapstoneOpMode extends LinearOpMode {
             case RIGHT:
                 // ...
                 break;
-            case NOT_FOUND:
+            case MIDDLE:
                 // ...
         }
         phoneCam.stopStreaming();

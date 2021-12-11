@@ -21,17 +21,11 @@ public class CapstonePipeline extends OpenCvPipeline {
         LEFT,
         RIGHT,
         MIDDLE,
-        NOT_FOUND,
-        UNINITIALIZED
     }
     private Location location;
 
-    static final Rect LEFT_ROI = new Rect(
-            new Point(60, 35),
-            new Point(120, 75));
-    static final Rect RIGHT_ROI = new Rect(
-            new Point(140, 35),
-            new Point(200, 75));
+    public static int leftX1 = 30, leftX2 = 120, rightX1 = 190, rightX2 = 270;
+    public static int  height1 = 15,  height2 = 145;
 
     static double PERCENT_COLOR_THRESHOLD = 0.4;
 
@@ -42,6 +36,13 @@ public class CapstonePipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
+        Rect LEFT_ROI = new Rect(
+                new Point(leftX1, height1),
+                new Point(leftX2, height2));
+        Rect RIGHT_ROI = new Rect(
+                new Point(rightX1, height1),
+                new Point(rightX2, height2));
+
         Imgproc.cvtColor(input, mat, Imgproc.COLOR_RGB2HSV);
         // For Yellow only
 //        Scalar lowHSV = new Scalar(23, 50, 70);

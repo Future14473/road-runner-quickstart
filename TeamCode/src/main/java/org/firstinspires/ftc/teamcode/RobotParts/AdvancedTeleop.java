@@ -38,6 +38,7 @@ public class AdvancedTeleop extends LinearOpMode {
         while (opModeIsActive()){
             //TOP DRIVER
 
+            // UPDATED Advanced Teleop
             //Cycler____________________________________________________
             if(gamepad2.right_bumper){
                 intake.inNoodlesUp();

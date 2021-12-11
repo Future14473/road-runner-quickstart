@@ -33,6 +33,8 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
+import org.firstinspires.ftc.teamcode.Mechanisms.RetractableOdo;
+import org.firstinspires.ftc.teamcode.z_drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -60,6 +62,9 @@ public class AAAFinalAuto extends LinearOpMode
         Intake intake = new Intake(hardwareMap, timer);
         Cycler cycler = new Cycler(intake, new Output(hardwareMap), this);
         CapstonePipeline capstonePipeline = new CapstonePipeline(telemetry);
+        RetractableOdo retractableOdo = new RetractableOdo(hardwareMap);
+//        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
 
         //Hardware Setup
         EncoderMecanum encoderMecanum = new EncoderMecanum(hardwareMap, telemetry);
@@ -88,6 +93,7 @@ public class AAAFinalAuto extends LinearOpMode
         telemetry.addData("DO NOT ", "INITIALIZE YET");
         telemetry.update();
         intake.flipOutAuto();
+        retractableOdo.upOdo();
 
         waitForStart();
         CapstonePipeline.Location location = capstonePipeline.getLocation();
@@ -124,8 +130,12 @@ public class AAAFinalAuto extends LinearOpMode
 
         // PARK ____________________
         encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 0);
-        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
+//        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
+        encoderMecanum.setMotorsToPowerMode();
+        encoderMecanum.movePower(-1,0,0);
+        timer.safeDelay(3000);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
+        encoderMecanum.setMotorsToEncoderMode();
     }
 }

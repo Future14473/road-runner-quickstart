@@ -17,12 +17,16 @@ public class EncoderTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         EncoderMecanum drivetrain = new EncoderMecanum(hardwareMap, telemetry);
+        drivetrain.setMotorsToPowerMode();
         waitForStart();
-        drivetrain.moveInches(0,0,180);
+
         while (opModeIsActive()) {
+            drivetrain.movePower(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             drivetrain.telemetryEncoderPositions();
             telemetry.update();
         }
-    }
+        drivetrain.setMotorsToEncoderMode();
+                drivetrain.moveInches(3,0,0);
+    };
 }
 

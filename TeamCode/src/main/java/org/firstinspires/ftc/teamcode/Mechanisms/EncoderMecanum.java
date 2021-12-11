@@ -117,6 +117,27 @@ public class EncoderMecanum {
         moveEncoders(inToEncoders(forward), inToEncoders(strafe), degreesToEncoders(0));
     }
 
+    public void setMotorsToPowerMode(){
+        for (DcMotorEx motor : motors){
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+
+    public void setMotorsToEncoderMode(){
+        for (DcMotorEx motor : motors){
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+    }
+
+    public void movePower(double forward, double strafe, double turn){
+
+
+        leftFront.setPower(forward + strafe + turn);
+        leftRear.setPower(forward - strafe + turn);
+        rightFront.setPower(forward - strafe - turn);
+        rightRear.setPower(forward + strafe - turn);
+    }
+
     public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
         PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
                 coefficients.p, coefficients.i, coefficients.d,

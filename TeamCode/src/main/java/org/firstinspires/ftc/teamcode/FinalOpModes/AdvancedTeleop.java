@@ -70,7 +70,7 @@ public class AdvancedTeleop extends LinearOpMode {
             if(gamepad2.b){
                 intake.flipOutTeleop();
                 intake.transferOutake();
-                cycler.dumperOutPrep();
+                cycler.dumperOutPrepHigh();
                 intake.transferIntake();
                 intake.flipInTeleop();
             }

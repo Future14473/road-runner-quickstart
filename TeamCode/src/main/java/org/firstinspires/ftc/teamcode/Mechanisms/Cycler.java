@@ -22,9 +22,25 @@ public class Cycler {
         intake.transferOutake();
     }
 
-    public void dumperOutPrep(){
+    public void dumperOutPrepHigh(){
         output.flipInDumper();
         output.extendHigh();
+        timer.safeDelay(500);
+        output.flipHalfDumper();
+        intake.transferIntake();
+    }
+
+    // for auto
+    public void dumperOutPrepLow(){
+        output.flipInDumper();
+        output.extendLow();
+        timer.safeDelay(500);
+        output.flipHalfDumper();
+        intake.transferIntake();
+    }
+    public void dumperOutPrepMiddle(){
+        output.flipInDumper();
+        output.extendMid();
         timer.safeDelay(500);
         output.flipHalfDumper();
         intake.transferIntake();

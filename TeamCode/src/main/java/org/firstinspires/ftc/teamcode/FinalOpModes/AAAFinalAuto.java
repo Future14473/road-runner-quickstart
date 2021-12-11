@@ -23,11 +23,8 @@ package org.firstinspires.ftc.teamcode.FinalOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
@@ -36,7 +33,6 @@ import org.firstinspires.ftc.teamcode.Mechanisms.Duck;
 import org.firstinspires.ftc.teamcode.Mechanisms.EncoderMecanum;
 import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.Output;
-import org.firstinspires.ftc.teamcode.util.Encoder;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -85,30 +81,38 @@ public class AAAFinalAuto extends LinearOpMode
                  */
             }
         });
+        CapstonePipeline.Location location = capstonePipeline.getLocation();
 
         intake.flipOutAuto();
 
-        CapstonePipeline.Location location = capstonePipeline.getLocation();
         waitForStart();
+
         webcam.stopStreaming();
 
         //remember it is forward, strafe so Y,X
+
+        // Duck____________________________
         encoderMecanum.moveInchesConstantHeading(duck1Y, duck1X);
 
-        // Duck
         duck.setAutoSpeed();
         duck.setSpeed();
         timer.safeDelay(Duck.autoDelayTime);
         duck.setStopSpeed();
         duck.setSpeed();
 
-        // Wobble
-        cycler.dumperOutPrep();
-
-
+        // Wobble__________________________
+        switch (location){
+            case LEFT:
+                cycler.dumperOutPrepHigh();
+                break;
+            case RIGHT:
+                cycler.dumperOutPrepLow();
+                break;
+            case MIDDLE:
+                cycler.dumperOutPrepMiddle();
+                break;
+        }
         encoderMecanum.moveInchesConstantHeading(wobbleY, wobbleX);
-        // wobble dum
-
         cycler.dumpRetract();
     }
 }

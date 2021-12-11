@@ -27,7 +27,7 @@ public class CycleTest extends LinearOpMode {
             }
 
             if(gamepad1.b){
-                cycler.dumperOutPrep();
+                cycler.dumperOutPrepHigh();
             }
 
             if(gamepad1.a){

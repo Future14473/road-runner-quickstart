@@ -48,12 +48,10 @@ import org.firstinspires.ftc.teamcode.util.Timer;
 @Config
 public class AAAFinalAuto extends LinearOpMode
 {
-    OpenCvWebcam webcam;
-    EncoderMecanum encoderMecanum;
 
-    public static double duck1Y = 12.5, duck1X = -4,
-    wobbleX = -40, wobbleY = -7;
-
+    public static double
+            duck1Y = 12.5, duck1X = -4,
+            wobbleX = -40, wobbleY = -7;
 
     @Override
     public void runOpMode() {
@@ -61,16 +59,17 @@ public class AAAFinalAuto extends LinearOpMode
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap, timer);
         Cycler cycler = new Cycler(intake, new Output(hardwareMap), this);
+        CapstonePipeline capstonePipeline = new CapstonePipeline(telemetry);
 
         //Hardware Setup
-        encoderMecanum = new EncoderMecanum(hardwareMap, telemetry);
+        EncoderMecanum encoderMecanum = new EncoderMecanum(hardwareMap, telemetry);
 
 
         // CV Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        OpenCvWebcam webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-        webcam.setPipeline(new CapstonePipeline(telemetry));
+        webcam.setPipeline(capstonePipeline);
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
@@ -87,8 +86,9 @@ public class AAAFinalAuto extends LinearOpMode
             }
         });
 
-
         intake.flipOutAuto();
+
+        CapstonePipeline.Location location = capstonePipeline.getLocation();
         waitForStart();
         webcam.stopStreaming();
 
@@ -104,6 +104,8 @@ public class AAAFinalAuto extends LinearOpMode
 
         // Wobble
         cycler.dumperOutPrep();
+
+
         encoderMecanum.moveInchesConstantHeading(wobbleY, wobbleX);
         // wobble dum
 

@@ -25,7 +25,9 @@ public class EncoderMecanum {
 //                    DriveConstants.MAX_RPM / 60 * DriveConstants.TICKS_PER_REV)
 //            );
     public static int drivetrainSpeed = 1000;
-    public static double ENCODERS_PER_INCHES = 4666;
+
+    //Drivetrain Specs
+    public static double ENCODERS_PER_INCHES = 31.08;
     public static double ENCODERS_PER_DEGREES = 1;
     private VoltageSensor batteryVoltageSensor;
     private List<DcMotorEx> motors;

@@ -49,11 +49,11 @@ public class AAAFinalAuto extends LinearOpMode
 
     public static double
             duck1Y = 12.5, duck1X = -4,
-            wobbleX = -40, wobbleY = -5,
-            wobbleXMidOffset = -1,
-            wobbleHighYOffset = -2,
-            wobbleLowYOffset = 2,
-            wobbleMidYOffset = -5.5,
+            wobbleX = -40,
+            wobbleY_HIGH = -7,
+            wobbleY_MIDDLE = -7.5,
+            wobbleY_LOW = -1.5,
+            preParkY = -2,
             preParkX = -23;
     public static long endParkTimeWait = 2000;
 
@@ -117,29 +117,31 @@ public class AAAFinalAuto extends LinearOpMode
         switch (location){
             case LEFT:
                 cycler.dumperOutPrepLow();
-                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleMidYOffset , wobbleX);
-                break;
-            case RIGHT:
-                cycler.dumperOutPrepHigh();
-                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleHighYOffset, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY_LOW, wobbleX);
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();
-                encoderMecanum.moveInchesConstantHeading(wobbleY + wobbleLowYOffset+wobbleXMidOffset, wobbleX);
+                encoderMecanum.moveInchesConstantHeading(wobbleY_MIDDLE, wobbleX);
+                break;
+            case RIGHT:
+                cycler.dumperOutPrepHigh();
+                encoderMecanum.moveInchesConstantHeading(wobbleY_HIGH, wobbleX);
                 break;
         }
         cycler.dumpRetractAuto();
 
-        // PARK ____________________
-        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset+3, wobbleX, 0);
-        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 0);
+        // Pre PARK ____________________
+        encoderMecanum.moveInchesConstantHeading(preParkY, wobbleX);
+        encoderMecanum.moveInchesConstantHeading(preParkY, preParkX);
 //        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
+
+        // Park
         encoderMecanum.setMotorsToPowerMode();
         encoderMecanum.movePower(-1,0,0);
         timer.safeDelay(endParkTimeWait);
         encoderMecanum.movePower(0,0,0);
         encoderMecanum.setMotorsToEncoderMode();
-        encoderMecanum.moveInches(0,0,90);
+        encoderMecanum.moveInches(0,0,135);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
 

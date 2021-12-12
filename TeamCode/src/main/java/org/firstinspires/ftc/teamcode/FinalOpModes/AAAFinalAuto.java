@@ -53,9 +53,12 @@ public class AAAFinalAuto extends LinearOpMode
             wobbleX_LOW = -40,
             wobbleY_HIGH = -7,
             wobbleY_MIDDLE = -5.5,
-            wobbleY_LOW = -1.5,
-            preParkY = -2,
-            preParkX = -23;
+            wobbleYprep_LOW = -7.5,
+            wobbleY_LOW = -6,
+            preParkY_DEFAULT = -2,
+            preParkX_DEFAULT = -23,
+            preParkY_LOW = -.5,
+            preParkX_LOW = -30;
     public static long endParkTimeWait = 2000;
 
     @Override
@@ -118,7 +121,9 @@ public class AAAFinalAuto extends LinearOpMode
         switch (location){
             case LEFT:
                 cycler.dumperOutPrepLow();
-                encoderMecanum.moveInchesConstantHeading(wobbleY_LOW, wobbleX_LOW);
+                encoderMecanum.moveInchesConstantHeading(wobbleYprep_LOW, duck1X);
+                encoderMecanum.moveInchesConstantHeading(wobbleYprep_LOW, wobbleX_LOW);
+//                encoderMecanum.moveInchesConstantHeading(wobbleY_LOW, wobbleX_LOW);
                 break;
             case MIDDLE:
                 cycler.dumperOutPrepMiddle();
@@ -132,9 +137,14 @@ public class AAAFinalAuto extends LinearOpMode
         cycler.dumpRetractAuto();
 
         // Pre PARK ____________________
-        encoderMecanum.moveInchesConstantHeading(preParkY, wobbleX_HIGH);
-        encoderMecanum.moveInchesConstantHeading(preParkY, preParkX);
-//        encoderMecanum.moveInches(wobbleY+wobbleLowYOffset, preParkX, 180);
+        //            case LEFT:
+        //                // back a little
+        //                encoderMecanum.moveInchesConstantHeading(preParkY_LOW, wobbleX_LOW);
+        //                //left a little
+        //                encoderMecanum.moveInchesConstantHeading(preParkY_LOW, preParkX_LOW);
+        //                break;
+        encoderMecanum.moveInchesConstantHeading(preParkY_DEFAULT, wobbleX_HIGH);
+        encoderMecanum.moveInchesConstantHeading(preParkY_DEFAULT, preParkX_DEFAULT);
 
         // Park
         encoderMecanum.setMotorsToPowerMode();
@@ -142,7 +152,7 @@ public class AAAFinalAuto extends LinearOpMode
         timer.safeDelay(endParkTimeWait);
         encoderMecanum.movePower(0,0,0);
         encoderMecanum.setMotorsToEncoderMode();
-        encoderMecanum.moveInches(0,0,135);
+        encoderMecanum.moveInches(0,0,146);
         telemetry.addData("Path Status", "Done");
         telemetry.update();
 

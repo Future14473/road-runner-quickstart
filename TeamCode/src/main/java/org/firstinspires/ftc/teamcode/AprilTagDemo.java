@@ -129,6 +129,11 @@ public class AprilTagDemo extends LinearOpMode
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                     }
 
+// _________________Current XYZ Orientation___________________________________
+//                    X(Green): up and down distance
+//                    Y(Red): left and right distance
+//                    Z(Blue): front and back distance
+
                     for(AprilTagDetection detection : detections)
                     {
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));

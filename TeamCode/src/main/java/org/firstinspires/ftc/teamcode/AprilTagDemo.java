@@ -40,7 +40,7 @@ public class AprilTagDemo extends LinearOpMode
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
-    static final double INCH_PER_METER = 39.37; // 3.28 * 12 is 39.36 so this checks out
+    static final double INCH_PER_METER = 39.37; // d3.28 * 12 is 39.36 so this checks out
 
     // Lens intrinsics
     // UNITS ARE PIXELS

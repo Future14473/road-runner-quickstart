@@ -132,9 +132,9 @@ public class AprilTagDemo extends LinearOpMode
                     for(AprilTagDetection detection : detections)
                     {
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Translation X: %.2f in", detection.pose.x*INCH_PER_METER));
-                        telemetry.addLine(String.format("Translation Y: %.2f in", detection.pose.y*INCH_PER_METER));
-                        telemetry.addLine(String.format("Translation Z: %.2f in", detection.pose.z*INCH_PER_METER));
+                        telemetry.addLine(String.format("Translation X: %.1f in", detection.pose.x*INCH_PER_METER));
+                        telemetry.addLine(String.format("Translation Y: %.1f in", detection.pose.y*INCH_PER_METER));
+                        telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z*INCH_PER_METER));
 //                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));

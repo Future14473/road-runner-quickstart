@@ -76,10 +76,12 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
             middlePosX1 = 30, middlePosX2 = 35,
             rightPosX1 = 40, rightPosX2 = 45;
 
-    Mat previousDrawing;
 
     Scalar notDetectedColor = new Scalar(255, 0, 0);
     Scalar detectedColor = new Scalar(0, 255, 0);
+
+    // 720 x 1280
+    Mat previousDrawing = new Mat(720, 1280, CvType.CV_8UC1);
 
     double fx;
     double fy;
@@ -173,7 +175,10 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
             }else {
                 //this way we don't get all that flickering
                 return previousDrawing;
+
             }
+//            telemetry.addData("Mat Size", input.size());
+//            telemetry.update();
 
 //            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
 //            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);

@@ -23,6 +23,7 @@ package org.firstinspires.ftc.teamcode.AprilTags;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -64,21 +65,18 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
         RIGHT,
         MIDDLE,
     }
-    private Location location;
+    public Location location;
 
-    public static int leftX1 = 30, leftX2 = 120, rightX1 = 190, rightX2 = 270,
-            middleX1 = 15, middleX2 = 20;
-    public static int  height1 = 15,  height2 = 145;
+    public static int leftRectX1 = 30, leftRectX2 = 120,
+            rightRectX1 = 190, rightRectX2 = 270,
+            middleRectX1 = 15, middleRectX2 = 20;
+    public static int heightRect1 = 15,  heightRect2 = 145;
 
-    Rect LEFT_ROI = new Rect(
-            new Point(leftX1, height1),
-            new Point(leftX2, height2));
-    Rect RIGHT_ROI = new Rect(
-            new Point(rightX1, height1),
-            new Point(rightX2, height2));
-    Rect MIDDLE_ROI = new Rect(
-            new Point(middleX1, height1),
-            new Point(middleX2, height2));
+    public static int leftPosX1 = 14, leftPosX2 = 17,
+            middlePosX1 = 30, middlePosX2 = 35,
+            rightPosX1 = 40, rightPosX2 = 45;
+
+    Mat previousDrawing;
 
     Scalar notDetectedColor = new Scalar(255, 0, 0);
     Scalar detectedColor = new Scalar(0, 255, 0);
@@ -96,9 +94,9 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
     private float decimation;
     private boolean needToSetDecimation;
     private final Object decimationSync = new Object();
-
-    public AprilTagDetectionPipelineBoundingBoxes(double tagsize, double fx, double fy, double cx, double cy)
-    {
+    Telemetry telemetry;
+    public AprilTagDetectionPipelineBoundingBoxes(double tagsize, double fx, double fy, double cx, double cy, Telemetry telemetry)
+    {   this.telemetry = telemetry;
         this.tagsize = tagsize;
         this.tagsizeX = tagsize;
         this.tagsizeY = tagsize;
@@ -149,17 +147,41 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
 
         // For fun, use OpenCV to draw 6DOF markers on the image. We actually recompute the pose using
         // OpenCV because I haven't yet figured out how to re-use AprilTag's pose in OpenCV.
+
+        Rect LEFT_ROI = new Rect(
+                new Point(leftRectX1, heightRect1),
+                new Point(leftRectX2, heightRect2));
+        Rect RIGHT_ROI = new Rect(
+                new Point(rightRectX1, heightRect1),
+                new Point(rightRectX2, heightRect2));
+        Rect MIDDLE_ROI = new Rect(
+                new Point(middleRectX1, heightRect1),
+                new Point(middleRectX2, heightRect2));
+
         for(AprilTagDetection detection : detections)
         {
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
-            // no drawing for now too inconsistent
-            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
-            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
-            Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
-//            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
-           // draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
-        }
+            if ((detection.pose.y >= leftPosX1) && detection.pose.y <= leftPosX2){
+                location = Location.LEFT;
+                Imgproc.rectangle(input, LEFT_ROI, detectedColor);
+            } else if ((detection.pose.y >= middlePosX1) && detection.pose.y <= middlePosX2){
+                location = Location.MIDDLE;
+                Imgproc.rectangle(input, MIDDLE_ROI, detectedColor);
+            } else if ((detection.pose.y >= rightPosX1) && detection.pose.y <= rightPosX2){
+                location = Location.RIGHT;
+                Imgproc.rectangle(input, RIGHT_ROI, detectedColor);
+            }else {
+                //this way we don't get all that flickering
+                return previousDrawing;
+            }
 
+//            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
+//            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
+//            Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
+            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
+            draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
+        }
+        previousDrawing = input;
         return input;
     }
 

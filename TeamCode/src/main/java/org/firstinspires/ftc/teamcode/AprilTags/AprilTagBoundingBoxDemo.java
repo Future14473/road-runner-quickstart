@@ -36,8 +36,9 @@ import java.util.ArrayList;
 public class AprilTagBoundingBoxDemo extends LinearOpMode
 {
     OpenCvCamera camera;
-    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+    AprilTagDetectionPipelineBoundingBoxes aprilTagDetectionPipeline;
 
+    public static int frameConfidence = 0;
     static final double FEET_PER_METER = 3.28084;
     static final double INCH_PER_METER = 39.37; // d3.28 * 12 is 39.36 so this checks out
 
@@ -66,7 +67,7 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 //        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipelineBoundingBoxes(tagsize, fx, fy, cx, cy, telemetry);
 
         camera.setPipeline(aprilTagDetectionPipeline);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
@@ -128,7 +129,6 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
 
                         // Add the correct detection
-
                     }
 
 // _________________Current XYZ Orientation___________________________________
@@ -136,12 +136,26 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
 //                    Y(Red): left and right distance
 //                    Z(Blue): front and back distance
 
+
                     for(AprilTagDetection detection : detections)
                     {
+                        //                    convert all units to inches
+                        detection.pose.x *= INCH_PER_METER;
+                        detection.pose.y *= INCH_PER_METER;
+                        detection.pose.z *= INCH_PER_METER;
+
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Translation X: %.1f in", detection.pose.x*INCH_PER_METER));
-                        telemetry.addLine(String.format("Translation Y: %.1f in", detection.pose.y*INCH_PER_METER));
-                        telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z*INCH_PER_METER));
+                        telemetry.addLine(String.format("Translation X: %.1f in", detection.pose.x));
+                        telemetry.addLine(String.format("Translation Y: %.1f in", detection.pose.y));
+                        telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z));
+
+                        telemetry.addData("isInLeftBound? ", detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1);
+                        telemetry.addData("isInRightBound? ", detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2);
+                        telemetry.addData("isInBound? ", (detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1) && (detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2));
+                        if ((detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1) && (detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2)){
+                            telemetry.addLine("Position Left");
+
+                        }
 //                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));

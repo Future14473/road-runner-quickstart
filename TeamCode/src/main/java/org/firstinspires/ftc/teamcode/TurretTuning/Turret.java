@@ -26,4 +26,15 @@ public class Turret {
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lazySusan.setVelocity(200);
     }
+
+    public double getAngleDegrees(){
+        return lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
+    }
+    public double getAngleTicks(){
+        return lazySusan.getCurrentPosition();
+    }
+
+    public double angleTargetTicks(){
+        return lazySusan.getTargetPosition();
+    }
 }

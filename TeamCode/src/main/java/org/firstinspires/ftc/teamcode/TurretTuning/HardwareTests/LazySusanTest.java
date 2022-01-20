@@ -13,7 +13,10 @@ public class LazySusanTest extends LinearOpMode {
         waitForStart();
         turret.rotateDegrees(90);
         while (opModeIsActive()){
-            telemetry.addData("Turret Position", )
+            telemetry.addData("Turret Position", turret.getAngleTicks());
+            telemetry.addData("Turret Degrees", turret.getAngleDegrees());
+            telemetry.addData("Turret Target Position", turret.angleTargetTicks());
+            telemetry.update();
         }
     }
 }

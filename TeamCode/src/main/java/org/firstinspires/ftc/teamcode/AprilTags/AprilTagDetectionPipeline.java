@@ -37,7 +37,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 
-class AprilTagDetectionPipeline extends OpenCvPipeline
+public class AprilTagDetectionPipeline extends OpenCvPipeline
 {
     private long nativeApriltagPtr;
     private Mat grey = new Mat();
@@ -122,9 +122,9 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
         for(AprilTagDetection detection : detections)
         {
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
-            // no drawing for now too inconsistent
-          //  drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
-           // draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
+            // no drawing for now too inconsistent (actually it's because of the zoom, 1/21)
+            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
+            draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
 
         return input;
@@ -242,10 +242,10 @@ class AprilTagDetectionPipeline extends OpenCvPipeline
         }
 
         // Base lines
-        //Imgproc.line(buf, projectedPoints[0], projectedPoints[1], blue, thickness);
-        //Imgproc.line(buf, projectedPoints[1], projectedPoints[2], blue, thickness);
-        //Imgproc.line(buf, projectedPoints[2], projectedPoints[3], blue, thickness);
-        //Imgproc.line(buf, projectedPoints[3], projectedPoints[0], blue, thickness);
+        Imgproc.line(buf, projectedPoints[0], projectedPoints[1], blue, thickness);
+        Imgproc.line(buf, projectedPoints[1], projectedPoints[2], blue, thickness);
+        Imgproc.line(buf, projectedPoints[2], projectedPoints[3], blue, thickness);
+        Imgproc.line(buf, projectedPoints[3], projectedPoints[0], blue, thickness);
 
         // Top lines
         Imgproc.line(buf, projectedPoints[4], projectedPoints[5], green, thickness);

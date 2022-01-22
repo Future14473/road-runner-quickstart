@@ -6,18 +6,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class Turret {
+public class LazySusan {
     DcMotorEx lazySusan;
-    public Turret(HardwareMap hardwareMap){
+    public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
         lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
-    public Integer getLazySusanVelo(){
+    public Integer getVelo(){
        return (int) lazySusan.getVelocity();
     }
 
-    public void setLazySusanPower(double power){
+    public void setPower(double power){
         lazySusan.setPower(power);
     }
 
@@ -27,14 +27,19 @@ public class Turret {
         lazySusan.setVelocity(200);
     }
 
-    public double getAngleDegrees(){
+    public double getDegrees(){
         return lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
     }
-    public double getAngleTicks(){
+
+    public double getTargetDegrees(){
+        return lazySusan.getTargetPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
+    }
+
+    public double getTicks(){
         return lazySusan.getCurrentPosition();
     }
 
-    public double angleTargetTicks(){
+    public double getTargetTicks(){
         return lazySusan.getTargetPosition();
     }
 }

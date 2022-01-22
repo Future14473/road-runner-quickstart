@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.TurretTuning;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.kinematics.Kinematics;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
@@ -12,8 +11,6 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.Objects;
 
@@ -47,7 +44,7 @@ public class TunerManualFeedforwardTuner extends LinearOpMode {
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private Turret turret;
+    private LazySusan lazySusan;
 
     private static MotionProfile generateProfile(boolean turningClockwise) {
         MotionState start = new MotionState(turningClockwise ? 0 : DISTANCE, 0, 0, 0);
@@ -64,7 +61,7 @@ public class TunerManualFeedforwardTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        turret = new Turret(hardwareMap);
+        lazySusan = new LazySusan(hardwareMap);
 
         NanoClock clock = NanoClock.system();
 
@@ -95,11 +92,11 @@ public class TunerManualFeedforwardTuner extends LinearOpMode {
             MotionState motionState = activeProfile.get(profileTime);
             double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-            turret.setLazySusanPower(targetPower);
+            lazySusan.setPower(targetPower);
 //                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
 //                    drive.updatePoseEstimate();
 
-            double currentVelo = Objects.requireNonNull(turret.getLazySusanVelo(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+            double currentVelo = Objects.requireNonNull(lazySusan.getVelo(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
 
             // update telemetry
             telemetry.addData("targetVelocity", motionState.getV());

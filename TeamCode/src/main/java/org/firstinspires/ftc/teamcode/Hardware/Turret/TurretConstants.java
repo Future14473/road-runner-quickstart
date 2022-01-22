@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TurretTuning;
+package org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 public class TurretConstants {
     static double motorTeeth = 14;

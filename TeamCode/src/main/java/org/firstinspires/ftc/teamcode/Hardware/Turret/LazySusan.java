@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.TurretTuning;
+package org.firstinspires.ftc.teamcode.Hardware.Turret;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class LazySusan {
     DcMotorEx lazySusan;
@@ -21,7 +19,7 @@ public class LazySusan {
         lazySusan.setPower(power);
     }
 
-    public void rotateDegrees(double degrees){
+    public void rotateToDegrees(double degrees){
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lazySusan.setVelocity(200);

@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.AprilTags;
+package org.firstinspires.ftc.teamcode.AprilTags.Detection;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -81,7 +81,8 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
     Scalar detectedColor = new Scalar(0, 255, 0);
 
     // 720 x 1280
-    Mat previousDrawing = new Mat(720, 1280, CvType.CV_8UC1);
+    Mat previousDrawing;
+//    = new Mat(720, 1280, CvType.CV_8UC1);
 
     double fx;
     double fy;
@@ -115,6 +116,7 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
     {
         // Allocate a native context object. See the corresponding deletion in the finalizer
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
+        previousDrawing = frame;
     }
 
     @Override
@@ -172,7 +174,8 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
             } else if ((detection.pose.y >= rightPosX1) && detection.pose.y <= rightPosX2){
                 location = Location.RIGHT;
                 Imgproc.rectangle(input, RIGHT_ROI, detectedColor);
-            }else {
+            }
+            else {
                 //this way we don't get all that flickering
                 return previousDrawing;
 
@@ -186,7 +189,6 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
-        previousDrawing = input;
         return input;
     }
 

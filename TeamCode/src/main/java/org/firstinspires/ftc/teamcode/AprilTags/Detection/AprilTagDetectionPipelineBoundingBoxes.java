@@ -175,11 +175,11 @@ public class AprilTagDetectionPipelineBoundingBoxes extends OpenCvPipeline
                 location = Location.RIGHT;
                 Imgproc.rectangle(input, RIGHT_ROI, detectedColor);
             }
-            else {
-                //this way we don't get all that flickering
-                return previousDrawing;
-
-            }
+//            else {
+//                //this way we don't get all that flickering
+//                return previousDrawing;
+//
+//            }
 //            telemetry.addData("Mat Size", input.size());
 //            telemetry.update();
 

@@ -3,12 +3,19 @@ package org.firstinspires.ftc.teamcode.Hardware.Turret;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 public class LazySusan {
+    private VoltageSensor batteryVoltageSensor;
+
     DcMotorEx lazySusan;
+
     public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
         lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
     public Integer getVelo(){
        return (int) lazySusan.getVelocity();
@@ -19,6 +26,14 @@ public class LazySusan {
     }
     public void setVelocity(int vel){
         lazySusan.setVelocity(vel);
+    }
+
+    public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
+        PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
+                coefficients.p, coefficients.i, coefficients.d,
+                coefficients.f * 12 / batteryVoltageSensor.getVoltage()
+        );
+        lazySusan.setPIDFCoefficients(runMode, compensatedCoefficients);
     }
 
     public void rotateToDegrees(double degrees){

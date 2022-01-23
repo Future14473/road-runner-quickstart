@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware.Turret.HardwareTests;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.kinematics.Kinematics;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
@@ -12,27 +12,41 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-// importing important constants from Turret Constants
+import java.util.List;
+
+import kotlin.Lazy;
+
 import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kA;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
 
+
 /*
- * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
- * tuning these coefficients is just as important as the positional parameters. Like the other
- * manual tuning routines, this op mode relies heavily upon the dashboard. To access the dashboard,
- * connect your computer to the RC's WiFi network. In your browser, navigate to
- * https://192.168.49.1:8080/dash if you're using the RC phone or https://192.168.43.1:8080/dash if
- * you are using the Control Hub. Once you've successfully connected, start the program, and your
- * robot will begin moving forward and backward according to a motion profile. Your job is to graph
- * the velocity errors over time and adjust the feedforward coefficients. Once you've found a
- * satisfactory set of gains, add them to the appropriate fields in the DriveConstants.java file.
+ * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
+ * loop velocity control. Although it may seem unnecessary, tuning these coefficients is just as
+ * important as the positional parameters. Like the other manual tuning routines, this op mode
+ * relies heavily upon the dashboard. To access the dashboard, connect your computer to the RC's
+ * WiFi network. In your browser, navigate to https://192.168.49.1:8080/dash if you're using the RC
+ * phone or https://192.168.43.1:8080/dash if you are using the Control Hub. Once you've successfully
+ * connected, start the program, and your robot will begin moving forward and backward according to
+ * a motion profile. Your job is to graph the velocity errors over time and adjust the PID
+ * coefficients (note: the tuning variable will not appear until the op mode finishes initializing).
+ * Once you've found a satisfactory set of gains, add them to the DriveConstants.java file under the
+ * MOTOR_VELO_PID field.
+ *
+ * Recommended tuning process:
+ *
+ * 1. Increase kP until any phase lag is eliminated. Concurrently increase kD as necessary to
+ *    mitigate oscillations.
+ * 2. Add kI (or adjust kF) until the steady state/constant velocity plateaus are reached.
+ * 3. Back off kP and kD a little until the response is less oscillatory (but without lag).
  *
  * Pressing Y/Δ (Xbox/PS4) will pause the tuning process and enter driver override, allowing the
  * user to reset the position of the bot in the event that it drifts off the path.
@@ -40,19 +54,15 @@ import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
  */
 @Config
 @Autonomous(group = "drive")
-public class LazySusanFeedforwardTuner extends LinearOpMode {
-    public static double DEGREES = 45;
+public class LazySusanVelocityPIDTuner extends LinearOpMode {
+    public static double DEGREES = 90; // in
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
-
-    private LazySusan lazySusan;
 
     enum Mode {
         DRIVER_MODE,
         TUNING_MODE
     }
-
-    private Mode mode;
 
     private static MotionProfile generateProfile(boolean movingForward) {
         MotionState start = new MotionState(movingForward ? 0 : DEGREES, 0, 0, 0);
@@ -62,30 +72,31 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        // creating the lazy susan
-        lazySusan = new LazySusan(hardwareMap);
+        LazySusan lazySusan = new LazySusan(hardwareMap);
 
-        // returns if lazy susan is running using with encoders
-        if (lazySusan.getRunMode()== DcMotorEx.RunMode.RUN_USING_ENCODERS) {
-            RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
-                    "when using the built-in drive motor velocity PID.");
+        if (lazySusan.getRunMode()!= DcMotor.RunMode.RUN_USING_ENCODER) {
+            RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +
+                    "PID is not in use", getClass().getSimpleName());
         }
 
         // creates telemetry
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        // set the denum mode to tuning mode since this class is for feedforward tuning
-        mode = Mode.TUNING_MODE;
+        Mode mode = Mode.TUNING_MODE;
 
-        //set up clock for timing
+        double lastKp = MOTOR_VELO_PID.p;
+        double lastKi = MOTOR_VELO_PID.i;
+        double lastKd = MOTOR_VELO_PID.d;
+        double lastKf = MOTOR_VELO_PID.f;
+
+        lazySusan.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+
         NanoClock clock = NanoClock.system();
 
-        //update telemetry
         telemetry.addLine("Ready!");
         telemetry.update();
         telemetry.clearAll();
 
-        // wait for start
         waitForStart();
 
         boolean movingForwards = true;
@@ -113,39 +124,51 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
+                    double targetPower = kV * motionState.getV();
                     lazySusan.setPower(targetPower);
 
-                    double currentVelo = lazySusan.getVelo();
+                    double velocities = lazySusan.getVelo();
 
                     // update telemetry
-                    //telemetry.addData("setPower ", targetVelocity);
-                    telemetry.addData("targetPower", targetPower);
-                    telemetry.addData("current position", lazySusan.getDegrees());
-                    telemetry.addData("target position", lazySusan.getTargetDegrees());
                     telemetry.addData("targetVelocity", motionState.getV());
-                    telemetry.addData("measuredVelocity", currentVelo);
-                    telemetry.addData("error", motionState.getV() - currentVelo);
+
+                        telemetry.addData("measuredVelocity", velocities);
+                        telemetry.addData("error",  motionState.getV() - velocities);
                     break;
                 case DRIVER_MODE:
+                    /*
                     if (gamepad1.b) {
+                        laz.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
                         activeProfile = generateProfile(movingForwards);
                         profileStart = clock.seconds();
                     }
 
-//                    drive.setWeightedDrivePower(
-//                            new Pose2d(
-//                                    -gamepad1.left_stick_y,
-//                                    -gamepad1.left_stick_x,
-//                                    -gamepad1.right_stick_x
-//                            )
-//                    );
+                    drive.setWeightedDrivePower(
+                            new Pose2d(
+                                    -gamepad1.left_stick_y,
+                                    -gamepad1.left_stick_x,
+                                    -gamepad1.right_stick_x
+                            )
+                    );
+                    */
+
                     break;
             }
 
+            if (lastKp != MOTOR_VELO_PID.p || lastKd != MOTOR_VELO_PID.d
+                    || lastKi != MOTOR_VELO_PID.i || lastKf != MOTOR_VELO_PID.f) {
+                lazySusan.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+
+                lastKp = MOTOR_VELO_PID.p;
+                lastKi = MOTOR_VELO_PID.i;
+                lastKd = MOTOR_VELO_PID.d;
+                lastKf = MOTOR_VELO_PID.f;
+            }
+
             telemetry.update();
-        } // end of while
+        }
     }
 }

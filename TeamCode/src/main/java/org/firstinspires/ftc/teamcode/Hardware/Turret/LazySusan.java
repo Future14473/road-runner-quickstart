@@ -25,7 +25,11 @@ public class LazySusan {
     }
 
     public double getDegrees(){
-        return lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
+        // get the position from raw ticks to raw degrees (can end up over 360degrees or under -360)
+        double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
+        //
+        pos %= 360;
+        return pos + ((pos)<0 ? 360 : 0);
     }
 
     public double getTargetDegrees(){

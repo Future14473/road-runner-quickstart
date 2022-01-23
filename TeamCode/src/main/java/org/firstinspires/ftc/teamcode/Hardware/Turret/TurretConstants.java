@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Hardware.Turret;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class TurretConstants {
     static double motorTeeth = 14;
     static double motorToBevelTeeth = 28;

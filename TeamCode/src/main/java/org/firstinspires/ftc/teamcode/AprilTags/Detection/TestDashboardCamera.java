@@ -15,22 +15,11 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 @TeleOp
 public class TestDashboardCamera extends LinearOpMode {
     OpenCvCamera camera;
-    // Lens intrinsics
-    // UNITS ARE PIXELS
-    // NOTE: this calibration is for the C920 webcam at 800x448.
-    // You will need to do your own calibration for other configurations!
-    double fx = 578.272;
-    double fy = 578.272;
-    double cx = 402.145;
-    double cy = 221.506;
-
-    // UNITS ARE METERS
-    double tagsize = 0.166;
     @Override
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
-        camera.setPipeline(new AprilTagDetectionPipelineBoundingBoxes(tagsize, fx, fy, cx, cy, telemetry));
+
         FtcDashboard.getInstance().startCameraStream(camera, 0);
         waitForStart();
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()

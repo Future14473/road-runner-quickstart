@@ -10,16 +10,18 @@ import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+// importing important constants from Turret Constants
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kA;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -39,11 +41,11 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 @Config
 @Autonomous(group = "drive")
 public class LazySusanFeedforwardTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+    public static double DEGREES = 45;
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    private LazySusan drive;
+    private LazySusan lazySusan;
 
     enum Mode {
         DRIVER_MODE,
@@ -53,33 +55,38 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
     private Mode mode;
 
     private static MotionProfile generateProfile(boolean movingForward) {
-        MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
-        MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
+        MotionState start = new MotionState(movingForward ? 0 : DEGREES, 0, 0, 0);
+        MotionState goal = new MotionState(movingForward ? DEGREES : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (RUN_USING_ENCODER) {
+        // creating the lazy susan
+        lazySusan = new LazySusan(hardwareMap);
+
+        // returns if lazy susan is running using with encoders
+        if (lazySusan.getRunMode()== DcMotorEx.RunMode.RUN_USING_ENCODERS) {
             RobotLog.setGlobalErrorMsg("Feedforward constants usually don't need to be tuned " +
                     "when using the built-in drive motor velocity PID.");
         }
 
+        // creates telemetry
         telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
-        drive = new LazySusan(hardwareMap);
-
+        // set the denum mode to tuning mode since this class is for feedforward tuning
         mode = Mode.TUNING_MODE;
 
+        //set up clock for timing
         NanoClock clock = NanoClock.system();
 
+        //update telemetry
         telemetry.addLine("Ready!");
         telemetry.update();
         telemetry.clearAll();
 
+        // wait for start
         waitForStart();
-
-        if (isStopRequested()) return;
 
         boolean movingForwards = true;
         MotionProfile activeProfile = generateProfile(true);
@@ -108,9 +115,9 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 
-                    drive.setPower(targetPower);
+                    lazySusan.setPower(targetPower);
 
-                    double currentVelo = drive.getDegrees();
+                    double currentVelo = lazySusan.getVelo();
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.getV());
@@ -136,6 +143,6 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
             }
 
             telemetry.update();
-        }
+        } // end of while
     }
 }

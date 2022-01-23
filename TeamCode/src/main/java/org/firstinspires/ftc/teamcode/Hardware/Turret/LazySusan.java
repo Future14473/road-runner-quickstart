@@ -9,7 +9,6 @@ public class LazySusan {
     public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
         lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
     }
     public Integer getVelo(){
        return (int) lazySusan.getVelocity();
@@ -40,4 +39,6 @@ public class LazySusan {
     public double getTargetTicks(){
         return lazySusan.getTargetPosition();
     }
+
+    public DcMotorEx.RunMode getRunMode() {return lazySusan.getMode();}
 }

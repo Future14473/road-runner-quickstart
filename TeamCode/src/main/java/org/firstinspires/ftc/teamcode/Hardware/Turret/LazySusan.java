@@ -17,6 +17,9 @@ public class LazySusan {
     public void setPower(double power){
         lazySusan.setPower(power);
     }
+    public void setVelocity(int vel){
+        lazySusan.setVelocity(vel);
+    }
 
     public void rotateToDegrees(double degrees){
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));

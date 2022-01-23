@@ -113,13 +113,13 @@ public class LazySusanFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
-
-                    lazySusan.setPower(targetPower);
+                    double targetVelocity = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
+                    lazySusan.setVelocity((int) targetVelocity);
 
                     double currentVelo = lazySusan.getVelo();
 
                     // update telemetry
+                    telemetry.addData("setPower ", targetVelocity);
                     telemetry.addData("targetVelocity", motionState.getV());
                     telemetry.addData("measuredVelocity", currentVelo);
                     telemetry.addData("error", motionState.getV() - currentVelo);

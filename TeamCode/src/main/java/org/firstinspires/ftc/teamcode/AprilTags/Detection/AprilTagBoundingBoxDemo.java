@@ -21,9 +21,11 @@
 
 package org.firstinspires.ftc.teamcode.AprilTags.Detection;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -68,8 +70,9 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
 //        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipelineBoundingBoxes(tagsize, fx, fy, cx, cy, telemetry);
-
         camera.setPipeline(aprilTagDetectionPipeline);
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
+
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override

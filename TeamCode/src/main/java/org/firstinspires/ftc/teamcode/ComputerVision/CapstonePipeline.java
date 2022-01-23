@@ -24,7 +24,7 @@ public class    CapstonePipeline extends OpenCvPipeline {
     }
     private Location location;
 
-    public static int leftX1 = 30, leftX2 = 120, rightX1 = 190, rightX2 = 270;
+    public static int leftX1 = 30, leftX2 = 120, rightX1 = 190, rightX2 = 280;
     public static int  height1 = 15,  height2 = 145;
 
     public static double PERCENT_COLOR_THRESHOLD = 0.3;

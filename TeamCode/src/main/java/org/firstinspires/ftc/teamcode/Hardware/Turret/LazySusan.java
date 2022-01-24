@@ -69,5 +69,12 @@ public class LazySusan {
         return lazySusan.getTargetPosition();
     }
 
+    public String getPIDCoef(){
+        return String.valueOf(lazySusan.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).p) + ", " +
+                String.valueOf(lazySusan.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i) + ", " +
+        String.valueOf(lazySusan.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION).d);
+//        return lazySusan.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
     public DcMotorEx.RunMode getRunMode() {return lazySusan.getMode();}
 }

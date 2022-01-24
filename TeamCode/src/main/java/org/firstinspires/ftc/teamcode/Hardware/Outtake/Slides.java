@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
@@ -10,7 +11,7 @@ public class Slides {
     DcMotorEx LeftSlide;
     DcMotorEx RightSlide;
 
-    public static int velocity = 1000;
+    public static int velocity = 5000;
 
     public static int retractInPos = 0;
     public static int highGoal = -415;
@@ -20,8 +21,9 @@ public class Slides {
 
     public Slides(HardwareMap hardwareMap) {
 
-        LeftSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
-        RightSlide = hardwareMap.get(DcMotorEx.class, "linearSlide2");
+        LeftSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
+        LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightSlide = hardwareMap.get(DcMotorEx.class, "backSlide");
 
 
         LeftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

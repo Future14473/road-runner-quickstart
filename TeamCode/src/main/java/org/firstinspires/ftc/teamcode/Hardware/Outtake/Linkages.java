@@ -10,18 +10,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Linkages {
     Servo leftExtender, rightExtender, dumper;
 
-    public static double leftExtenderOutPos = 0.35;
-    public static double rightExtenderOutPos = 0.35;
-    public static double dumperOutPos = 0.35;
+    public static double leftExtenderOutPos = 1.0;
+    public static double rightExtenderOutPos = 1.0;
+    public static double dumperOutPos = 0.7;
     public static double dumperHalfPos = 0.17;
     public static double leftExtenderInPos = 0.35;
     public static double rightExtenderInPos = 0.35;
-    public static double dumperInPos = 0.35;
+    public static double dumperInPos = 0.2;
 
     public Linkages(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");
         leftExtender = hardwareMap.get(Servo.class, "LeftExtender");
+        leftExtender.setDirection(Servo.Direction.REVERSE);
 
     }
 
@@ -32,13 +33,13 @@ public class Linkages {
     public void flipInDumper() { dumper.setPosition(dumperInPos); }
 
     public void extendLeftExtender() {
-        dumper.setPosition(leftExtenderOutPos);
+        leftExtender.setPosition(leftExtenderOutPos);
     }
     public void extendRightExtender() {
-        dumper.setPosition(rightExtenderOutPos);
+        rightExtender.setPosition(rightExtenderOutPos);
     }
-    public void retractLeftExtender() { dumper.setPosition(leftExtenderInPos); }
-    public void retractRightExtender() { dumper.setPosition(rightExtenderInPos); }
+    public void retractLeftExtender() { leftExtender.setPosition(leftExtenderInPos); }
+    public void retractRightExtender() { rightExtender.setPosition(rightExtenderInPos); }
 
     public void DumperIn(){
         flipInDumper();

@@ -1,24 +1,31 @@
 package org.firstinspires.ftc.teamcode.Hardware.Turret;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+@Config
 public class LazySusan {
     private VoltageSensor batteryVoltageSensor;
+    public static int velo = 2000;
 
     DcMotorEx lazySusan;
 
     public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
         lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
     public Integer getVelo(){
        return (int) lazySusan.getVelocity();
+    }
+
+    public boolean isStillMoving(){
+        return lazySusan.isBusy();
     }
 
     public void setPower(double power){
@@ -39,7 +46,7 @@ public class LazySusan {
     public void rotateToDegrees(double degrees){
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lazySusan.setVelocity(200);
+        lazySusan.setVelocity(velo);
     }
 
     public double getDegrees(){

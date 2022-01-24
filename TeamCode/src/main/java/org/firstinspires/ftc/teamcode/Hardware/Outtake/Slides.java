@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TurretTuning;
+package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
-public class Outtake {
+public class Slides {
     DcMotorEx LeftSlide;
     DcMotorEx RightSlide;
 
@@ -18,7 +18,7 @@ public class Outtake {
     public static int lowGoal = -200;
 
 
-    public Outtake(HardwareMap hardwareMap) {
+    public Slides(HardwareMap hardwareMap) {
 
         LeftSlide = hardwareMap.get(DcMotorEx.class, "linearSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "linearSlide2");

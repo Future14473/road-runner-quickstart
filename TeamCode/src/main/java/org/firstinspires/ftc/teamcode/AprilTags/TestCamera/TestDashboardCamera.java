@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.AprilTags.Detection;
+package org.firstinspires.ftc.teamcode.AprilTags.TestCamera;
 
 import android.util.Log;
 

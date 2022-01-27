@@ -179,6 +179,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
+
         return input;
     }
 

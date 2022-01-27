@@ -152,13 +152,6 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
                         telemetry.addLine(String.format("Translation Y: %.1f in", detection.pose.y));
                         telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z));
 
-                        telemetry.addData("isInLeftBound? ", detection.pose.y >= AprilBoundBoxPipeline.leftPosX1);
-                        telemetry.addData("isInRightBound? ", detection.pose.y <= AprilBoundBoxPipeline.leftPosX2);
-                        telemetry.addData("isInBound? ", (detection.pose.y >= AprilBoundBoxPipeline.leftPosX1) && (detection.pose.y <= AprilBoundBoxPipeline.leftPosX2));
-                        if ((detection.pose.y >= AprilBoundBoxPipeline.leftPosX1) && (detection.pose.y <= AprilBoundBoxPipeline.leftPosX2)){
-                            telemetry.addLine("Position Left");
-
-                        }
 //                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));

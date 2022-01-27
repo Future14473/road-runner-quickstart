@@ -30,7 +30,6 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvInternalCamera;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ import java.util.ArrayList;
 public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
 {
     OpenCvWebcam webcam;
-    AprilTagDetectionPipelineBoundingBoxes aprilTagDetectionPipeline;
+    AprilBoundBoxPipeline aprilTagDetectionPipeline;
 
     public static int frameConfidence = 0;
     static final double FEET_PER_METER = 3.28084;
@@ -70,7 +69,7 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 //        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilTagDetectionPipelineBoundingBoxes(tagsize, fx, fy, cx, cy, telemetry);
+        aprilTagDetectionPipeline = new AprilBoundBoxPipeline(tagsize, fx, fy, cx, cy, telemetry);
         webcam.setPipeline(aprilTagDetectionPipeline);
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
@@ -153,10 +152,10 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
                         telemetry.addLine(String.format("Translation Y: %.1f in", detection.pose.y));
                         telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z));
 
-                        telemetry.addData("isInLeftBound? ", detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1);
-                        telemetry.addData("isInRightBound? ", detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2);
-                        telemetry.addData("isInBound? ", (detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1) && (detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2));
-                        if ((detection.pose.y >= AprilTagDetectionPipelineBoundingBoxes.leftPosX1) && (detection.pose.y <= AprilTagDetectionPipelineBoundingBoxes.leftPosX2)){
+                        telemetry.addData("isInLeftBound? ", detection.pose.y >= AprilBoundBoxPipeline.leftPosX1);
+                        telemetry.addData("isInRightBound? ", detection.pose.y <= AprilBoundBoxPipeline.leftPosX2);
+                        telemetry.addData("isInBound? ", (detection.pose.y >= AprilBoundBoxPipeline.leftPosX1) && (detection.pose.y <= AprilBoundBoxPipeline.leftPosX2));
+                        if ((detection.pose.y >= AprilBoundBoxPipeline.leftPosX1) && (detection.pose.y <= AprilBoundBoxPipeline.leftPosX2)){
                             telemetry.addLine("Position Left");
 
                         }

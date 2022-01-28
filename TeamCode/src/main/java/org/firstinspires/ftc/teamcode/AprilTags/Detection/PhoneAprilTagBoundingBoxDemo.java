@@ -40,8 +40,6 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
     OpenCvWebcam webcam;
     AprilBoundBoxPipeline aprilTagDetectionPipeline;
 
-    public static int frameConfidence = 0;
-    static final double FEET_PER_METER = 3.28084;
     static final double INCH_PER_METER = 39.37; // d3.28 * 12 is 39.36 so this checks out
 
     // Lens intrinsics

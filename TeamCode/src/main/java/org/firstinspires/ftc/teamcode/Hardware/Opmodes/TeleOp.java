@@ -37,12 +37,12 @@ public class TeleOp extends LinearOpMode {
                 outtake.linkages.DumperIn();
             }
 
-            if (gamepad1.left_trigger > 0){
-                intake.out();
-            }
-
-            if (gamepad1.right_trigger > 0){
+           if (gamepad1.right_trigger > 0){
                 intake.in();
+            } else if (gamepad1.left_trigger > 0){
+                intake.out();
+            } else{
+                intake.stop();
             }
         }
     }

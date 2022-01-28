@@ -16,4 +16,6 @@ public class Intake {
     public void out(){
         intake.setPower(-1.0);
     }
+
+    public void stop() {intake.setPower(0);}
 }

@@ -58,8 +58,8 @@ import java.util.List;
 
             this.drive = drive;
 
-            parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
-            perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "perpendicularEncoder"));
+            parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
+            perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
 
             // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
         }

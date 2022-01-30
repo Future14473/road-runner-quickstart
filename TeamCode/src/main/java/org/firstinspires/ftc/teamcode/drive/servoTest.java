@@ -15,13 +15,17 @@ public class servoTest extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() {
+    public void runOpMode(){
+
         Servo servo1 = hardwareMap.get(Servo.class, "servo1");
 
         waitForStart();
-
         if (isStopRequested()) return;
+        while (opModeIsActive()){
 
-        servo1.setPosition(movement);
+
+
+            servo1.setPosition(movement);
+        }
     }
 }

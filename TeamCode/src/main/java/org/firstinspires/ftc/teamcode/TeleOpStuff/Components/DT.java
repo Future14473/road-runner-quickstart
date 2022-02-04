@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 //positive - counterClockwise
 
@@ -15,11 +14,11 @@ public class DT {
     DcMotorEx rightBack;
     DcMotorEx leftFront;
     DcMotorEx leftBack;
-    final double TICKS_PER_ROTATION = 384.5;
-    final double WHEEL_RADIUS = 1.889; //Inches
-    final double DT_WIDTH = 10.368; //Inches
-    final double MAX_ANGULAR_VELOCITY = 45.553; //Radians per second
-    final double MAX_VELOCITY = MAX_ANGULAR_VELOCITY * WHEEL_RADIUS;
+    public final double TICKS_PER_ROTATION = 384.5;
+    public final double RADIUS = 1.889; //Inches
+    public final double DT_WIDTH = 10.368; //Inches
+    public final double MAX_ANGULAR_VELOCITY = 45.553; //Radians per second
+    public final double MAX_VELOCITY = MAX_ANGULAR_VELOCITY * RADIUS;
 
     public DT(HardwareMap hardwareMap, LinearOpMode opMode){
         //Change motor configuration names if necessary
@@ -35,12 +34,12 @@ public class DT {
 
     //converts distance to motor ticks (distance is in inches)
     public double distanceToTicks(double distance){
-        return distance / (2 * Math.PI * WHEEL_RADIUS) * TICKS_PER_ROTATION;
+        return distance / (2 * Math.PI * RADIUS) * TICKS_PER_ROTATION;
     }
 
     //convert motor ticks to distance (distance is in inches)
     public double ticksToDistance(double ticks){
-        return ticks * 2 * Math.PI * WHEEL_RADIUS / TICKS_PER_ROTATION;
+        return ticks * 2 * Math.PI * RADIUS / TICKS_PER_ROTATION;
     }
 
     //Sets right drive pod velocity (velocity is in inches/second, positive is forward)
@@ -67,12 +66,12 @@ public class DT {
 
     //Gets right drive pod Angular Velocity in Radians/second (FYI: 3.14159265 radians = 180 degrees)
     public double getRightAngularVelocity(){
-        return getRightPodVelocity() / (2 * Math.PI * WHEEL_RADIUS);
+        return getRightPodVelocity() / (2 * Math.PI * RADIUS);
     }
 
     //Gets left drive pod Angular Velocity in Radians/second (FYI: 3.14159265 radians = 180 degrees)
     public double getLeftAngularVelocity(){
-        return getLeftPodVelocity() / (2 * Math.PI * WHEEL_RADIUS);
+        return getLeftPodVelocity() / (2 * Math.PI * RADIUS);
     }
 
     //Sets robot velocity (inches/second, foreward is positive) and angular velocity (radians/second, counterclockwise positive)

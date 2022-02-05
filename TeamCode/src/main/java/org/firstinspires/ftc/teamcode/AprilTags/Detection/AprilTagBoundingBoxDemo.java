@@ -22,9 +22,11 @@
 package org.firstinspires.ftc.teamcode.AprilTags.Detection;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -61,13 +63,17 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
     final float DECIMATION_LOW = 2;
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
+    private FtcDashboard dashboard = FtcDashboard.getInstance();
 
     @Override
     public void runOpMode()
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        camera = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
+
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
+
         aprilTagDetectionPipeline = new AprilBoundBoxPipeline(tagsize, fx, fy, cx, cy, telemetry);
         camera.setPipeline(aprilTagDetectionPipeline);
         FtcDashboard.getInstance().startCameraStream(camera, 0);
@@ -152,6 +158,8 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
                         telemetry.addLine(String.format("Translation Z: %.1f in", detection.pose.z));
 
 
+
+
                         }
 //                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
 //                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
@@ -161,7 +169,15 @@ public class AprilTagBoundingBoxDemo extends LinearOpMode
 //                        telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
                     }
                 }
-
+            if (aprilTagDetectionPipeline.location == AprilBoundBoxPipeline.Location.LEFT){
+                telemetry.addData("Position", "Lefts");
+            }
+            if (aprilTagDetectionPipeline.location == AprilBoundBoxPipeline.Location.MIDDLE){
+                telemetry.addData("Position", "Middle");
+            }
+            if (aprilTagDetectionPipeline.location == AprilBoundBoxPipeline.Location.RIGHT){
+                telemetry.addData("Position", "Right");
+            }
                 telemetry.update();
             }
 

@@ -72,7 +72,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
             middleRectX1 = 15, middleRectX2 = 20;
     public static int heightRect1 = 15,  heightRect2 = 145;
 
-    public static int leftPosX = 14, middlePosX = 40, rightPosX = 80;
+    public static int leftPosX = -3, middlePosX = 12, rightPosX = 28;
 
 
     Scalar notDetectedColor = new Scalar(255, 0, 0);
@@ -164,11 +164,11 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
         {
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
 
-            if (detection.pose.y <= leftPosX){
+            if (detection.pose.x <= leftPosX){
                 location = Location.LEFT;
-            } else if (detection.pose.y <= middlePosX){
+            } else if (detection.pose.x <= middlePosX){
                 location = Location.MIDDLE;
-            } else if (detection.pose.y <= rightPosX){
+            } else if (detection.pose.x <= rightPosX){
                 location = Location.RIGHT;
             }
 

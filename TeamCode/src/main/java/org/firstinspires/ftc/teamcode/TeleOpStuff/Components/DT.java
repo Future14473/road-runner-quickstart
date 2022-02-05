@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 //positive - counterClockwise
 
@@ -19,9 +20,10 @@ public class DT {
     public final double DT_WIDTH = 10.368; //Inches
     public final double MAX_ANGULAR_VELOCITY = 45.553; //Radians per second
     public final double MAX_VELOCITY = MAX_ANGULAR_VELOCITY * RADIUS;
-
+    PIDFCoefficients pidf;
     public DT(HardwareMap hardwareMap, LinearOpMode opMode){
         //Change motor configuration names if necessary
+        pidf = new PIDFCoefficients(0, 0,6, 0); //Tune motor PID coefficients if necessary
         rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
         rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
         leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
@@ -30,6 +32,10 @@ public class DT {
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
+        rightBack.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
+        leftFront.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
+        leftBack.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidf);
     }
 
     //converts distance to motor ticks (distance is in inches)

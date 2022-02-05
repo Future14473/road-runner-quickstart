@@ -67,10 +67,11 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
     }
     public Location location;
 
-    public static int leftRectX1 = 30, leftRectX2 = 120,
-            rightRectX1 = 190, rightRectX2 = 270,
-            middleRectX1 = 15, middleRectX2 = 20;
-    public static int heightRect1 = 15,  heightRect2 = 145;
+    public static int leftRectX1 = 12, leftRectX2 = 250,
+            rightRectX1 = 1250, rightRectX2 = 1025,
+            middleRectX1 = 775, middleRectX2 = 550, thickness = 10;
+    public static int heightRect1 = 650,  heightRect2 = 425;
+
 
     public static int leftPosX = -3, middlePosX = 12, rightPosX = 28;
 
@@ -172,9 +173,9 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
                 location = Location.RIGHT;
             }
 
-            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor);
-            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
-            Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
+            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor, thickness);
+            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor, thickness);
+            Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor, thickness);
 
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);

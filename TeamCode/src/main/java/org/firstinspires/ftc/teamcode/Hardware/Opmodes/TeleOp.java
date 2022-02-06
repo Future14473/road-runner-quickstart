@@ -58,6 +58,13 @@ public class TeleOp extends LinearOpMode {
                 intake.stop();
             }
 
+           if (gamepad1.left_stick_button){
+               intake.up();
+           }
+           if (gamepad1.left_bumper){
+                intake.drop();
+           }
+
            tankDrive.setPowerDir(gamepad1.left_stick_y, gamepad1.left_stick_x);
         }
     }

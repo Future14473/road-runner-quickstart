@@ -71,7 +71,7 @@ public class TeleOp extends LinearOpMode {
            }
            duck.move();
 
-           tankDrive.setPowerDir(gamepad1.left_stick_y, gamepad1.left_stick_x);
+           tankDrive.setPowerDir(gamepad1.right_stick_y, -gamepad1.left_stick_x);
         }
     }
 }

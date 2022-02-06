@@ -32,10 +32,10 @@ public class Linkages {
     }
     public void flipInDumper() { dumper.setPosition(dumperInPos); }
 
-    public void DumperIn(){
+    public void dumperIn(){
         flipInDumper();
     }
-    public void DumperOut(){
+    public void dumperOut(){
         flipOutDumper();
     }
 

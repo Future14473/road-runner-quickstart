@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Outtake;
-import org.firstinspires.ftc.teamcode.Hardware.Outtake.Slides;
 
-import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
@@ -18,6 +17,8 @@ public class TeleOp extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
+        Duck duck = new Duck(hardwareMap);
+
         waitForStart();
 
         while (opModeIsActive()) {
@@ -35,10 +36,10 @@ public class TeleOp extends LinearOpMode {
                 outtake.linkages.retract();
             }
             if (gamepad1.x) {
-                outtake.linkages.DumperOut();
+                outtake.linkages.dumperOut();
             }
             if (gamepad1.y) {
-                outtake.linkages.DumperIn();
+                outtake.linkages.dumperIn();
             }
             if(gamepad1.b){
                 lazySusan.rotateToDegrees(90);
@@ -64,6 +65,11 @@ public class TeleOp extends LinearOpMode {
            if (gamepad1.left_bumper){
                 intake.drop();
            }
+
+           if (gamepad1.right_stick_button){
+               duck.setBlueSpeed();
+           }
+           duck.move();
 
            tankDrive.setPowerDir(gamepad1.left_stick_y, gamepad1.left_stick_x);
         }

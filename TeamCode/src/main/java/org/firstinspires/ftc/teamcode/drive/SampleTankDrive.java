@@ -63,6 +63,9 @@ public class SampleTankDrive extends TankDrive {
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
+    // access each motor individually
+    DcMotorEx leftFront, leftRear, rightRear, rightFront;
+
     public static double VX_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
@@ -134,10 +137,10 @@ public class SampleTankDrive extends TankDrive {
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
         // add/remove motors depending on your robot (e.g., 6WD)
-        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
+        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
 
         leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -373,13 +376,18 @@ public class SampleTankDrive extends TankDrive {
     }
 
     @Override
-    public void setMotorPowers(double v, double v1) {
+    public void setMotorPowers(double leftPower, double rightPower) {
         for (DcMotorEx leftMotor : leftMotors) {
-            leftMotor.setPower(v);
+            leftMotor.setPower(leftPower);
         }
         for (DcMotorEx rightMotor : rightMotors) {
-            rightMotor.setPower(v1);
+            rightMotor.setPower(rightPower);
         }
+    }
+
+    //our own special moving method
+    public void setPowerDir(double forward, double turn){
+        setMotorPowers(forward + turn, forward - turn);
     }
 
     @Override

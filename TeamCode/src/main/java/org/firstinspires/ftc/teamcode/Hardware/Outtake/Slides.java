@@ -14,15 +14,14 @@ public class Slides {
     public static int velocity = 5000;
 
     public static int retractInPos = 0;
-    public static int highGoal = -415;
-    public static int midGoal = -290;
-    public static int lowGoal = -200;
+    public static int highGoal = 737;
+    public static int midGoal = 336;
+    public static int lowGoal = 143;
 
 
     public Slides(HardwareMap hardwareMap) {
 
         LeftSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
-        LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         RightSlide = hardwareMap.get(DcMotorEx.class, "backSlide");
 
 

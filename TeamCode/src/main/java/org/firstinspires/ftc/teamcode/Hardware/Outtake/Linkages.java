@@ -11,11 +11,11 @@ public class Linkages {
     Servo leftExtender, rightExtender, dumper;
 
     public static double leftExtenderOutPos = 0.675;
-    public static double rightExtenderOutPos = 0.66;
-    public static double dumperOutPos = 0.7;
-    public static double dumperHalfPos = 0.17;
+    public static double rightExtenderOutPos = 0.4;
+    public static double dumperOutPos = 0.6;
+    public static double dumperHalfPos = 0.45;
     public static double leftExtenderInPos = 0.975;
-    public static double rightExtenderInPos = 0.975;
+    public static double rightExtenderInPos = 0.75;
     public static double dumperInPos = 0.2;
 
     public Linkages(HardwareMap hardwareMap) {

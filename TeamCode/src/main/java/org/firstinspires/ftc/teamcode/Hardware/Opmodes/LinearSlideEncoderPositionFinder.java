@@ -18,22 +18,7 @@ public class LinearSlideEncoderPositionFinder extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()){
-            if (gamepad1.x){
-                front.setPower(1.0);
-                back.setPower(-1.0);
-            }else if(gamepad1.y){
-                front.setPower(1.0);
-                back.setPower(1.0);
-            }else if (gamepad1.a){
-                front.setPower(-1.0);
-                back.setPower(1.0);
-            }else if(gamepad1.b){
-                front.setPower(-1.0);
-                back.setPower(-1.0);
-            } else{
-                front.setPower(0);
-                back.setPower(0);
-            }
+
             telemetry.addData("Linear Slide Position Front", front.getCurrentPosition());
             telemetry.addData("Linear Slide Position Back", back.getCurrentPosition());
             telemetry.update();

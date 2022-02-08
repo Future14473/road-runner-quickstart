@@ -13,6 +13,8 @@ public class LinearSlideEncoderPositionFinder extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         DcMotorEx front = hardwareMap.get(DcMotorEx.class, "frontSlide");
         DcMotorEx back = hardwareMap.get(DcMotorEx.class, "backSlide");
+        front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
         while (opModeIsActive()){

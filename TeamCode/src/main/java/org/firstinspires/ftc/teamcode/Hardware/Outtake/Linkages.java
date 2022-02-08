@@ -15,8 +15,7 @@ public class Linkages {
     public static double dumperOutPos = 0.6;
     public static double dumperHalfPos = 0.45;
     public static double leftExtenderInPos = 0.975;
-    public static double rightExtenderInPos = 0.75;
-    public static double dumperInPos = 0.2;
+     public static double dumperInPos = 0.2;
 
     public Linkages(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");

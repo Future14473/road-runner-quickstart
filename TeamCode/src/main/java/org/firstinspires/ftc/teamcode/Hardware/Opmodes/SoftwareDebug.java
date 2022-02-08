@@ -21,6 +21,7 @@ public class SoftwareDebug extends LinearOpMode {
 
         waitForStart();
         outtake.linkages.flipHalfDumper();
+        intake.drop();
 
         while (opModeIsActive()) {
 

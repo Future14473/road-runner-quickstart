@@ -12,6 +12,7 @@ public class Linkages {
 
     public static double leftExtenderOutPos = 0.675;
     public static double rightExtenderOutPos = 0.4;
+    public static double rightExtenderInPos = 0.75;
     public static double dumperOutPos = 0.6;
     public static double dumperHalfPos = 0.45;
     public static double leftExtenderInPos = 0.975;

@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class LazySusan {
     private VoltageSensor batteryVoltageSensor;
     public static int velo = 2000;
+    public static int incrementAmt = 45;
 
     DcMotorEx lazySusan;
 
@@ -47,6 +48,13 @@ public class LazySusan {
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lazySusan.setVelocity(velo);
+    }
+
+    public void turnRightIncrement(){
+        rotateToDegrees(this.getDegrees() + incrementAmt);
+    }
+    public void turnLeftIncrement(){
+        rotateToDegrees(this.getDegrees() - incrementAmt);
     }
 
     public double getDegrees(){

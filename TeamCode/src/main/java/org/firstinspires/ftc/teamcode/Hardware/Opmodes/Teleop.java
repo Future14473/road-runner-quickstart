@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Outtake;
 import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
+import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
@@ -17,11 +18,18 @@ public class Teleop extends LinearOpMode {
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
         Duck duck = new Duck(hardwareMap);
+        Timer timer = new Timer(this);
 
         outtake.linkages.flipHalfDumper();
         intake.drop();
 
         waitForStart();
+
+        new Thread( () -> {
+            while (opModeIsActive()) {
+                tankDrive.setPowerDir(gamepad2.right_stick_y, -gamepad2.left_stick_x);
+            }
+        }).start();
 
         while (opModeIsActive()) {
 
@@ -35,6 +43,8 @@ public class Teleop extends LinearOpMode {
 
         if (gamepad1.dpad_up) {
             outtake.linkages.dumperIn();
+            outtake.linkages.dumperIn();
+            timer.safeDelay(200);
             outtake.slides.extendHigh();
         }
 
@@ -47,20 +57,32 @@ public class Teleop extends LinearOpMode {
             outtake.linkages.extend();
         }
         if(gamepad1.right_bumper) {
-            outtake.linkages.dumperOut();
+            lazySusan.rotateToDegrees(180);
+            outtake.linkages.extend();
         }
         if (gamepad1.dpad_down) {
+            outtake.linkages.dumperOut();
+            timer.safeDelay(500);
+            lazySusan.rotateToDegrees(0);
             outtake.linkages.flipHalfDumper();
             outtake.linkages.retract();
+            timer.safeDelay(1000);
             outtake.slides.retract();
         }
+
+        if (gamepad1.right_stick_x > 0){
+            lazySusan.turnRightIncrement();
+        }
+            if (gamepad1.right_stick_x < 0){
+                lazySusan.turnLeftIncrement();
+            }
 
             if (gamepad1.right_stick_button){
                duck.setBlueSpeed();
            }
            duck.move();
 
-           tankDrive.setPowerDir(gamepad2.right_stick_y, -gamepad2.left_stick_x);
+
         }
     }
 }

@@ -1,0 +1,40 @@
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+@TeleOp
+public class LinearSlideEncoderPositionFinder extends LinearOpMode {
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        DcMotorEx front = hardwareMap.get(DcMotorEx.class, "frontSlide");
+        DcMotorEx back = hardwareMap.get(DcMotorEx.class, "backSlide");
+
+        waitForStart();
+        while (opModeIsActive()){
+            if (gamepad1.x){
+                front.setPower(1.0);
+                back.setPower(-1.0);
+            }else if(gamepad1.y){
+                front.setPower(1.0);
+                back.setPower(1.0);
+            }else if (gamepad1.a){
+                front.setPower(-1.0);
+                back.setPower(1.0);
+            }else if(gamepad1.b){
+                front.setPower(-1.0);
+                back.setPower(-1.0);
+            } else{
+                front.setPower(0);
+                back.setPower(0);
+            }
+            telemetry.addData("Linear Slide Position Front", front.getCurrentPosition());
+            telemetry.addData("Linear Slide Position Back", back.getCurrentPosition());
+            telemetry.update();
+        }
+    }
+}

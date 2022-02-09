@@ -132,7 +132,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
 
     public void setDecimation(float decimation)
     {
-        synchronized (decimationSync)
+        synchronized (decimationSync) // todo sycronization is needed to make the different thread read the same input?
         {
             this.decimation = decimation;
             needToSetDecimation = true;

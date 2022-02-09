@@ -30,14 +30,14 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
+import org.openftc.easyopencv.OpenCvInternalCamera;
 
 import java.util.ArrayList;
 
 @TeleOp
 public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
 {
-    OpenCvWebcam webcam;
+    OpenCvCamera phoneCam;
     AprilBoundBoxPipeline aprilTagDetectionPipeline;
 
     static final double INCH_PER_METER = 39.37; // d3.28 * 12 is 39.36 so this checks out
@@ -65,19 +65,20 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
     public void runOpMode()
     {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        aprilTagDetectionPipeline = new AprilBoundBoxPipeline(tagsize, fx, fy, cx, cy, telemetry);
-        webcam.setPipeline(aprilTagDetectionPipeline);
-        FtcDashboard.getInstance().startCameraStream(webcam, 0);
+        phoneCam = OpenCvCameraFactory.getInstance().createInternalCamera(OpenCvInternalCamera.CameraDirection.BACK, cameraMonitorViewId);
 
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        aprilTagDetectionPipeline = new AprilBoundBoxPipeline(tagsize, fx, fy, cx, cy, telemetry);
+        phoneCam.setPipeline(aprilTagDetectionPipeline);
+
+        FtcDashboard.getInstance().startCameraStream(phoneCam, 0);
+
+        phoneCam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
             public void onOpened()
             {
 //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
-                webcam.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
+                phoneCam.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -102,9 +103,9 @@ public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
             // If there's been a new frame...
             if(detections != null)
             {
-                telemetry.addData("FPS", webcam.getFps());
-                telemetry.addData("Overhead ms", webcam.getOverheadTimeMs());
-                telemetry.addData("Pipeline ms", webcam.getPipelineTimeMs());
+                telemetry.addData("FPS", phoneCam.getFps());
+                telemetry.addData("Overhead ms", phoneCam.getOverheadTimeMs());
+                telemetry.addData("Pipeline ms", phoneCam.getPipelineTimeMs());
 
                 // If we don't see any tags
                 if(detections.size() == 0)

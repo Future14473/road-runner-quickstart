@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
@@ -19,6 +21,7 @@ public class Teleop extends LinearOpMode {
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         outtake.linkages.flipHalfDumper();
         intake.drop();
@@ -27,7 +30,7 @@ public class Teleop extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(gamepad2.right_stick_y, -gamepad2.left_stick_x);
+                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.left_stick_x);
             }
         }).start();
 
@@ -82,7 +85,8 @@ public class Teleop extends LinearOpMode {
            }
            duck.move();
 
-
+        telemetry.addData("Turret Angle", lazySusan.getDegrees());
+        telemetry.update();
         }
     }
 }

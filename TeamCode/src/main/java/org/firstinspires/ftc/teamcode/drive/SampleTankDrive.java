@@ -64,6 +64,8 @@ public class SampleTankDrive extends TankDrive {
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
     public static int teleopVelo = (int) (1400*0.85);
+    public static double rightDTconst = 1.0;
+    public static double leftDTconst = 1.0;
 
     // access each motor individually
     DcMotorEx leftFront, leftRear, rightRear, rightFront;
@@ -380,10 +382,10 @@ public class SampleTankDrive extends TankDrive {
     @Override
     public void setMotorPowers(double leftPower, double rightPower) {
         for (DcMotorEx leftMotor : leftMotors) {
-            leftMotor.setPower(leftPower);
+            leftMotor.setPower(leftPower * leftDTconst);
         }
         for (DcMotorEx rightMotor : rightMotors) {
-            rightMotor.setPower(rightPower);
+            rightMotor.setPower(rightPower * rightDTconst);
         }
     }
 
@@ -409,6 +411,8 @@ public class SampleTankDrive extends TankDrive {
         }
     }
 
+
+    //todo warning this method doesn't work for turning and PID constants not tuned
     public void setVelocityDir(double forward, double turn){
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //todo check the overflow of velo

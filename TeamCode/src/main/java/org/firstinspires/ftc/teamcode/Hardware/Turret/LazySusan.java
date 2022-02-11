@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class LazySusan {
     private VoltageSensor batteryVoltageSensor;
     public static int velo = 2000;
-    public static int incrementAmt = 22;
+    public static int incrementAmt = 15;
 
     DcMotorEx lazySusan;
 

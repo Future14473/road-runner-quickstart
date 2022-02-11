@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
@@ -11,8 +13,11 @@ import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
+@Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class Teleop extends LinearOpMode {
+
+
     @Override
     public void runOpMode() throws InterruptedException {
         Outtake outtake = new Outtake(hardwareMap);
@@ -28,10 +33,11 @@ public class Teleop extends LinearOpMode {
 
         waitForStart();
 
+
+
         new Thread( () -> {
             while (opModeIsActive()) {
-//                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
-                tankDrive.setVelocityDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
+                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
             }
         }).start();
 
@@ -75,20 +81,21 @@ public class Teleop extends LinearOpMode {
             if (gamepad1.dpad_down) {
                 outtake.linkages.dumperOut();
                 timer.safeDelay(500);
-                lazySusan.rotateToDegrees(0);
-                outtake.linkages.flipHalfDumper();
                 outtake.linkages.retract();
+                outtake.linkages.flipHalfDumper();
+                timer.safeDelay(500);
+                lazySusan.rotateToDegrees(0);
                 timer.safeDelay(1000);
                 outtake.slides.retract();
             }
 
         //manual linkage
-            if(gamepad1.left_stick_y > 0){
-                outtake.linkages.increment();
-            }
-            if(gamepad1.left_stick_y < 0){
-                outtake.linkages.decrement();
-            }
+//            if(gamepad1.left_stick_y > 0){
+//                outtake.linkages.increment();
+//            }
+//            if(gamepad1.left_stick_y < 0){
+//                outtake.linkages.decrement();
+//            }
 
             if (gamepad1.right_stick_x > 0){
                 lazySusan.turnRightIncrement();

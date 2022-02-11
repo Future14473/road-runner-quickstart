@@ -30,7 +30,8 @@ public class Teleop extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.left_stick_x);
+//                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
+                tankDrive.setVelocityDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
             }
         }).start();
 
@@ -44,38 +45,54 @@ public class Teleop extends LinearOpMode {
                 intake.stop();
             }
 
-        if (gamepad1.dpad_up) {
-            outtake.linkages.dumperIn();
-            outtake.linkages.dumperIn();
-            timer.safeDelay(200);
-            outtake.slides.extendHigh();
-        }
+           if (gamepad1.left_bumper){
+               outtake.linkages.dumperIn();
+           }
+           if(gamepad1.right_bumper){
+               outtake.linkages.flipHalfDumper();
+           }
 
-        if (gamepad1.dpad_right) {
-            lazySusan.rotateToDegrees(90);
-            outtake.linkages.extend();
-        }
-        if (gamepad1.dpad_left) { // make retract and down all in one method later
-            lazySusan.rotateToDegrees(-90);
-            outtake.linkages.extend();
-        }
-        if(gamepad1.right_bumper) {
-            lazySusan.rotateToDegrees(180);
-            outtake.linkages.extend();
-        }
-        if (gamepad1.dpad_down) {
-            outtake.linkages.dumperOut();
-            timer.safeDelay(500);
-            lazySusan.rotateToDegrees(0);
-            outtake.linkages.flipHalfDumper();
-            outtake.linkages.retract();
-            timer.safeDelay(1000);
-            outtake.slides.retract();
-        }
 
-        if (gamepad1.right_stick_x > 0){
-            lazySusan.turnRightIncrement();
-        }
+            if (gamepad1.dpad_up) {
+                outtake.linkages.dumperIn();
+                outtake.linkages.dumperIn();
+                timer.safeDelay(200);
+                outtake.slides.extendHigh();
+            }
+
+            if (gamepad1.dpad_right) {
+                lazySusan.rotateToDegrees(90);
+                outtake.linkages.extend();
+            }
+            if (gamepad1.dpad_left) { // make retract and down all in one method later
+                lazySusan.rotateToDegrees(-90);
+                outtake.linkages.extend();
+            }
+            if(gamepad1.y) {
+                lazySusan.rotateToDegrees(180);
+                outtake.linkages.extend();
+            }
+            if (gamepad1.dpad_down) {
+                outtake.linkages.dumperOut();
+                timer.safeDelay(500);
+                lazySusan.rotateToDegrees(0);
+                outtake.linkages.flipHalfDumper();
+                outtake.linkages.retract();
+                timer.safeDelay(1000);
+                outtake.slides.retract();
+            }
+
+        //manual linkage
+            if(gamepad1.left_stick_y > 0){
+                outtake.linkages.increment();
+            }
+            if(gamepad1.left_stick_y < 0){
+                outtake.linkages.decrement();
+            }
+
+            if (gamepad1.right_stick_x > 0){
+                lazySusan.turnRightIncrement();
+            }
             if (gamepad1.right_stick_x < 0){
                 lazySusan.turnLeftIncrement();
             }
@@ -86,6 +103,7 @@ public class Teleop extends LinearOpMode {
            duck.move();
 
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
+        telemetry.addData("Drive Velocity", tankDrive.getVelos());
         telemetry.update();
         }
     }

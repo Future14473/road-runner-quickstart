@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Linkages {
     Servo leftExtender, rightExtender, dumper;
 
+    public static double incrementAmt = 0.05;
     public static double leftExtenderOutPos = 0.675;
     public static double rightExtenderOutPos = 0.4;
     public static double rightExtenderInPos = 0.75;
@@ -24,6 +25,15 @@ public class Linkages {
         leftExtender = hardwareMap.get(Servo.class, "LeftExtender");
         leftExtender.setDirection(Servo.Direction.REVERSE);
 
+    }
+
+    public void increment(){
+        leftExtender.setPosition(leftExtender.getPosition()+incrementAmt);
+        rightExtender.setPosition(rightExtender.getPosition()+incrementAmt);
+    }
+    public void decrement(){
+        leftExtender.setPosition(leftExtender.getPosition()-incrementAmt);
+        rightExtender.setPosition(rightExtender.getPosition()-incrementAmt);
     }
 
     public void flipOutDumper() { dumper.setPosition(dumperOutPos); }

@@ -63,6 +63,7 @@ public class SampleTankDrive extends TankDrive {
     public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    public static int teleopVelo = (int) (1400*0.85);
 
     // access each motor individually
     DcMotorEx leftFront, leftRear, rightRear, rightFront;
@@ -389,6 +390,32 @@ public class SampleTankDrive extends TankDrive {
     //our own special moving method
     public void setPowerDir(double forward, double turn){
         setMotorPowers(forward + turn, forward - turn);
+    }
+
+    public String getVelos(){
+        return "frontLeft " + leftFront.getVelocity() + ", " +
+                "frontRight " + rightFront.getVelocity() + ", " +
+                "backLeft " + leftRear.getVelocity() + ", " +
+                "backRight " + rightRear.getVelocity();
+    }
+
+    public void setVelocityMotors(int leftVelo, int rightVelo){
+        for (DcMotorEx leftMotor : leftMotors) {
+            leftMotor.setVelocity(leftVelo);
+        }
+
+        for (DcMotorEx rightMotor : rightMotors) {
+            rightMotor.setVelocity(rightVelo);
+        }
+    }
+
+    public void setVelocityDir(double forward, double turn){
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //todo check the overflow of velo
+        setVelocityMotors(
+                (int) ((forward * teleopVelo) + (turn * teleopVelo)),
+                (int) ((forward * teleopVelo) - (turn * teleopVelo))
+        );
     }
 
     @Override

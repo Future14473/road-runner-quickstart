@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -37,10 +38,14 @@ public class VuforiaTest extends LinearOpMode
          * Setup Vuforia
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(viewportContainerIds[0]);
-        parameters.vuforiaLicenseKey = "YOUR VUFORIA KEY HERE";
+        parameters.vuforiaLicenseKey =      "AZBucJv/////AAABmS1HLxudp06FtvHEcplAgzMDBD5hZJTgmbmRRNw3a5sMahUVYeOMv7vtcCVaJ+ZQLwrS" +
+                "1h/0Fdff6vRIgHL37MM68mKI+fZ65OGeS+y2VnnLypejXhEP0QpNrL3GoIr/Sid5HrOqc1H0wQQho" +
+                "gTqBsNptuddJQcQOINzZNHMrrs5zoBZQBTyWWCG+FCJ+P2/3wV7UCeTQ5PZOgpW12GCV2QcWdsmn8" +
+                "8ItDLWTXl9zdBxUDlIQtq3zjbV12tBlI8vH1Bn4+qUvpEdrRBMhaEzPvoBHZdwDiABtxThuDH/Drc4" +
+                "A7zMjvMkFqp6ejgTphRuQdWhTKtsVNJyFg5WReY/HE3YcamHenFH8DSSYzvhenwt";
         parameters.cameraDirection   = VuforiaLocalizer.CameraDirection.BACK;
         // Uncomment this line below to use a webcam
-        //parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Create a Vuforia passthrough "virtual camera"
@@ -113,4 +118,3 @@ public class VuforiaTest extends LinearOpMode
             return input;
         }
     }
-}

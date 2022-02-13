@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.apache.commons.math3.analysis.function.Max;
+
 /*
  * Constants shared between multiple drive types.
  *
@@ -34,7 +36,7 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(20, 0, 10,28);
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(25, 0, 10,15);
     /*
      * These are physical constants that can be determined from your robot (including the track
      * width; it will be tune empirically later although a rough estimate is important). Users are
@@ -85,7 +87,8 @@ public class DriveConstants {
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 66.08684116824698*0.95;
+    public static double MAX_PERCENT = 0.90;
+    public static double MAX_VEL = 66.08684116824698 * MAX_PERCENT;
     public static double MAX_ACCEL = 73.17330064499293;
     public static double MAX_ANG_VEL = Math.toRadians(310.55713333333335);
     public static double MAX_ANG_ACCEL = Math.toRadians(310.55713333333335);

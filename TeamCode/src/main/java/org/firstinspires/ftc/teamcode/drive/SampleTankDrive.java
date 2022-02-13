@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.TankDrive;
+import com.acmerobotics.roadrunner.followers.RamseteFollower;
 import com.acmerobotics.roadrunner.followers.TankPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -35,7 +36,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.TwoWheelTrackingLocalizer;
+import org.firstinspires.ftc.teamcode.drive.Ramsete.RamseteConstants;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
@@ -119,6 +120,7 @@ public class SampleTankDrive extends TankDrive {
                 new TankVelocityConstraint(MAX_VEL, TRACK_WIDTH)
         ));
         accelConstraint = new ProfileAccelerationConstraint(MAX_ACCEL);
+        follower = new RamseteFollower(RamseteConstants.b, RamseteConstants.zeta, RamseteConstants.)
         follower = new TankPIDVAFollower(AXIAL_PID, CROSS_TRACK_PID,
                 new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 

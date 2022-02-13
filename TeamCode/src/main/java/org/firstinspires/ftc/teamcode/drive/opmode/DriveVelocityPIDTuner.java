@@ -148,7 +148,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                     drive.setWeightedDrivePower(
                             new Pose2d(
                                     -gamepad1.left_stick_y,
-                                    -gamepad1.left_stick_x,
+                                    0,
                                     -gamepad1.right_stick_x
                             )
                     );

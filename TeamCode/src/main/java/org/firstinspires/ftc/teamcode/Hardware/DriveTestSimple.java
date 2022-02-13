@@ -26,7 +26,7 @@ public class DriveTestSimple extends LinearOpMode {
         while (opModeIsActive()){
 
             //forward
-            if (gamepad1.x){
+           if (gamepad1.x){
                 leftFront.setPower(1.0);
                 leftRear.setPower(1.0);
                 rightRear.setPower(1.0);

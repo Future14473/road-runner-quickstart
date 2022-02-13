@@ -173,7 +173,7 @@ public class SampleTankDrive extends TankDrive {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        //setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
 
     }
 
@@ -301,7 +301,8 @@ public class SampleTankDrive extends TankDrive {
                 break;
             }
         }
-
+        fieldOverlay.setStroke("#34e5eb");
+        DashboardUtil.drawRobot(fieldOverlay, currentPose);
         dashboard.sendTelemetryPacket(packet);
     }
 

@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode.roadrunnerext
+package org.firstinspires.ftc.teamcode.drive.roadrunnerext;
 
 import com.acmerobotics.roadrunner.drive.DriveSignal
+import com.acmerobotics.roadrunner.followers.TrajectoryFollower
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.util.NanoClock
 import com.acmerobotics.roadrunner.util.epsilonEquals
-import org.firstinspires.ftc.teamcode.drive.Ramsete.RamseteConstants.kHeading
-import org.firstinspires.ftc.teamcode.drive.Ramsete.RamseteConstants.kLinear
-import org.firstinspires.ftc.teamcode.roadrunnerext.RamseteConstants.*
+import org.firstinspires.ftc.teamcode.drive.roadrunnerext.RamseteConstants.*
+import org.firstinspires.ftc.teamcode.roadrunnerext.toInches
+import org.firstinspires.ftc.teamcode.roadrunnerext.toMeters
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -28,9 +29,8 @@ class ImprovedRamsete @JvmOverloads constructor(
     admissibleError: Pose2d = Pose2d(2.0, 2.0, Math.toRadians(5.0)),
     timeout: Double =  0.5,
     clock: NanoClock = NanoClock.system(),
-) : ImprovedTrajectoryFollower(admissibleError, timeout, clock) {
+) : TrajectoryFollower(admissibleError, timeout, clock) {
     override var lastError: Pose2d = Pose2d()
-    override var lastVelocityError: Pose2d? = Pose2d()
 
     private fun sinc(x: Double) =
         if (x epsilonEquals 0.0) {
@@ -44,7 +44,7 @@ class ImprovedRamsete @JvmOverloads constructor(
         val t = elapsedTime()
         val targetPose = trajectory[t].toMeters()
         val targetVel = trajectory.velocity(t).toMeters()
-        val targetAccel = if(t > trajectory.duration()) Pose2d() else trajectory.acceleration(t).toMeters()
+        val targetAccel = if (t > trajectory.duration()) Pose2d() else trajectory.acceleration(t).toMeters()
 
         val targetRobotVel = Kinematics.fieldToRobotVelocity(targetPose.toInches(), targetVel.toInches()).toMeters()
         val targetRobotAccel = Kinematics.fieldToRobotAcceleration(targetPose.toInches(), targetVel.toInches(), targetAccel.toInches()).toMeters()
@@ -66,32 +66,10 @@ class ImprovedRamsete @JvmOverloads constructor(
 
         val outV = v + (currentRobotVel?.toMeters()?.let { kLinear * (v - it.x) } ?: 0.0)
 
-        val outOmega = omega + (currentRobotVel?.toMeters()?.let { kHeading * (omega - it.heading) } ?: 0.0)
+        val outOmega = omega + (currentRobotVel?.toMeters()?.let { kHeading * (omega - it.heading) }
+                ?: 0.0)
 
         lastError = Kinematics.calculateRobotPoseError(targetPose.toInches(), currentPose.toInches())
-        lastVelocityError = currentRobotVel?.toMeters()?.let { Kinematics.calculateRobotPoseError(Pose2d(v, 0.0, omega).toInches(), it.toInches()) }
-        val alternative = calculate(currentPose.toFTCLibPose2d(), targetPose.toFTCLibPose2d(), targetRobotVel.x, targetRobotVel.heading)
         return DriveSignal(Pose2d(outV, 0.0, outOmega).toInches(), targetRobotAccel.toInches())
     }
-        private fun calculate(
-            currentPose: com.arcrobotics.ftclib.geometry.Pose2d?,
-            poseRef: com.arcrobotics.ftclib.geometry.Pose2d,
-            linearVelocityRefMeters: Double,
-            angularVelocityRefRadiansPerSecond: Double
-        ): DriveSignal {
-            val m_poseError = poseRef.relativeTo(currentPose)
-            val eX: Double = m_poseError.translation.x
-            val eY: Double = m_poseError.translation.y
-            val eTheta: Double = m_poseError.rotation.radians
-            val k: Double = 2.0 * zeta * sqrt(
-                    angularVelocityRefRadiansPerSecond.pow(2)
-                ) + b * linearVelocityRefMeters.pow(2)
-            return DriveSignal(
-                Pose2d(
-                    linearVelocityRefMeters * m_poseError.heading + k * eX,
-                    0.0,
-                    angularVelocityRefRadiansPerSecond + k * eTheta + b * linearVelocityRefMeters * sinc(eTheta) * eY
-                ).toInches()
-            )
-        }
 }

@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class RamseteConstants {
     // b is horizontal error
-    public static double b = 20;
+    public static double b = 30;
     // zeta is dampening for horizontal error
     public static double zeta = 0.7;
     // phase lag for actual thing, proportional

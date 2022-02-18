@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.Hardware.Turret.HardwareTests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -11,18 +11,22 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import kotlin.Lazy;
+
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
+
 
 /*
  * This routine is designed to tune the PID coefficients used by the REV Expansion Hubs for closed-
@@ -50,8 +54,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 @Autonomous(group = "drive")
-public class DriveVelocityPIDTuner extends LinearOpMode {
-    public static double DISTANCE = 72; // in
+public class LazySusanVelocityPIDTuner extends LinearOpMode {
+    public static double DEGREES = 90; // in
+
+    private FtcDashboard dashboard = FtcDashboard.getInstance();
 
     enum Mode {
         DRIVER_MODE,
@@ -59,21 +65,22 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
     }
 
     private static MotionProfile generateProfile(boolean movingForward) {
-        MotionState start = new MotionState(movingForward ? 0 : DISTANCE, 0, 0, 0);
-        MotionState goal = new MotionState(movingForward ? DISTANCE : 0, 0, 0, 0);
+        MotionState start = new MotionState(movingForward ? 0 : DEGREES, 0, 0, 0);
+        MotionState goal = new MotionState(movingForward ? DEGREES : 0, 0, 0, 0);
         return MotionProfileGenerator.generateSimpleMotionProfile(start, goal, MAX_VEL, MAX_ACCEL);
     }
 
     @Override
     public void runOpMode() {
-        if (!RUN_USING_ENCODER) {
+        LazySusan lazySusan = new LazySusan(hardwareMap);
+
+        if (lazySusan.getRunMode()!= DcMotor.RunMode.RUN_USING_ENCODER) {
             RobotLog.setGlobalErrorMsg("%s does not need to be run if the built-in motor velocity" +
                     "PID is not in use", getClass().getSimpleName());
         }
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        // creates telemetry
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         Mode mode = Mode.TUNING_MODE;
 
@@ -82,7 +89,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         double lastKd = MOTOR_VELO_PID.d;
         double lastKf = MOTOR_VELO_PID.f;
 
-        drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+        lazySusan.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
 
         NanoClock clock = NanoClock.system();
 
@@ -91,8 +98,6 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
         telemetry.clearAll();
 
         waitForStart();
-
-        if (isStopRequested()) return;
 
         boolean movingForwards = true;
         MotionProfile activeProfile = generateProfile(true);
@@ -106,7 +111,6 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                 case TUNING_MODE:
                     if (gamepad1.y) {
                         mode = Mode.DRIVER_MODE;
-                        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     }
 
                     // calculate and set the motor power
@@ -121,23 +125,20 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
                     MotionState motionState = activeProfile.get(profileTime);
                     double targetPower = kV * motionState.getV();
-                    drive.setDrivePower(new Pose2d(targetPower, 0, 0));
+                    lazySusan.setPower(targetPower);
 
-                    List<Double> velocities = drive.getWheelVelocities();
+                    double velocities = lazySusan.getVelo();
 
                     // update telemetry
                     telemetry.addData("targetVelocity", motionState.getV());
-                    for (int i = 0; i < velocities.size(); i++) {
-                        telemetry.addData("measuredVelocity" + i, velocities.get(i));
-                        telemetry.addData(
-                                "error" + i,
-                                motionState.getV() - velocities.get(i)
-                        );
-                    }
+
+                        telemetry.addData("measuredVelocity", velocities);
+                        telemetry.addData("error",  motionState.getV() - velocities);
                     break;
                 case DRIVER_MODE:
+                    /*
                     if (gamepad1.b) {
-                        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        laz.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
                         mode = Mode.TUNING_MODE;
                         movingForwards = true;
@@ -148,16 +149,18 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                     drive.setWeightedDrivePower(
                             new Pose2d(
                                     -gamepad1.left_stick_y,
-                                    0,
+                                    -gamepad1.left_stick_x,
                                     -gamepad1.right_stick_x
                             )
                     );
+                    */
+
                     break;
             }
 
             if (lastKp != MOTOR_VELO_PID.p || lastKd != MOTOR_VELO_PID.d
                     || lastKi != MOTOR_VELO_PID.i || lastKf != MOTOR_VELO_PID.f) {
-                drive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+                lazySusan.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
 
                 lastKp = MOTOR_VELO_PID.p;
                 lastKi = MOTOR_VELO_PID.i;

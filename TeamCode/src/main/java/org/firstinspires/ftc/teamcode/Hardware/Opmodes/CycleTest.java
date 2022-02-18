@@ -12,25 +12,30 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 @Config
 @TeleOp
 public class CycleTest extends LinearOpMode {
-    public static double startX = 23, startY = 65;
-    public static double collectX = 37, prepOutX = 5;
-    public static double dumpX = -6, dumpY = 43, dumpR = 240;
+    public static double intakeX = 49, intakeY = 65;
+    public static double leaveX = 23;
+    public static double endX = -4, endY = 43;
+  //  public static double collectX = 37, prepOutX = 5;
+  //  public static double dumpX = -6, dumpY = 43, dumpR = 240;
 
     //.splineTo(new Vector2d(dumpX, dumpY), Math.toRadians(dumpR))
 
     @Override
     public void runOpMode() throws InterruptedException {
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
-        tankDrive.setPoseEstimate(new Pose2d(startX, startY, 0));
-        Trajectory intakeTraj = tankDrive.trajectoryBuilder(new Pose2d(startX,startY, 0))
-                .splineTo(new Vector2d(collectX, startY), Math.toRadians(0))
+        tankDrive.setPoseEstimate(new Pose2d(intakeX, intakeY, 180));
+        Trajectory intakeTraj = tankDrive.trajectoryBuilder(new Pose2d(intakeX, intakeY, 180))
+                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(180))
+                .splineTo(new Vector2d(endX, endY), Math.toRadians(240))
                 .build();
-        Trajectory toHalfOut = tankDrive.trajectoryBuilder(intakeTraj.end(), true)
-                .splineTo(new Vector2d(prepOutX, startY), Math.toRadians(0))
-                .build();
-        Trajectory toAllianceTraj = tankDrive.trajectoryBuilder(new Pose2d(prepOutX, startY, Math.toRadians(0)), true)
-                .splineTo(new Vector2d(dumpX, dumpY), Math.toRadians(dumpR))
-                .build();
+//                .splineTo(new Vector2d(collectX, startY), Math.toRadians(0))
+//                .build();
+//        Trajectory toHalfOut = tankDrive.trajectoryBuilder(intakeTraj.end(), true)
+//                .splineTo(new Vector2d(prepOutX, startY), Math.toRadians(0))
+//                .build();
+//        Trajectory toAllianceTraj = tankDrive.trajectoryBuilder(new Pose2d(prepOutX, startY, Math.toRadians(0)), true)
+//                .splineTo(new Vector2d(dumpX, dumpY), Math.toRadians(dumpR))
+//                .build();
 
         /*
         Trajectory fromAllianceTraj = tankDrive.trajectoryBuilder(new Pose2d(dumpX, dumpY, Math.toRadians(dumpR)), false)
@@ -47,8 +52,8 @@ public class CycleTest extends LinearOpMode {
 
         waitForStart();
         tankDrive.followTrajectory(intakeTraj);
-        tankDrive.followTrajectory(toHalfOut);
-        tankDrive.followTrajectory(toAllianceTraj);
+//        tankDrive.followTrajectory(toHalfOut);
+//        tankDrive.followTrajectory(toAllianceTraj);
         //tankDrive.followTrajectory(fromAllianceTraj);
         //tankDrive.followTrajectory(fromHalfOut);
     }

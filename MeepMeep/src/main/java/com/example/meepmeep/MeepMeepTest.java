@@ -16,7 +16,7 @@ MeepMeep meepMeep = new MeepMeep(600);
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(driveShim ->
                         driveShim.trajectorySequenceBuilder(new Pose2d(49, 65, Math.toRadians(180)))
-                                .splineTo(new Vector2d(23, 67), Math.toRadians(180))
+                                .splineTo(new Vector2d(23, 65), Math.toRadians(180))
                         //.splineTo(new Vector2d(37, 65), Math.toRadians(180))
                                // .splineTo(new Vector2d(5, 65),Math.toRadians(0))
                                // .splineTo(new Vector2d(-4, 59), Math.toRadians(0))

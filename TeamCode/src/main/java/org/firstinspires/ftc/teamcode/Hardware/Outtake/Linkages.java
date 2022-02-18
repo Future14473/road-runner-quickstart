@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Linkages {
     Servo leftExtender, rightExtender, dumper;
 
-    public static double incrementAmt = 0.005;
+    public static double incrementAmt = 0.003 ;
     public static double leftExtenderOutPos = 0.675;
-    public static double rightExtenderOutPos = 0.18;
+    public static double rightExtenderOutPos = 0.25;
     public static double rightExtenderInPos = 0.75;
     public static double dumperOutPos = 0.6;
     public static double dumperHalfPos = 0.45;

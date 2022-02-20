@@ -23,11 +23,17 @@ public class CycleTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
-        tankDrive.setPoseEstimate(new Pose2d(intakeX, intakeY, 180));
-        Trajectory intakeTraj = tankDrive.trajectoryBuilder(new Pose2d(intakeX, intakeY, 180))
-                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(180))
-                .splineTo(new Vector2d(endX, endY), Math.toRadians(240))
+        tankDrive.setPoseEstimate(new Pose2d(0, 0, 0));
+        Trajectory trajectoryforward = tankDrive.trajectoryBuilder(new Pose2d(), true)
+                .splineTo(new Vector2d(36, 36), Math.toRadians(0))
                 .build();
+        Trajectory trajectorybackward = tankDrive.trajectoryBuilder(new Pose2d(), false)
+                .splineTo(new Vector2d(0, 0), Math.toRadians(0))
+                .build();
+//        Trajectory intakeTraj = tankDrive.trajectoryBuilder(new Pose2d(intakeX, intakeY, 180))
+//                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(180))
+//                .splineTo(new Vector2d(endX, endY), Math.toRadians(240))
+//                .build();
 //                .splineTo(new Vector2d(collectX, startY), Math.toRadians(0))
 //                .build();
 //        Trajectory toHalfOut = tankDrive.trajectoryBuilder(intakeTraj.end(), true)
@@ -51,7 +57,10 @@ public class CycleTest extends LinearOpMode {
 
 
         waitForStart();
-        tankDrive.followTrajectory(intakeTraj);
+        for (int i = 0; i < 100; i++) {
+            tankDrive.followTrajectory(trajectoryforward);
+            tankDrive.followTrajectory(trajectorybackward);
+        }
 //        tankDrive.followTrajectory(toHalfOut);
 //        tankDrive.followTrajectory(toAllianceTraj);
         //tankDrive.followTrajectory(fromAllianceTraj);

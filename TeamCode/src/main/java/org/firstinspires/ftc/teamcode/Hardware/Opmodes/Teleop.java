@@ -20,7 +20,7 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Outtake outtake = new Outtake(hardwareMap);
+        Outtake outtake = new Outtake(hardwareMap, this);
         Intake intake = new Intake(hardwareMap);
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
@@ -28,7 +28,8 @@ public class Teleop extends LinearOpMode {
         Timer timer = new Timer(this);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        outtake.linkages.flipHalfDumper();
+        outtake.readyToIntake();
+
         intake.drop();
 
         waitForStart();
@@ -43,7 +44,7 @@ public class Teleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-           if (gamepad1.right_trigger > 0){
+            if (gamepad1.right_trigger > 0){
                 intake.in();
             } else if (gamepad1.left_trigger > 0){
                 intake.out();
@@ -51,51 +52,27 @@ public class Teleop extends LinearOpMode {
                 intake.stop();
             }
 
-           if (gamepad1.left_bumper){
-               outtake.linkages.dumperIn();
-           }
-           if(gamepad1.right_bumper){
-               outtake.linkages.flipHalfDumper();
-           }
+            if (gamepad1.left_bumper){
+                outtake.closeDumper();
+            }
+            if(gamepad1.right_bumper){
+                outtake.readyToIntake();
+            }
 
 
             if (gamepad1.dpad_up) {
-                outtake.linkages.dumperIn();
-                outtake.linkages.dumperIn();
-                timer.safeDelay(200);
-                outtake.slides.extendHigh();
+                outtake.up();
             }
 
             if (gamepad1.dpad_right) {
-                lazySusan.rotateToDegrees(90);
-                outtake.linkages.extend();
+                outtake.right();
             }
-            if (gamepad1.dpad_left) { // make retract and down all in one method later
-                lazySusan.rotateToDegrees(-90);
-                outtake.linkages.extend();
+            if (gamepad1.dpad_left) {
+                outtake.left();
             }
             if(gamepad1.y) {
-                lazySusan.rotateToDegrees(180);
-                outtake.linkages.extend();
+                outtake.back();
             }
-            if (gamepad1.dpad_down) {
-                outtake.linkages.dumperOut();
-                timer.safeDelay(500);
-                outtake.linkages.retract();
-                outtake.linkages.flipHalfDumper();
-                timer.safeDelay(500);
-                lazySusan.rotateToDegrees(0);
-                timer.safeDelay(1000);
-                outtake.slides.retract();
-            }
-
-        //manual linkage
-//            if(gamepad1.left_stick_y > 0){
-//                outtake.linkages.increment();
-//            }
-//            if(gamepad1.left_stick_y < 0){
-//                outtake.linkages.decrement();
-//            }
 
             if (gamepad1.right_stick_x > 0){
                 lazySusan.turnRightIncrement();

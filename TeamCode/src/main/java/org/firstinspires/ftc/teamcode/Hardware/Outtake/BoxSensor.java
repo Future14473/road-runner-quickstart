@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.ColorSensor;
+package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 import android.graphics.Color;
 
@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
-public class ColorSensor {
+public class BoxSensor {
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
 
@@ -27,7 +27,7 @@ public class ColorSensor {
 
     float gain = 1;
 
-    public ColorSensor(HardwareMap hardwareMap){
+    public BoxSensor(HardwareMap hardwareMap){
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         colorSensor.setGain(gain);
     }

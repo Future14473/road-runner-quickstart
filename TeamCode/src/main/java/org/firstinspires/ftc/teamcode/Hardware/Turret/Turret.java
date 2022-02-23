@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.Hardware.Turret;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Slides;
 

@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Hardware.ColorSensor.ColorSensor;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.BoxSensor;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Outtake;
@@ -20,16 +20,16 @@ public class TeleopWithColorSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Outtake outtake = new Outtake(hardwareMap);
+        Outtake outtake = new Outtake(hardwareMap, this);
         Intake intake = new Intake(hardwareMap);
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
         Duck duck = new Duck(hardwareMap);
-        Timer timer = new Timer(this);
-        ColorSensor colorSensor = new ColorSensor(hardwareMap);
+        BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        outtake.linkages.flipHalfDumper();
+        outtake.readyToIntake();
+
         intake.drop();
 
         waitForStart();
@@ -53,50 +53,26 @@ public class TeleopWithColorSensor extends LinearOpMode {
             }
 
            if (gamepad1.left_bumper){
-               outtake.linkages.dumperIn();
+               outtake.closeDumper();
            }
            if(gamepad1.right_bumper){
-               outtake.linkages.flipHalfDumper();
+               outtake.readyToIntake();
            }
 
 
             if (gamepad1.dpad_up) {
-                outtake.linkages.dumperIn();
-                outtake.linkages.dumperIn();
-                timer.safeDelay(200);
-                outtake.slides.extendHigh();
+                outtake.up();
             }
 
             if (gamepad1.dpad_right) {
-                lazySusan.rotateToDegrees(90);
-                outtake.linkages.extend();
+                outtake.right();
             }
             if (gamepad1.dpad_left) { // make retract and down all in one method later
-                lazySusan.rotateToDegrees(-90);
-                outtake.linkages.extend();
+                outtake.left();
             }
             if(gamepad1.y) {
-                lazySusan.rotateToDegrees(180);
-                outtake.linkages.extend();
+                outtake.back();
             }
-            if (gamepad1.dpad_down) {
-                outtake.linkages.dumperOut();
-                timer.safeDelay(500);
-                outtake.linkages.retract();
-                outtake.linkages.flipHalfDumper();
-                timer.safeDelay(500);
-                lazySusan.rotateToDegrees(0);
-                timer.safeDelay(1000);
-                outtake.slides.retract();
-            }
-
-        //manual linkage
-//            if(gamepad1.left_stick_y > 0){
-//                outtake.linkages.increment();
-//            }
-//            if(gamepad1.left_stick_y < 0){
-//                outtake.linkages.decrement();
-//            }
 
             if (gamepad1.right_stick_x > 0){
                 lazySusan.turnRightIncrement();
@@ -104,7 +80,6 @@ public class TeleopWithColorSensor extends LinearOpMode {
             if (gamepad1.right_stick_x < 0){
                 lazySusan.turnLeftIncrement();
             }
-
 
             duck.setStop();
             if (gamepad2.right_bumper){

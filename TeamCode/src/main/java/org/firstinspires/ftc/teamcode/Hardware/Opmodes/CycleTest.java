@@ -15,6 +15,7 @@ public class CycleTest extends LinearOpMode {
     public static double intakeX = 49, intakeY = 65;
     public static double leaveX = 23;
     public static double endX = -4, endY = 43;
+    public static double endAngle = 0;
   //  public static double collectX = 37, prepOutX = 5;
   //  public static double dumpX = -6, dumpY = 43, dumpR = 240;
 
@@ -23,13 +24,24 @@ public class CycleTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
-        tankDrive.setPoseEstimate(new Pose2d(0, 0, 0));
-        Trajectory trajectoryforward = tankDrive.trajectoryBuilder(new Pose2d(), true)
-                .splineTo(new Vector2d(36, 36), Math.toRadians(0))
+        tankDrive.setPoseEstimate(new Pose2d(intakeX, intakeY));
+        Trajectory trajectoryforward = tankDrive.trajectoryBuilder(new Pose2d(intakeX, intakeY), true)
+                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(0))
+                .splineTo(new Vector2d(endX, endY), Math.toRadians(endAngle))
                 .build();
-        Trajectory trajectorybackward = tankDrive.trajectoryBuilder(new Pose2d(), false)
-                .splineTo(new Vector2d(0, 0), Math.toRadians(0))
+        Trajectory trajectoryspline = tankDrive.trajectoryBuilder(new Pose2d(leaveX, intakeY), true)
+                .splineTo(new Vector2d(endX, endY), Math.toRadians(endAngle)).build();
+
+
+        Trajectory trajectorybackward = tankDrive.trajectoryBuilder(new Pose2d(endX,endY, endAngle), false)
+                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(0))
+                .splineTo(new Vector2d(intakeX, intakeY), Math.toRadians(0))
                 .build();
+//        Trajectory trajectorysplinebackward = tankDrive.trajectoryBuilder(new Pose2d(leaveX, intakeY), false)
+//                .splineTo(new Vector2d(intakeX, intakeY), Math.toRadians(endAngle)).build();
+
+
+
 //        Trajectory intakeTraj = tankDrive.trajectoryBuilder(new Pose2d(intakeX, intakeY, 180))
 //                .splineTo(new Vector2d(leaveX, intakeY), Math.toRadians(180))
 //                .splineTo(new Vector2d(endX, endY), Math.toRadians(240))
@@ -59,7 +71,9 @@ public class CycleTest extends LinearOpMode {
         waitForStart();
         for (int i = 0; i < 100; i++) {
             tankDrive.followTrajectory(trajectoryforward);
+            tankDrive.followTrajectory(trajectoryspline);
             tankDrive.followTrajectory(trajectorybackward);
+//            tankDrive.followTrajectory(trajectorysplinebackward);
         }
 //        tankDrive.followTrajectory(toHalfOut);
 //        tankDrive.followTrajectory(toAllianceTraj);

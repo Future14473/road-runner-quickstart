@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
 import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -35,6 +36,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MA
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
 @Config
+@Disabled
 @Autonomous(group = "drive")
 public class AAAVelocityFeedforwardTuner extends LinearOpMode {
     public static double DEGREES = 45;

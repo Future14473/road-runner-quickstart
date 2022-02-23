@@ -104,10 +104,16 @@ public class Teleop extends LinearOpMode {
                 lazySusan.turnLeftIncrement();
             }
 
-            if (gamepad1.right_stick_button){
-               duck.setBlueSpeed();
+            if (gamepad2.right_bumper){
+                duck.setBlue(1);
            }
-           duck.move();
+            if (gamepad2.left_bumper){
+                duck.setRed(1);
+            }
+            if (gamepad2.a){
+                duck.setStop();
+            }
+
 
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
         telemetry.addData("Drive Velocity", tankDrive.getVelos());

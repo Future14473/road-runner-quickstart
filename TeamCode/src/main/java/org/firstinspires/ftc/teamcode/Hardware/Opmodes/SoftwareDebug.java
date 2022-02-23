@@ -73,9 +73,8 @@ public class SoftwareDebug extends LinearOpMode {
            }
 
            if (gamepad1.right_stick_button){
-               duck.setBlueSpeed();
+               duck.setBlue(0.66);
            }
-           duck.move();
 
            tankDrive.setPowerDir(gamepad1.right_stick_y, -gamepad1.left_stick_x);
         }

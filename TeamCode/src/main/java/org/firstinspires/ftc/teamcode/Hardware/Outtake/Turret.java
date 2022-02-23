@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 
-public class Outtake {
+public class Turret {
     Linkages linkages;
     Dumper dumper;
     Slides slides;
@@ -14,7 +13,7 @@ public class Outtake {
     BoxSensor boxSensor;
     Timer timer;
 
-    public Outtake (HardwareMap hardwareMap, LinearOpMode linearOpMode){
+    public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
         lazySusan = new LazySusan(hardwareMap);
         linkages = new Linkages(hardwareMap);
         slides = new Slides(hardwareMap);

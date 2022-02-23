@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.Hardware.Turret.HardwareTests;
+package org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusanOpmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
 import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
 import com.acmerobotics.roadrunner.profile.MotionState;
@@ -11,21 +10,14 @@ import com.acmerobotics.roadrunner.util.NanoClock;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
 
-import java.util.List;
-
-import kotlin.Lazy;
-
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.kV;
 
 
 /*

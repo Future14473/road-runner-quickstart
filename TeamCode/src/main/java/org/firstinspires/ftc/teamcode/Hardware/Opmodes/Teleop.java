@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.Outtake.Outtake;
-import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
@@ -20,7 +19,7 @@ public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Outtake outtake = new Outtake(hardwareMap, this);
+        Turret turret = new Turret(hardwareMap, this);
         Intake intake = new Intake(hardwareMap);
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
@@ -28,7 +27,7 @@ public class Teleop extends LinearOpMode {
         Timer timer = new Timer(this);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        outtake.readyToIntake();
+        turret.readyToIntake();
 
         intake.drop();
 
@@ -53,25 +52,28 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.left_bumper){
-                outtake.closeDumper();
+                turret.closeDumper();
             }
             if(gamepad1.right_bumper){
-                outtake.readyToIntake();
+                turret.readyToIntake();
             }
 
 
             if (gamepad1.dpad_up) {
-                outtake.up();
+                turret.up();
             }
 
             if (gamepad1.dpad_right) {
-                outtake.right();
+                turret.right();
             }
             if (gamepad1.dpad_left) {
-                outtake.left();
+                turret.left();
+            }
+            if (gamepad1.dpad_down){
+                turret.down();
             }
             if(gamepad1.y) {
-                outtake.back();
+                turret.back();
             }
 
             if (gamepad1.right_stick_x > 0){

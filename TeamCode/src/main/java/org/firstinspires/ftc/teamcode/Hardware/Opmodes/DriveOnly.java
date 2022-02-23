@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
-import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
-import org.firstinspires.ftc.teamcode.Hardware.Outtake.Outtake;
-import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp

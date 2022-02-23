@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Turret.HardwareTests;
+package org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusanOpmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -13,15 +13,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.teamcode.Hardware.Turret.LazySusan;
-
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kA;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
 
 // importing important constants from Turret Constants
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.kA;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.Hardware.Outtake.TurretConstants.kV;
 
 /*
  * This routine is designed to tune the open-loop feedforward coefficients. Although it may seem unnecessary,
@@ -40,7 +39,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.Turret.TurretConstants.kV;
  */
 @Config
 @Autonomous(group = "drive")
-public class AAAVelocityFeedforwardTuner extends LinearOpMode {
+public class LazySusanFeedforwardTuner extends LinearOpMode {
     public static double DEGREES = 45;
 
     private FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -113,16 +112,14 @@ public class AAAVelocityFeedforwardTuner extends LinearOpMode {
                     }
 
                     MotionState motionState = activeProfile.get(profileTime);
-//                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
-//                    lazySusan.setPower(targetPower);
-                    lazySusan.setVelocity((int) motionState.getV());
-                    lazySusan.rotateToDegrees(movingForwards ? 45 : 0);
-                    double currentVelo = lazySusan.getVelo();
+                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
+                    lazySusan.setPower(targetPower);
 
+                    double currentVelo = lazySusan.getVelo();
 
                     // update telemetry
                     //telemetry.addData("setPower ", targetVelocity);
-//                    telemetry.addData("targetPower", targetPower);
+                    telemetry.addData("targetPower", targetPower);
                     telemetry.addData("current position", lazySusan.getDegrees());
                     telemetry.addData("target position", lazySusan.getTargetDegrees());
                     telemetry.addData("targetVelocity", motionState.getV());

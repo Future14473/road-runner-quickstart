@@ -84,6 +84,5 @@ public class Turret {
 
     public void release(){dumper.dump();}
 
-
-
+    public void toggleLinkages(){linkages.toggle();}
 }

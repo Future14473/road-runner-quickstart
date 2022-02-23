@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Linkages {
     Servo leftExtender, rightExtender;
 
+    int toggleIndex = 0;
+
     public static double incrementAmt = 0.005;
     public static double leftExtenderOutPos = 0.675;
     public static double leftExtenderInPos = 0.975;
@@ -44,6 +46,15 @@ public class Linkages {
     public void retract(){
         leftExtender.setPosition(leftExtenderInPos);
         rightExtender.setPosition(rightExtenderInPos);
+    }
+
+    public void toggle(){
+        // see if it is at the out position
+        if (rightExtender.getPosition() - rightExtenderOutPos < 0.05){
+            toggleIndex = 0;
+        }
+        toggleIndex++;
+        rightExtender.setPosition(extenderPoses[toggleIndex]);
     }
 }
 

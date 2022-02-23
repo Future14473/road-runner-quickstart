@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.SwitchableLight;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class BoxSensor {
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
+    SwitchableLight light;
 
     public static double emptyDistance = 7.0;
     public static double dumperHue = 180,
@@ -46,4 +48,5 @@ public class BoxSensor {
         if ((hue > duckHueLow) && (hue < duckHueHigh)) return "duck";
         return "none";
     }
+
 }

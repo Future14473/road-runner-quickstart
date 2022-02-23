@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.BoxSensor;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class TeleopWithColorSensor extends LinearOpMode {
+public class AAATeleopWithColorSensor extends LinearOpMode {
 
 
     @Override
@@ -26,6 +27,7 @@ public class TeleopWithColorSensor extends LinearOpMode {
         Duck duck = new Duck(hardwareMap);
         BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        boolean rightBumper1PrevState = false, rightBumperCurrState;
 
         turret.readyToIntake();
 
@@ -87,9 +89,15 @@ public class TeleopWithColorSensor extends LinearOpMode {
                 turret.leftSharedHub();
             }
 
-            if (gamepad1.right_bumper){
-                turret.toggleLinkages();
+            rightBumperCurrState = gamepad1.right_bumper;
+            // if the button wasn't just pressed
+            if (rightBumperCurrState != rightBumper1PrevState) {
+                // and you really did press right bumper
+                if (rightBumperCurrState == true) {
+                    turret.toggleLinkages();
+                }
             }
+            rightBumper1PrevState = rightBumperCurrState;
 
             duck.setStop();
             if (gamepad2.right_bumper){
@@ -105,8 +113,8 @@ public class TeleopWithColorSensor extends LinearOpMode {
 
         telemetry.addData("Dumper isFilled", colorSensor.hasBlock() ? "filled" : "empty");
         telemetry.addData("Dumper Block", colorSensor.getColor());
+        telemetry.addData("Toggle Pos", Linkages.toggleIndex);
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
-        telemetry.addData("Drive Velocity", tankDrive.getVelos());
         telemetry.update();
         }
     }

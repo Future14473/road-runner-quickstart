@@ -26,14 +26,14 @@ public class Turret {
         slides.extendLow();
         timer.safeDelay(300);
         lazySusan.rotateToDegrees(90);
-        linkages.extend();
+        linkages.extendShared();
     }
 
     public void leftSharedHub(){
         slides.extendLow();
         timer.safeDelay(300);
         lazySusan.rotateToDegrees(-90);
-        linkages.extend();
+        linkages.extendShared();
     }
 
     public void right(){

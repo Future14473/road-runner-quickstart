@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -10,19 +8,21 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Linkages {
     Servo leftExtender, rightExtender;
 
-    int toggleIndex = 0;
+    public static int toggleIndex = 0;
 
     public static double incrementAmt = 0.005;
     public static double leftExtenderOutPos = 0.675;
     public static double leftExtenderInPos = 0.975;
 
-    public static double rightExtenderOutPos = 0.18;
-    public static double rightExtenderInPos = 0.75,
+    public static double rightExtenderOutPos = 0.18,
+                            rightExtenderInPos = 0.75,
+
+                            rightExtenderSharedOutPos = 0.3,
                             rightHalfOutPos = 0.465,
-                            rightCloseOutPos = 0.27;
+                            rightCloseOutPos = 0.6;
 
 
-    public static double[] extenderPoses = {rightExtenderOutPos, rightHalfOutPos, rightCloseOutPos};
+    public static double[] sharedHubPoses = {rightExtenderSharedOutPos, rightHalfOutPos, rightCloseOutPos};
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");
@@ -48,13 +48,18 @@ public class Linkages {
         rightExtender.setPosition(rightExtenderInPos);
     }
 
+    public void extendShared(){
+        rightExtender.setPosition(rightExtenderSharedOutPos);
+    }
+
     public void toggle(){
         // see if it is at the out position
-        if (rightExtender.getPosition() - rightExtenderOutPos < 0.05){
+        if (rightExtender.getPosition() - rightExtenderSharedOutPos < 0.05){
             toggleIndex = 0;
         }
         toggleIndex++;
-        rightExtender.setPosition(extenderPoses[toggleIndex]);
+        toggleIndex %= 3;
+        rightExtender.setPosition(sharedHubPoses[toggleIndex]);
     }
 }
 

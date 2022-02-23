@@ -72,9 +72,9 @@ public class SoftwareDebug extends LinearOpMode {
                 intake.drop();
            }
 
-           if (gamepad1.right_stick_button){
-               duck.setBlue(0.66);
-           }
+//           if (gamepad1.right_stick_button){
+//               duck.setBlue(0.66);
+//           }
 
            tankDrive.setPowerDir(gamepad1.right_stick_y, -gamepad1.left_stick_x);
         }

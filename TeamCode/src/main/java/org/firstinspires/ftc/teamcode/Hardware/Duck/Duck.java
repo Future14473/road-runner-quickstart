@@ -25,16 +25,20 @@ public class Duck {
         duckPower = -speed;
     }
 
-    public void setBlue(double speed){
-        duck.setPower(speed);
+    public void setBlue(){
+        duckPower = 1.0;
     }
 
-    public void setRed(double speed){
-        duck.setPower(-speed);
+    public void setRed(){
+        duckPower = -1.0;
     }
 
     public void setStop(){
         duckPower = 0;
+    }
+
+    public void move(){
+        duck.setPower(duckPower);
     }
 
 

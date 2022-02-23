@@ -80,6 +80,19 @@ public class TeleopWithColorSensor extends LinearOpMode {
                 lazySusan.turnLeftIncrement();
             }
 
+            if (gamepad1.b){
+                turret.rightSharedHub();
+            }
+            if (gamepad1.x){
+                turret.leftSharedHub();
+            }
+//            if (gamepad1.left_bumper){
+//                outtake.linkages.decrement();
+//            }
+//            if (gamepad1.right_bumper){
+//                outtake.linkages.increment();
+//            }
+
             duck.setStop();
             if (gamepad2.right_bumper){
                 duck.setBlue();

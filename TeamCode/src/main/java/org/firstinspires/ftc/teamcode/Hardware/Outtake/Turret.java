@@ -22,6 +22,20 @@ public class Turret {
         timer = new Timer(linearOpMode);
     }
 
+    public void rightSharedHub(){
+        slides.extendLow();
+        timer.safeDelay(300);
+        lazySusan.rotateToDegrees(90);
+        linkages.extend();
+    }
+
+    public void leftSharedHub(){
+        slides.extendLow();
+        timer.safeDelay(300);
+        lazySusan.rotateToDegrees(-90);
+        linkages.extend();
+    }
+
     public void right(){
         lazySusan.rotateToDegrees(90);
         linkages.extend();
@@ -44,9 +58,9 @@ public class Turret {
         timer.safeDelay(500);
         linkages.retract();
         dumper.intake();
-        timer.safeDelay(500);
+        timer.safeDelay(1100);
         lazySusan.rotateToDegrees(0);
-        timer.safeDelay(1000);
+        timer.safeDelay(1750);
         slides.retract();
     }
 

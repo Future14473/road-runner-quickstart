@@ -12,9 +12,15 @@ public class Linkages {
 
     public static double incrementAmt = 0.005;
     public static double leftExtenderOutPos = 0.675;
-    public static double rightExtenderOutPos = 0.18;
-    public static double rightExtenderInPos = 0.75;
     public static double leftExtenderInPos = 0.975;
+
+    public static double rightExtenderOutPos = 0.18;
+    public static double rightExtenderInPos = 0.75,
+                            rightHalfOutPos = 0.465,
+                            rightCloseOutPos = 0.27;
+
+
+    public static double[] extenderPoses = {rightExtenderOutPos, rightHalfOutPos, rightCloseOutPos};
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");

@@ -37,7 +37,7 @@ public class TeleopWithColorSensor extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
+                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x * (gamepad2.right_bumper ? 1.0 : 0.85));
             }
         }).start();
 
@@ -45,18 +45,15 @@ public class TeleopWithColorSensor extends LinearOpMode {
 
            if (gamepad1.right_trigger > 0){
                 intake.in();
+                if(turret.hasBlock() && turret.isDown()){
+                    intake.out();
+                    turret.up();
+                }
             } else if (gamepad1.left_trigger > 0){
                 intake.out();
             } else{
                 intake.stop();
             }
-
-           if (gamepad1.left_bumper){
-               turret.closeDumper();
-           }
-           if(gamepad1.right_bumper){
-               turret.readyToIntake();
-           }
 
 
             if (gamepad1.dpad_up) {
@@ -76,10 +73,10 @@ public class TeleopWithColorSensor extends LinearOpMode {
                 turret.back();
             }
 
-            if (gamepad1.right_stick_x > 0){
+            if ((gamepad1.right_stick_x > 0) && !turret.isDown()){
                 lazySusan.turnRightIncrement();
             }
-            if (gamepad1.right_stick_x < 0){
+            if ((gamepad1.right_stick_x < 0) && !turret.isDown()){
                 lazySusan.turnLeftIncrement();
             }
 
@@ -93,8 +90,10 @@ public class TeleopWithColorSensor extends LinearOpMode {
             duck.move();
 
 
-        telemetry.addData("Dumper isFilled", colorSensor.isBlock() ? "filled" : "empty");
-            telemetry.addData("Dumper Block", colorSensor.getColor());
+
+
+        telemetry.addData("Dumper isFilled", colorSensor.hasBlock() ? "filled" : "empty");
+        telemetry.addData("Dumper Block", colorSensor.getColor());
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
         telemetry.addData("Drive Velocity", tankDrive.getVelos());
         telemetry.update();

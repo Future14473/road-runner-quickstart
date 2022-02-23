@@ -37,7 +37,7 @@ public class Teleop extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x);
+                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x * (gamepad2.right_bumper ? 1.0 : 0.85));
             }
         }).start();
 

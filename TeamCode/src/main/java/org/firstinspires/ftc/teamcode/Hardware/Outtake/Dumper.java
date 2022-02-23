@@ -15,23 +15,15 @@ public class Dumper {
         dumper = hardwareMap.get(Servo.class, "dumper");
     }
 
-    public void flipOutDumper() {
+    public void dump() {
         dumper.setPosition(dumperOutPos);
     }
 
-    public void flipHalfDumper() {
+    public void intake() {
         dumper.setPosition(dumperHalfPos);
     }
 
-    public void flipInDumper() {
+    public void close() {
         dumper.setPosition(dumperInPos);
-    }
-
-    public void dumperIn() {
-        flipInDumper();
-    }
-
-    public void dumperOut() {
-        flipOutDumper();
     }
 }

@@ -40,10 +40,10 @@ public class Turret {
     }
 
     public void down(){
-        dumper.dumperOut();
+        dumper.dump();
         timer.safeDelay(500);
         linkages.retract();
-        dumper.flipHalfDumper();
+        dumper.intake();
         timer.safeDelay(500);
         lazySusan.rotateToDegrees(0);
         timer.safeDelay(1000);
@@ -51,18 +51,24 @@ public class Turret {
     }
 
     public void up(){
-        dumper.dumperIn();
+        dumper.close();
         timer.safeDelay(200);
         slides.extendHigh();
     }
 
     public void readyToIntake(){
-        dumper.flipHalfDumper();
+        dumper.intake();
     }
 
     public void closeDumper(){
-        dumper.dumperIn();
+        dumper.close();
     }
+
+    public boolean hasBlock(){return boxSensor.hasBlock();}
+
+    public boolean isDown(){ return slides.LeftSlide.getCurrentPosition() < 200;}
+
+    public void release(){dumper.dump();}
 
 
 

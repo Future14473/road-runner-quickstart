@@ -32,7 +32,7 @@ public class BoxSensor {
         colorSensor.setGain(gain);
     }
 
-    public boolean isBlock(){
+    public boolean hasBlock(){
         return ((DistanceSensor) colorSensor).getDistance(DistanceUnit.CM) < emptyDistance;
     }
 

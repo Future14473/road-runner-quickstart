@@ -78,6 +78,7 @@ public class Turret {
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
+        timer.safeDelay(500);
         slides.retract();
     }
 

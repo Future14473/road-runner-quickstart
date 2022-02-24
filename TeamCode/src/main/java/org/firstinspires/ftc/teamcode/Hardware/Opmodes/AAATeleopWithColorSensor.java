@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
+import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
@@ -25,6 +26,7 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
         Duck duck = new Duck(hardwareMap);
+        Timer timer = new Timer(this);
         BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         boolean rightBumper1PrevState = false, rightBumperCurrState;
@@ -39,7 +41,7 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(gamepad2.left_stick_y, -gamepad2.right_stick_x * (gamepad2.right_bumper ? 1.0 : 0.85));
+                tankDrive.setPowerDir(-gamepad2.left_stick_y, gamepad2.right_stick_x * (gamepad2.right_bumper ? 1.0 : 0.85));
             }
         }).start();
 
@@ -50,6 +52,7 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
                 if(turret.hasBlock() && turret.isDown()){
                     intake.out();
                     turret.up();
+                    timer.safeDelay(600);
                 }
             } else if (gamepad1.left_trigger > 0){
                 intake.out();

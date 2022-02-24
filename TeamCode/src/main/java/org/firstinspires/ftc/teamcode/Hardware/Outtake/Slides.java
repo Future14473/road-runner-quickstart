@@ -34,6 +34,7 @@ public class Slides {
 
     }
 
+    public int getHeight(){return LeftSlide.getCurrentPosition();}
 
     public void extendHigh() {
         LeftSlide.setTargetPosition(highGoal);

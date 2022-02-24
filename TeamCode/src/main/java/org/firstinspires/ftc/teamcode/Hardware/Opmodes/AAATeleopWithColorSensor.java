@@ -92,6 +92,12 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
                 turret.leftSharedHub();
             }
 
+            if (gamepad1.left_bumper){
+                turret.letGoEmergency();
+                intake.out();
+                timer.safeDelay(800);
+            }
+
             rightBumperCurrState = gamepad1.right_bumper;
             // if the button wasn't just pressed
             if (rightBumperCurrState != rightBumper1PrevState) {
@@ -118,6 +124,7 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
         telemetry.addData("Dumper Block", colorSensor.getColor());
         telemetry.addData("Toggle Pos", Linkages.toggleIndex);
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
+        telemetry.addData("Slide Height", turret.getHeight());
         telemetry.update();
         }
     }

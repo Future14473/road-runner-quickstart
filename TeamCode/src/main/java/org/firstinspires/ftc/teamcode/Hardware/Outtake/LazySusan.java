@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 public class LazySusan {
     private VoltageSensor batteryVoltageSensor;
     public static int velo = 2000;
-    public static int incrementAmt = 15;
+    public static int incrementAmt = 7;
 
     DcMotorEx lazySusan;
 
@@ -28,6 +28,9 @@ public class LazySusan {
     public boolean isStillMoving(){
         return lazySusan.isBusy();
     }
+
+    // see if the turret is back to the starting position
+    public boolean isHome() {return Math.abs(getDegrees()) < 3;}
 
     public void setPower(double power){
         lazySusan.setPower(power);

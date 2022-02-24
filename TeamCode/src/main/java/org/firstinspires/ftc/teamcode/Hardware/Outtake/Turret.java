@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
@@ -12,6 +13,7 @@ public class Turret {
     LazySusan lazySusan;
     BoxSensor boxSensor;
     Timer timer;
+    LinearOpMode opMode;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
         lazySusan = new LazySusan(hardwareMap);
@@ -20,6 +22,7 @@ public class Turret {
         dumper = new Dumper(hardwareMap);
         boxSensor = new BoxSensor(hardwareMap);
         timer = new Timer(linearOpMode);
+        this.opMode = linearOpMode;
     }
 
     public void rightSharedHub(){
@@ -39,6 +42,15 @@ public class Turret {
     public void right(){
         lazySusan.rotateToDegrees(135);
         linkages.extend();
+    }
+
+    public void letGoEmergency(){
+        lazySusan.rotateToDegrees(0);
+        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+            // wait
+        }
+        slides.retract();
+        dumper.intake();
     }
 
     public void left(){
@@ -62,7 +74,10 @@ public class Turret {
 
         boolean isAngle180 = (lazySusan.getTargetDegrees() - 180) < 0.05;
         lazySusan.rotateToDegrees(0);
-        timer.safeDelay(isAngle180 ? 950 : 800);
+//        timer.safeDelay(isAngle180 ? 950 : 800);
+        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+            // wait
+        }
         slides.retract();
     }
 
@@ -87,4 +102,6 @@ public class Turret {
     public void release(){dumper.dump();}
 
     public void toggleLinkages(){linkages.toggle();}
+
+    public String getHeight() {return String.valueOf(slides.getHeight());}
 }

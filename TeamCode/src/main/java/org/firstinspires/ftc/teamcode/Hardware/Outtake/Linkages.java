@@ -15,10 +15,10 @@ public class Linkages {
     public static double leftExtenderInPos = 0.975;
 
     public static double rightExtenderOutPos = 0.18,
-                            rightExtenderInPos = 0.75,
+                            rightExtenderInPos = 0.7,
 
-                            rightExtenderSharedOutPos = 0.3,
-                            rightHalfOutPos = 0.465,
+                            rightExtenderSharedOutPos = 0.465,
+                            rightHalfOutPos = 0.5,
                             rightCloseOutPos = 0.6;
 
 

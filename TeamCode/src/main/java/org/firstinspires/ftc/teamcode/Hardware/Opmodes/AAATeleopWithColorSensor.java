@@ -50,15 +50,15 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
            if (gamepad1.right_trigger > 0){
                 intake.in();
                 if(turret.hasBlock() && turret.isDown()){
-                    intake.out();
                     turret.up();
-                    timer.safeDelay(600);
+                    intake.out();
+                    timer.safeDelay(900);
                 }
             } else if (gamepad1.left_trigger > 0){
                 intake.out();
             } else{
                 intake.stop();
-            }
+
 
 
             if (gamepad1.dpad_up) {
@@ -120,5 +120,6 @@ public class AAATeleopWithColorSensor extends LinearOpMode {
         telemetry.addData("Turret Angle", lazySusan.getDegrees());
         telemetry.update();
         }
+    }
     }
 }

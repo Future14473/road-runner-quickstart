@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Dumper {
     Servo dumper;
 
-    public static double dumperOutPos = 0.6;
-    public static double dumperHalfPos = 0.45;
+    public static double dumperOutPos = 0.7;
+    public static double dumperIntakePos = 0.56;
     public static double dumperInPos = 0.2;
     public Dumper(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");
@@ -20,7 +20,7 @@ public class Dumper {
     }
 
     public void intake() {
-        dumper.setPosition(dumperHalfPos);
+        dumper.setPosition(dumperIntakePos);
     }
 
     public void close() {

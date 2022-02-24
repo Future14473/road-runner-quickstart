@@ -37,12 +37,12 @@ public class Turret {
     }
 
     public void right(){
-        lazySusan.rotateToDegrees(90);
+        lazySusan.rotateToDegrees(135);
         linkages.extend();
     }
 
     public void left(){
-        lazySusan.rotateToDegrees(-90);
+        lazySusan.rotateToDegrees(-135);
         linkages.extend();
     }
 
@@ -59,8 +59,10 @@ public class Turret {
         linkages.retract();
         dumper.intake();
         timer.safeDelay(1100);
+
+        boolean isAngle180 = (lazySusan.getTargetDegrees() - 180) < 0.05;
         lazySusan.rotateToDegrees(0);
-        timer.safeDelay(1750);
+        timer.safeDelay(isAngle180 ? 950 : 800);
         slides.retract();
     }
 

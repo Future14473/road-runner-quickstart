@@ -69,7 +69,7 @@ public class CycleTest extends LinearOpMode {
 
 
         waitForStart();
-        for (int i = 0; i < 100; i++) {
+        while(opModeIsActive()) {
             tankDrive.followTrajectory(trajectoryforward);
             tankDrive.followTrajectory(trajectoryspline);
             tankDrive.followTrajectory(trajectorybackward);

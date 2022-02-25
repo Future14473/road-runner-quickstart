@@ -25,6 +25,54 @@ public class Turret {
         this.opMode = linearOpMode;
     }
 
+    public void preloadUp(){
+        slides.extendHigh();
+        timer.safeDelay(500);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        linkages.extend();
+        timer.safeDelay(500);
+    }
+
+    public void preloadDown(){
+        // down
+        dumper.dump();
+        timer.safeDelay(500);
+        linkages.retract();
+        dumper.intake();
+        timer.safeDelay(1100);
+
+        lazySusan.rotateToDegrees(0);
+        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+            // wait
+        }
+        slides.retract();
+    }
+
+
+    public void duckScorePrep(){
+        dumper.close();
+        slides.extendHigh();
+        timer.safeDelay(500);
+        lazySusan.rotateToDegrees(45);
+        timer.safeDelay(500);
+        linkages.extend();
+        timer.safeDelay(500);
+
+        // down
+//        down();
+//        dumper.dump();
+//        timer.safeDelay(500);
+//        linkages.retract();
+//        dumper.intake();
+//        timer.safeDelay(1100);
+//
+//        lazySusan.rotateToDegrees(0);
+//        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+//            // wait
+//        }
+//        slides.retract();
+    }
+
     public void rightSharedHub(){
         slides.extendLow();
         timer.safeDelay(300);

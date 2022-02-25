@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class AAATeleopWithColorSensor extends LinearOpMode {
+public class BBBTeleop extends LinearOpMode {
 
 
     @Override

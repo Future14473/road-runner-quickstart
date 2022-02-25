@@ -22,6 +22,7 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.drive.DriveSignal;
 import com.acmerobotics.roadrunner.drive.TankDrive;
+import com.acmerobotics.roadrunner.followers.RamseteFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.profile.MotionProfile;
@@ -47,6 +48,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.drive.roadrunnerext.ImprovedRamsete;
+import org.firstinspires.ftc.teamcode.drive.roadrunnerext.RamseteConstants;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
@@ -118,7 +120,9 @@ public class SampleTankDrive extends TankDrive {
                 new TankVelocityConstraint(MAX_VEL, TRACK_WIDTH)
         ));
         accelConstraint = new ProfileAccelerationConstraint(MAX_ACCEL);
+
         follower = new ImprovedRamsete();
+//        follower = new RamseteFollower(RamseteConstants.b, RamseteConstants.zeta);
 
         poseHistory = new ArrayList<>();
 
@@ -204,6 +208,12 @@ public class SampleTankDrive extends TankDrive {
     public void turn(double angle) {
         turnAsync(angle);
         waitForIdle();
+    }
+
+    // turn to an angle in radins, todo might need to deal with wrapping cases
+    public void turnTo(double angle){
+        Pose2d currentPose = getPoseEstimate();
+        turn(angle - currentPose.getHeading());
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {

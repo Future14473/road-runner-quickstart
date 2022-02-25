@@ -36,6 +36,8 @@ public class Slides {
 
     public int getHeight(){return LeftSlide.getCurrentPosition();}
 
+    public boolean isBusy(){return LeftSlide.isBusy();}
+
     public void extendHigh() {
         LeftSlide.setTargetPosition(highGoal);
         RightSlide.setTargetPosition(highGoal);
@@ -50,6 +52,8 @@ public class Slides {
         RightSlide.setVelocity(velocity);
     }
 
+
+    // todo make the shared hub less dump and lower
     public void extendLow() {
         LeftSlide.setTargetPosition(lowGoal);
         RightSlide.setTargetPosition(lowGoal);

@@ -20,7 +20,7 @@ public class Linkages {
                             rightExtenderSharedOutPos = 0.465,
                             rightHalfOutPos = 0.5,
                             rightCloseOutPos = 0.6,
-                            rightLowAuto = 0.6,
+                            rightLowAuto = 0.43,
                             leftLowAuto = 0.3;
 
 

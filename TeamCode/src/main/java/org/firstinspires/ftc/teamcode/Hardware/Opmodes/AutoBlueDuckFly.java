@@ -66,13 +66,14 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
-        Trajectory preloadHighMid, duckPath, alignDuck, scoreDuck, park, preloadLow;
-        preloadHighMid = drive.trajectoryBuilder(start)
+        Trajectory preload, duckPath, alignDuck, scoreDuck, park;
+        preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
-                .addTemporalMarker(0, () -> {
-                  turret.preloadUpLow();
-                })
+//                .addTemporalMarker(0, () -> {
+//                  turret.preloadUpLow();
+//                })
                 .build();
+
 //        preloadLow = drive.trajectoryBuilder(start)
 //                .splineTo(new Vector2d())
 
@@ -83,19 +84,20 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Get CV Position
 //        location = cv.getLocation();
+        timer.safeDelay(5000);
         location = cv.location;
-        if (location == AprilBoundBoxPipeline.Location.LEFT){
+        if (location == AprilBoundBoxPipeline.Location.LEFT) {
             telemetry.addData("Position", "Lefts");
         }
-        if (location == AprilBoundBoxPipeline.Location.MIDDLE){
+        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
             telemetry.addData("Position", "Middle");
         }
-        if (location == AprilBoundBoxPipeline.Location.RIGHT){
+        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
             telemetry.addData("Position", "Right");
-        } if (location == null){
+        }
+        if (location == null) {
             telemetry.addData("Position", "Null");
         }
-
         telemetry.addData("In ", "Init");
         telemetry.update();
 
@@ -103,13 +105,28 @@ public class AutoBlueDuckFly extends LinearOpMode {
         camera.closeCameraDevice();
 
         // Preload
-        drive.followTrajectory(preloadHighMid);
+        // decide the preload up pos
+        if (location == AprilBoundBoxPipeline.Location.LEFT) {
+            turret.preloadUpLow();
+        }
+        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
+            turret.preloadUpMid();
+        }
+        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
+            turret.preloadUp();
+        }
+        if (location == null){
+            turret.preloadUp();
+        }
+
+        drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
-        turret.preloadDownLow();
+        turret.down();
 
         duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();
+
 
         // Duck Drop
         drive.followTrajectory(duckPath);

@@ -73,7 +73,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
     public static int heightRect1 = 650,  heightRect2 = 425;
 
 
-    public static int leftPosX = -3, middlePosX = 12, rightPosX = 28;
+    public static int leftPosX = 12, middlePosX = 28, rightPosX = 28;
 
 
     Scalar notDetectedColor = new Scalar(255, 0, 0);
@@ -110,6 +110,8 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
         constructMatrix();
     }
 
+
+    // change this to only detect for two positions
     public Location getLocation(){
         if (location == AprilBoundBoxPipeline.Location.LEFT){
             telemetry.addData("Position", "Lefts");
@@ -175,26 +177,31 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
                 new Point(middleRectX1, heightRect1),
                 new Point(middleRectX2, heightRect2));
 
-        for(AprilTagDetection detection : detections)
-        {
-            Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
+        if (detections.isEmpty()){
+            location = Location.RIGHT;
 
-            if (detection.pose.x <= leftPosX){
-                location = Location.LEFT;
-            } else if (detection.pose.x <= middlePosX){
-                location = Location.MIDDLE;
-            } else if (detection.pose.x <= rightPosX){
-                location = Location.RIGHT;
+        } else {
+            for (AprilTagDetection detection : detections) {
+                Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
+
+                if (detection.pose.x <= leftPosX) {
+                    location = Location.LEFT;
+                } else if (detection.pose.x <= middlePosX) {
+                    location = Location.MIDDLE;
+                }
+
+//            else if (detection.pose.x <= rightPosX){
+//                location = Location.RIGHT;
+//            }
+
+                Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT ? detectedColor : notDetectedColor, thickness);
+                Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE ? detectedColor : notDetectedColor, thickness);
+                Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT ? detectedColor : notDetectedColor, thickness);
+
+                drawAxisMarker(input, tagsizeY / 2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
+                draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
             }
-
-            Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT? detectedColor:notDetectedColor, thickness);
-            Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor, thickness);
-            Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor, thickness);
-
-            drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
-            draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
         }
-
         return input;
     }
 

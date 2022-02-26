@@ -25,7 +25,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
                             startX = -36-5.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -60, duckY = 66.5, duckH = 180,
+                            duckX = -58, duckY = 66.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
@@ -47,6 +47,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         AprilBoundBoxPipeline.Location location;
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         FtcDashboard.getInstance().startCameraStream(camera, 0);
+        telemetry.setMsTransmissionInterval(50);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -62,8 +63,6 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
             }
         });
-        location = cv.getLocation();
-
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
@@ -71,7 +70,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         preloadHighMid = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .addTemporalMarker(0, () -> {
-                  turret.preloadUpMid();
+                  turret.preloadUpLow();
                 })
                 .build();
 //        preloadLow = drive.trajectoryBuilder(start)
@@ -82,13 +81,31 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.closeDumper();
         intake.drop();
 
+        // Get CV Position
+//        location = cv.getLocation();
+        location = cv.location;
+        if (location == AprilBoundBoxPipeline.Location.LEFT){
+            telemetry.addData("Position", "Lefts");
+        }
+        if (location == AprilBoundBoxPipeline.Location.MIDDLE){
+            telemetry.addData("Position", "Middle");
+        }
+        if (location == AprilBoundBoxPipeline.Location.RIGHT){
+            telemetry.addData("Position", "Right");
+        } if (location == null){
+            telemetry.addData("Position", "Null");
+        }
+
+        telemetry.addData("In ", "Init");
+        telemetry.update();
+
         waitForStart();
         camera.closeCameraDevice();
 
         // Preload
         drive.followTrajectory(preloadHighMid);
         drive.turnTo(Math.toRadians(preloadH));
-        turret.preloadDown();
+        turret.preloadDownLow();
 
         duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))

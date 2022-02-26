@@ -44,9 +44,27 @@ public class Turret {
         slides.extendLow();
         timer.safeDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
-        linkages.extend();
+        linkages.extendLowAuto();
         timer.safeDelay(500);
     }
+
+    public void preloadDownLow(){
+        // down
+        dumper.dump();
+        timer.safeDelay(500);
+        slides.extendMid();
+        linkages.retract();
+        dumper.intake();
+        timer.safeDelay(1100);
+
+        lazySusan.rotateToDegrees(0);
+        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+            // wait
+        }
+        slides.retract();
+    }
+
+
     public void preloadDown(){
         // down
         dumper.dump();

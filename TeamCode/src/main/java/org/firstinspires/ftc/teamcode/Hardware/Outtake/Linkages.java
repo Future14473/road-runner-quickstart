@@ -19,7 +19,9 @@ public class Linkages {
 
                             rightExtenderSharedOutPos = 0.465,
                             rightHalfOutPos = 0.5,
-                            rightCloseOutPos = 0.6;
+                            rightCloseOutPos = 0.6,
+                            rightLowAuto = 0.6,
+                            leftLowAuto = 0.3;
 
 
     public static double[] sharedHubPoses = {rightExtenderSharedOutPos, rightHalfOutPos, rightCloseOutPos};
@@ -43,6 +45,12 @@ public class Linkages {
         leftExtender.setPosition(leftExtenderOutPos);
         rightExtender.setPosition(rightExtenderOutPos);
     }
+
+    public void extendLowAuto(){
+        leftExtender.setPosition(leftLowAuto);
+        rightExtender.setPosition(rightLowAuto);
+    }
+
     public void retract(){
         leftExtender.setPosition(leftExtenderInPos);
         rightExtender.setPosition(rightExtenderInPos);

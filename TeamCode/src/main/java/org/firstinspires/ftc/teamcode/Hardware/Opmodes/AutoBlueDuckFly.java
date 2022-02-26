@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Autonomous
 @Config
-public class AutoBlueDuck extends LinearOpMode {
+public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
                             duckX = -60, duckY = 66.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 56;
@@ -38,19 +38,6 @@ public class AutoBlueDuck extends LinearOpMode {
                   turret.preloadUp();
                 })
                 .build();
-        duckPath = drive.trajectoryBuilder(preload.end(), true)
-                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
-                .build();
-
-        scoreDuck = drive.trajectoryBuilder(duckPath.end())
-                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
-//                .addTemporalMarker(2, () -> {
-//
-//                })
-                .build();
-        park = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
-                .build();
 
         drive.setPoseEstimate(start); //todo read into Ramsette heading
 
@@ -63,11 +50,15 @@ public class AutoBlueDuck extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         turret.preloadDown();
 
+        duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
+                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
+                .build();
+
         // Duck Drop
         drive.followTrajectory(duckPath);
-        drive.turn(Math.toRadians(20));
+        drive.turn(Math.toRadians(10));
         alignDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .back(0.5)
+                .back(1.5)
                 .build();
         drive.followTrajectory(alignDuck);
 //        drive.turnTo(0);
@@ -83,15 +74,23 @@ public class AutoBlueDuck extends LinearOpMode {
         intake.stop();
         duck.setStop(); duck.move();
 
+        scoreDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
+
+                .build();
+
         // Score Duck
         drive.followTrajectory(scoreDuck);
-        drive.turnTo(0);
+        drive.turn(Math.toRadians(20));
+        drive.turnTo(Math.toRadians(0));
         turret.duckScorePrep();
-//        drive.turnTo(0);
         turret.down();
 
+        park = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
+                .build();
+
         //park
-        drive.turnTo(Math.toRadians(30));
         drive.followTrajectory(park);
     }
 }

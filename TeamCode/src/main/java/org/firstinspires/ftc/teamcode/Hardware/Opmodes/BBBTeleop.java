@@ -50,9 +50,10 @@ public class BBBTeleop extends LinearOpMode {
            if (gamepad1.right_trigger > 0){
                 intake.in();
                 if(turret.hasBlock() && turret.isDown()){
-                    turret.up();
+                    timer.safeDelay(200);
                     intake.out();
-                    timer.safeDelay(900);
+                    timer.safeDelay(200);
+                    turret.up();
                 }
             } else if (gamepad1.left_trigger > 0){
                 intake.out();

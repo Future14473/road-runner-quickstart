@@ -13,7 +13,7 @@ public class Slides {
 
     public static int velocity = 5000;
 
-    public static int retractInPos = 0;
+    public static int retractInPos = 15;
     public static int highGoal = 737;
     public static int midGoal = 336;
     public static int lowGoal = 300;

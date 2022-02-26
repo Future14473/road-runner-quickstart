@@ -210,10 +210,12 @@ public class SampleTankDrive extends TankDrive {
         waitForIdle();
     }
 
+    public double turnAngle;
     // turn to an angle in radins, todo might need to deal with wrapping cases
     public void turnTo(double angle){
         Pose2d currentPose = getPoseEstimate();
-        turn(angle - currentPose.getHeading());
+        turnAngle = angle - currentPose.getHeading();
+        turn(turnAngle < -Math.toRadians(180) ? turnAngle + Math.toRadians(360) : turnAngle);
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {

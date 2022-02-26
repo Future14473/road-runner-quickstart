@@ -24,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Config
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
+                            startX = -36-5.5, startY = 70, startH = Math.toRadians(270),
                             duckX = -60, duckY = 66.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
@@ -65,14 +66,16 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
 
         // Trajectory Setup
-        Pose2d start = new Pose2d(-36,70, Math.toRadians(270));
-        Trajectory preload, duckPath, alignDuck, scoreDuck, park;
-        preload = drive.trajectoryBuilder(start)
+        Pose2d start = new Pose2d(startX,startY,startH);
+        Trajectory preloadHighMid, duckPath, alignDuck, scoreDuck, park, preloadLow;
+        preloadHighMid = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .addTemporalMarker(0, () -> {
-                  turret.preloadUpLow();
+                  turret.preloadUpMid();
                 })
                 .build();
+//        preloadLow = drive.trajectoryBuilder(start)
+//                .splineTo(new Vector2d())
 
         // Position Setup
         drive.setPoseEstimate(start);
@@ -83,7 +86,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         camera.closeCameraDevice();
 
         // Preload
-        drive.followTrajectory(preload);
+        drive.followTrajectory(preloadHighMid);
         drive.turnTo(Math.toRadians(preloadH));
         turret.preloadDown();
 
@@ -105,7 +108,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnTo(Math.toRadians(130));
+        drive.turnTo(Math.toRadians(150));
         drive.turnTo(Math.toRadians(0));
         turret.closeDumper();
         intake.stop();

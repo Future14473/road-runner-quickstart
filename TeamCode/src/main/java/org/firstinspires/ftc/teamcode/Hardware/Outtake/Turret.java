@@ -56,7 +56,7 @@ public class Turret {
         lazySusan.rotateToDegrees(45);
         timer.safeDelay(500);
         linkages.extend();
-        timer.safeDelay(500);
+        timer.safeDelay(700);
 
         // down
 //        down();

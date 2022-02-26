@@ -17,8 +17,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 @Config
 public class AutoBlueDuck extends LinearOpMode {
     public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
-                            duckX = -58, duckY = 67, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0;
+                            duckX = -60, duckY = 66.5, duckH = 180,
+                            scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 42;
     public static long duckWait = 3000;
 
 
@@ -31,20 +31,27 @@ public class AutoBlueDuck extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
 
         Pose2d start = new Pose2d(-36,70, Math.toRadians(270));
-        Trajectory preload = drive.trajectoryBuilder(start)
+        Trajectory preload, duckPath, alignDuck, scoreDuck, park;
+        preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .addTemporalMarker(0, () -> {
                   turret.preloadUp();
                 })
                 .build();
-        Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
+        duckPath = drive.trajectoryBuilder(preload.end(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();
-        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
+        alignDuck = drive.trajectoryBuilder(duckPath.end())
+                .back(0.5)
+                .build();
+        scoreDuck = drive.trajectoryBuilder(duckPath.end())
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
 //                .addTemporalMarker(2, () -> {
 //
 //                })
+                .build();
+        park = drive.trajectoryBuilder(scoreDuck.end())
+                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
                 .build();
 
         drive.setPoseEstimate(start); //todo read into Ramsette heading
@@ -60,6 +67,9 @@ public class AutoBlueDuck extends LinearOpMode {
 
         // Duck Drop
         drive.followTrajectory(duckPath);
+        drive.turn(Math.toRadians(10));
+        drive.
+//        drive.turnTo(0);
         duck.setBlue(); duck.move();
         timer.safeDelay(duckWait);
 
@@ -77,9 +87,7 @@ public class AutoBlueDuck extends LinearOpMode {
 //        drive.turnTo(0);
         turret.down();
 
-//        while (opModeIsActive()){
-//            telemetry.addData("Done", "with auto");
-//            telemetry.update();
-//        }
+        //park
+        drive.followTrajectory(park);
     }
 }

@@ -1,17 +1,24 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 @Config
@@ -24,12 +31,43 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Hardware Setup
         SampleTankDrive drive = new SampleTankDrive(hardwareMap);
         Turret turret = new Turret(hardwareMap, this);
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap);
 
+        // Computer Vision Setup
+        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        camera.setPipeline(cv);
+        AprilBoundBoxPipeline.Location location;
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+//                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode)
+            {
+
+            }
+        });
+        while (!gamepad1.x){
+            telemetry.addData("Press X once CV ", "Reads correctly");
+            location = cv.getLocation();
+        }
+        camera.closeCameraDevice();
+
+        // Trajectory Setup
         Pose2d start = new Pose2d(-36,70, Math.toRadians(270));
         Trajectory preload, duckPath, alignDuck, scoreDuck, park;
         preload = drive.trajectoryBuilder(start)
@@ -39,10 +77,11 @@ public class AutoBlueDuckFly extends LinearOpMode {
                 })
                 .build();
 
-        drive.setPoseEstimate(start); //todo read into Ramsette heading
-
+        // Position Setup
+        drive.setPoseEstimate(start);
         turret.closeDumper();
         intake.drop();
+
         waitForStart();
 
         // Preload
@@ -76,7 +115,6 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         scoreDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
-
                 .build();
 
         // Score Duck

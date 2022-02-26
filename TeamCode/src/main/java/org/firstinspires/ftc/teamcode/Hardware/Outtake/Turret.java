@@ -35,6 +35,7 @@ public class Turret {
     public void preloadUpMid(){
         slides.extendMid();
         timer.safeDelay(500);
+        lazySusan.rotateToDegrees(0);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         linkages.extend();
         timer.safeDelay(500);

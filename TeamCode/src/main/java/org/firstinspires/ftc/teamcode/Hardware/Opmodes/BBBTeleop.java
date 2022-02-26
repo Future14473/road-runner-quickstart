@@ -129,6 +129,5 @@ public class BBBTeleop extends LinearOpMode {
         telemetry.update();
         }
     }
-        intake.up();
     }
 }

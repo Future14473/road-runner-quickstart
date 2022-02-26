@@ -11,16 +11,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
     DcMotor intake;
     Servo dropDown;
-    public static double dropPos = 1.0, upPos = 0.0;
+    public static double dropPos = 0.35, upPos = 0.0;
 
     public Intake(HardwareMap hardwareMap) {
         intake = hardwareMap.get(DcMotor.class, "intake");
         dropDown = hardwareMap.get(Servo.class, "dropDown");
-
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        dropDown.setDirection(Servo.Direction.REVERSE);
-
-        drop();
     }
     public void in(){
         intake.setPower(1.0);

@@ -61,11 +61,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
             }
         });
-        while (!gamepad1.x){
-            telemetry.addData("Press X once CV ", "Reads correctly");
-            location = cv.getLocation();
-        }
-        camera.closeCameraDevice();
+        location = cv.getLocation();
+
 
         // Trajectory Setup
         Pose2d start = new Pose2d(-36,70, Math.toRadians(270));
@@ -83,6 +80,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         intake.drop();
 
         waitForStart();
+        camera.closeCameraDevice();
 
         // Preload
         drive.followTrajectory(preload);

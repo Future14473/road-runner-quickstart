@@ -32,7 +32,20 @@ public class Turret {
         linkages.extend();
         timer.safeDelay(500);
     }
-
+    public void preloadUpMid(){
+        slides.extendMid();
+        timer.safeDelay(500);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        linkages.extend();
+        timer.safeDelay(500);
+    }
+    public void preloadUpLow(){
+        slides.extendLow();
+        timer.safeDelay(500);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        linkages.extend();
+        timer.safeDelay(500);
+    }
     public void preloadDown(){
         // down
         dumper.dump();

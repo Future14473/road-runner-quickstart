@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
                             duckX = -60, duckY = 66.5, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 56;
+                            scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
 
@@ -35,7 +35,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .addTemporalMarker(0, () -> {
-                  turret.preloadUp();
+                  turret.preloadUpLow();
                 })
                 .build();
 
@@ -68,7 +68,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnTo(Math.toRadians(115));
+        drive.turnTo(Math.toRadians(130));
         drive.turnTo(Math.toRadians(0));
         turret.closeDumper();
         intake.stop();

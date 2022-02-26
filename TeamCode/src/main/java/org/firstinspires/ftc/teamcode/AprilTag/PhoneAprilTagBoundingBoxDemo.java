@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.AprilTag;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -35,6 +36,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 
 @TeleOp
+@Disabled
 public class PhoneAprilTagBoundingBoxDemo extends LinearOpMode
 {
     OpenCvWebcam webcam;

@@ -47,6 +47,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.drive.roadrunnerext.ImprovedRamsete;
 import org.firstinspires.ftc.teamcode.drive.roadrunnerext.RamseteConstants;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;

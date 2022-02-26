@@ -68,9 +68,9 @@ public class AutoBlueDuck extends LinearOpMode {
         // Duck Drop
         drive.followTrajectory(duckPath);
         drive.turn(Math.toRadians(10));
-        drive.
 //        drive.turnTo(0);
-        duck.setBlue(); duck.move();
+        duck.setBlue();
+        duck.move();
         timer.safeDelay(duckWait);
 
         //Pickup Duck

@@ -88,7 +88,7 @@ public class AutoBlueDuck extends LinearOpMode {
         // Score Duck
         drive.followTrajectory(scoreDuck);
         drive.turnTo(0);
-        turret.duckScorePrep();
+        turret.duckScorePrepBlue();
 //        drive.turnTo(0);
         turret.down();
 

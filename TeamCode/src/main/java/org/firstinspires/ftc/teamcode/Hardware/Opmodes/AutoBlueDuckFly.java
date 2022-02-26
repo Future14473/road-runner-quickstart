@@ -156,7 +156,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.followTrajectory(scoreDuck);
         drive.turn(Math.toRadians(20));
         drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrep();
+        turret.duckScorePrepBlue();
         turret.down();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())

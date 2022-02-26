@@ -80,8 +80,31 @@ public class Turret {
         slides.retract();
     }
 
+    public void duckScorePrepRed(){
+        dumper.close();
+        slides.extendHigh();
+        timer.safeDelay(500);
+        lazySusan.rotateToDegrees(-45);
+        timer.safeDelay(500);
+        linkages.extend();
+        timer.safeDelay(800);
 
-    public void duckScorePrep(){
+        // down
+//        down();
+//        dumper.dump();
+//        timer.safeDelay(500);
+//        linkages.retract();
+//        dumper.intake();
+//        timer.safeDelay(1100);
+//
+//        lazySusan.rotateToDegrees(0);
+//        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+//            // wait
+//        }
+//        slides.retract();
+    }
+
+    public void duckScorePrepBlue(){
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);

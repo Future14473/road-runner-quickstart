@@ -110,6 +110,20 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
         constructMatrix();
     }
 
+    public Location getLocation(){
+        if (location == AprilBoundBoxPipeline.Location.LEFT){
+            telemetry.addData("Position", "Lefts");
+        }
+        if (location == AprilBoundBoxPipeline.Location.MIDDLE){
+            telemetry.addData("Position", "Middle");
+        }
+        if (location == AprilBoundBoxPipeline.Location.RIGHT){
+            telemetry.addData("Position", "Right");
+        }
+        telemetry.update();
+        return location;
+    }
+
     @Override
     public void init(Mat frame)
     {

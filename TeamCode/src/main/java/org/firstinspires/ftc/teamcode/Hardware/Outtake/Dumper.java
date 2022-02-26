@@ -9,7 +9,7 @@ public class Dumper {
     Servo dumper;
 
     public static double dumperOutPos = 0.7;
-    public static double dumperIntakePos = 0.5;
+    public static double dumperIntakePos = 0.46;
     public static double dumperInPos = 0.2;
     public Dumper(HardwareMap hardwareMap) {
         dumper = hardwareMap.get(Servo.class, "dumper");

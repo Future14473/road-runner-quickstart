@@ -23,12 +23,13 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous
 @Config
 public class AutoBlueDuckFly extends LinearOpMode {
-    public static double preloadX = -20, preloadY = 54.5, preloadH = 290,
-                            startX = -36-5.5, startY = 70, startH = Math.toRadians(270),
+    // pre x: -20   , pre y: 54.5, pre H: 290
+    // start x -36-5.5  start y: 70 startH: 270
+    public static double preloadX = -28, preloadY = 50, preloadH = 0,
+                            startX = -35-5.5, startY = 70, startH = Math.toRadians(270),
                             duckX = -58, duckY = 66.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -119,10 +120,12 @@ public class AutoBlueDuckFly extends LinearOpMode {
             turret.preloadUp();
         }
 
+        // drive from start to preload
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
         turret.down();
 
+        // build the duck path
         duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();

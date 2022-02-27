@@ -25,6 +25,28 @@ public class Turret {
         this.opMode = linearOpMode;
     }
 
+    public double calcualteDirection(double Xcur, double Ycur, double Xtar, double Ytar){
+        double Ang = Math.atan((Ytar-Ycur)/(Xtar-Xcur)); // ang finds the angle between the raw X Y target and current (in radians)
+
+        // if loop handles the wrapping cases (i didnt use a case statement deal with it)
+        if (Ang > 0 && Ytar>Ycur){
+            Ang = Ang;
+        } else if (Ang < 0 && Ytar<Ycur){
+            Ang = Math.PI - Ang;
+        } else if (Ang > 0 && Ytar>Ycur){
+            Ang = Math.PI + Ang;
+        } else if (Ang < 0 && Ytar>Ycur){
+            Ang = 2*Math.PI - Ang;
+        }
+        // return the angle should be between 0 -2 PI according to the meep meep field view headings
+        return Ang;
+    }
+
+    public void pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
+        double Angle = calcualteDirection(Xcur, Ycur, Xtar, Ytar); // calculates the angle from current to target
+        lazySusan.rotateToDegrees(360-Math.toDegrees(Angle-Hcur)); // should point the lazy susan towards xy coordinate
+    }
+
     public void preloadUp(){
         slides.extendHigh();
         timer.safeDelay(500);

@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 @Config
 public class LazySusan {
     private VoltageSensor batteryVoltageSensor;
@@ -14,6 +16,7 @@ public class LazySusan {
     public static int incrementAmt = 7;
 
     DcMotorEx lazySusan;
+    Telemetry telemetry;
 
     public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
@@ -21,6 +24,15 @@ public class LazySusan {
 //        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
+
+    public LazySusan(HardwareMap hardwareMap, Telemetry telemetry){
+        lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
+        lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
+        this.telemetry = telemetry;
+    }
+
     public Integer getVelo(){
        return (int) lazySusan.getVelocity();
     }
@@ -48,18 +60,42 @@ public class LazySusan {
     }
 
     // todo wrapping issue
-    public void rotateToDegreesRobotCentric(double degrees){
-        lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
-        lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lazySusan.setVelocity(degrees - getDegrees() > 180 ? -velo : velo);
-    }
+//    public void rotateToDegreesRobotCentric(double degrees){
+//        if ((degrees - getDegrees() > 180) || (degrees - getDegrees() < 0)) {
+//            lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees-360));
+//        } else {
+//            lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
+//        }
+////        lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
+//
+//        lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        telemetry.addData("current", getDegrees());
+//        telemetry.addData("target", degrees);
+//        telemetry.addData("Velo before check degrees - current < 180", velo);
+////        if (degrees - getDegrees() > 0){
+////            velo = -velo;
+////        }
+//        telemetry.addData("Corrected Velo" , velo);
+//
+//        lazySusan.setVelocity(velo);
+//
+//    }
 
-    public void rotateToDegreesFieldCentric(double degrees){
+    public void rotateToAbsolutePos(double degrees){
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lazySusan.setVelocity(velo);
     }
 
+    public void rotateToDegreesRobotCentric(double degrees){
+        double option1 = degrees;
+        double option2 = degrees - 360;
+        if(Math.abs(getDegrees() - option1) > Math.abs(getDegrees() - option2)){
+            rotateToAbsolutePos(option2);
+        } else {
+            rotateToAbsolutePos(option1);
+        }
+    }
 
     public void turnRightIncrement(){
         rotateToDegreesRobotCentric(this.getDegrees() + incrementAmt);
@@ -73,6 +109,7 @@ public class LazySusan {
         double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
         pos %= 360;
 //        return pos + ((pos)<0 ? 360 : 0);
+
         return pos < 0 ? pos + 360 : pos;
     }
 

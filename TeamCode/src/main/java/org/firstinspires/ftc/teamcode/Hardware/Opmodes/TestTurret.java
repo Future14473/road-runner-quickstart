@@ -16,7 +16,7 @@ public class TestTurret extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Turret turret = new Turret(hardwareMap, this);
-        LazySusan lazySusan = new LazySusan(hardwareMap);
+        LazySusan lazySusan = new LazySusan(hardwareMap, telemetry);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -24,7 +24,8 @@ public class TestTurret extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()){
-            lazySusan.rotateToDegreesRobotCentric(degrees);
+            lazySusan.rotateToAbsolutePos(degrees);
+            telemetry.addData("Current Degrees", lazySusan.getDegrees());
             telemetry.addData("Current Degrees", lazySusan.getDegrees());
             telemetry.update();
         }

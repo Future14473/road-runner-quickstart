@@ -47,17 +47,25 @@ public class LazySusan {
         lazySusan.setPIDFCoefficients(runMode, compensatedCoefficients);
     }
 
-    public void rotateToDegrees(double degrees){
+    // todo wrapping issue
+    public void rotateToDegreesRobotCentric(double degrees){
+        lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
+        lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lazySusan.setVelocity(degrees - getDegrees() > 180 ? -velo : velo);
+    }
+
+    public void rotateToDegreesFieldCentric(double degrees){
         lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(degrees));
         lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lazySusan.setVelocity(velo);
     }
 
+
     public void turnRightIncrement(){
-        rotateToDegrees(this.getDegrees() + incrementAmt);
+        rotateToDegreesRobotCentric(this.getDegrees() + incrementAmt);
     }
     public void turnLeftIncrement(){
-        rotateToDegrees(this.getDegrees() - incrementAmt);
+        rotateToDegreesRobotCentric(this.getDegrees() - incrementAmt);
     }
 
     public double getDegrees(){
@@ -65,7 +73,7 @@ public class LazySusan {
         double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
         pos %= 360;
 //        return pos + ((pos)<0 ? 360 : 0);
-        return pos;
+        return pos < 0 ? pos + 360 : pos;
     }
 
     public double getTargetDegrees(){

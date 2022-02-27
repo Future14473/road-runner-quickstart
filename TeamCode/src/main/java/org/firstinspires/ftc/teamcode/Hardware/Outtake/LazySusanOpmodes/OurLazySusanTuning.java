@@ -26,7 +26,7 @@ public class OurLazySusanTuning extends LinearOpMode {
 
         while (opModeIsActive()){
             // turn positive
-            lazySusan.rotateToDegrees(90);
+            lazySusan.rotateToDegreesRobotCentric(90);
             while(lazySusan.isStillMoving()){
                 telemetry.addData("CurrentPosition", lazySusan.getDegrees());
                 telemetry.addData("TargetPosition", 90);
@@ -37,7 +37,7 @@ public class OurLazySusanTuning extends LinearOpMode {
             timer.safeDelay(2000);
 
             // turn 0
-            lazySusan.rotateToDegrees(0);
+            lazySusan.rotateToDegreesRobotCentric(0);
             while(lazySusan.isStillMoving()){
                 telemetry.addData("CurrentPosition", lazySusan.getDegrees());
                 telemetry.addData("TargetPosition", 0);

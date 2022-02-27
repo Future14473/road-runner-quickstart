@@ -114,7 +114,7 @@ public class AAAVelocityFeedforwardTuner extends LinearOpMode {
 //                    double targetPower = Kinematics.calculateMotorFeedforward(motionState.getV(), motionState.getA(), kV, kA, kStatic);
 //                    lazySusan.setPower(targetPower);
                     lazySusan.setVelocity((int) motionState.getV());
-                    lazySusan.rotateToDegrees(movingForwards ? 45 : 0);
+                    lazySusan.rotateToDegreesRobotCentric(movingForwards ? 45 : 0);
                     double currentVelo = lazySusan.getVelo();
 
 

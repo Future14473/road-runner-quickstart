@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
@@ -14,6 +13,7 @@ public class Turret {
     BoxSensor boxSensor;
     Timer timer;
     LinearOpMode opMode;
+
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
         lazySusan = new LazySusan(hardwareMap);
@@ -44,7 +44,7 @@ public class Turret {
 
     public void pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
         double Angle = calcualteDirection(Xcur, Ycur, Xtar, Ytar); // calculates the angle from current to target
-        lazySusan.rotateToDegrees(360-Math.toDegrees(Angle-Hcur)); // should point the lazy susan towards xy coordinate
+        lazySusan.rotateToDegreesRobotCentric(360-Math.toDegrees(Angle-Hcur)); // should point the lazy susan towards xy coordinate
     }
 
     public void preloadUp(){
@@ -57,7 +57,7 @@ public class Turret {
     public void preloadUpMid(){
         slides.extendMid();
         timer.safeDelay(500);
-        lazySusan.rotateToDegrees(0);
+        lazySusan.rotateToDegreesRobotCentric(0);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         linkages.extend();
         timer.safeDelay(500);
@@ -79,7 +79,7 @@ public class Turret {
         dumper.intake();
         timer.safeDelay(1100);
 
-        lazySusan.rotateToDegrees(0);
+        lazySusan.rotateToDegreesRobotCentric(0);
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
@@ -95,7 +95,7 @@ public class Turret {
         dumper.intake();
         timer.safeDelay(1100);
 
-        lazySusan.rotateToDegrees(0);
+        lazySusan.rotateToDegreesRobotCentric(0);
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
@@ -106,7 +106,7 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
-        lazySusan.rotateToDegrees(-45);
+        lazySusan.rotateToDegreesRobotCentric(-45);
         timer.safeDelay(500);
         linkages.extend();
         timer.safeDelay(800);
@@ -130,7 +130,7 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
-        lazySusan.rotateToDegrees(45);
+        lazySusan.rotateToDegreesRobotCentric(45);
         timer.safeDelay(500);
         linkages.extend();
         timer.safeDelay(800);
@@ -153,24 +153,24 @@ public class Turret {
     public void rightSharedHub(){
         slides.extendLow();
         timer.safeDelay(300);
-        lazySusan.rotateToDegrees(90);
+        lazySusan.rotateToDegreesRobotCentric(90);
         linkages.extendShared();
     }
 
     public void leftSharedHub(){
         slides.extendLow();
         timer.safeDelay(300);
-        lazySusan.rotateToDegrees(-90);
+        lazySusan.rotateToDegreesRobotCentric(-90);
         linkages.extendShared();
     }
 
     public void right(){
-        lazySusan.rotateToDegrees(135);
+        lazySusan.rotateToDegreesRobotCentric(135);
         linkages.extend();
     }
 
     public void letGoEmergency(){
-        lazySusan.rotateToDegrees(0);
+        lazySusan.rotateToDegreesRobotCentric(0);
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
@@ -179,14 +179,14 @@ public class Turret {
     }
 
     public void left(){
-        lazySusan.rotateToDegrees(-135);
+        lazySusan.rotateToDegreesRobotCentric(-135);
         linkages.extend();
     }
 
     public void back(){
         // make it go up first so it doesn't break the REV hubs
         up();
-        lazySusan.rotateToDegrees(180);
+        lazySusan.rotateToDegreesRobotCentric(180);
         linkages.extend();
     }
 
@@ -198,7 +198,7 @@ public class Turret {
         timer.safeDelay(1100);
 
         boolean isAngle180 = (lazySusan.getTargetDegrees() - 180) < 0.05;
-        lazySusan.rotateToDegrees(0);
+        lazySusan.rotateToDegreesRobotCentric(0);
 //        timer.safeDelay(isAngle180 ? 950 : 800);
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait

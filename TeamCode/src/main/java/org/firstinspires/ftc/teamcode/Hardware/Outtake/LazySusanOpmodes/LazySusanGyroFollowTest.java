@@ -15,7 +15,7 @@ public class LazySusanGyroFollowTest extends LinearOpMode {
         LazySusan lazySusan = new LazySusan(hardwareMap);
         IMU imu = new IMU(hardwareMap);
         waitForStart();
-        lazySusan.rotateToDegrees(imu.getHeading());
+        lazySusan.rotateToDegreesRobotCentric(imu.getHeading());
         while (opModeIsActive()){
             telemetry.addData("Turret Position", lazySusan.getTicks());
             telemetry.addData("Turret Degrees", lazySusan.getDegrees());

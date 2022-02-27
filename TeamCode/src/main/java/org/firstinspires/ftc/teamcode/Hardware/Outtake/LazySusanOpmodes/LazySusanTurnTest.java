@@ -14,7 +14,7 @@ public class LazySusanTurnTest extends LinearOpMode {
         LazySusan lazySusan = new LazySusan(hardwareMap);
         waitForStart();
 
-        lazySusan.rotateToDegrees(90); //todo check if tick values wrap for dcmotor
+        lazySusan.rotateToDegreesRobotCentric(90); //todo check if tick values wrap for dcmotor
         while (opModeIsActive()){
             telemetry.addData("Turret Position", lazySusan.getTicks());
             telemetry.addData("Turret Degrees", lazySusan.getDegrees());

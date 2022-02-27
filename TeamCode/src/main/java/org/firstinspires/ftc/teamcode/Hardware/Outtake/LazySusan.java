@@ -87,9 +87,18 @@ public class LazySusan {
         lazySusan.setVelocity(velo);
     }
 
+    public void incrementPos(double degrees){
+        lazySusan.setTargetPosition(TurretConstants.turretDegreesToTicks(getAbsoluteDegrees() + degrees));
+        lazySusan.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lazySusan.setVelocity(velo);
+    }
+
     public void rotateToDegreesRobotCentric(double degrees){
         double option1 = degrees;
-        double option2 = degrees - 360;
+        double option2;
+        if(degrees < 0) option2 = degrees + 360;
+        else option2 = degrees - 360;
+
         if(Math.abs(getDegrees() - option1) > Math.abs(getDegrees() - option2)){
             rotateToAbsolutePos(option2);
         } else {
@@ -108,6 +117,14 @@ public class LazySusan {
         // get the position from raw ticks to raw degrees (can end up over 360degrees or under -360)
         double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
         pos %= 360;
+//        return pos + ((pos)<0 ? 360 : 0);
+
+        return pos < 0 ? pos + 360 : pos;
+    }
+
+    public double getAbsoluteDegrees(){
+        // get the position from raw ticks to raw degrees (can end up over 360degrees or under -360)
+        double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
 //        return pos + ((pos)<0 ? 360 : 0);
 
         return pos < 0 ? pos + 360 : pos;

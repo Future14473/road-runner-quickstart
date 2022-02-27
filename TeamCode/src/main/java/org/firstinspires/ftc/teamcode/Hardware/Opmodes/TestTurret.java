@@ -22,9 +22,13 @@ public class TestTurret extends LinearOpMode {
 
         turret.up();
         waitForStart();
+        double prevDegrees = 0;
 
         while (opModeIsActive()){
-            lazySusan.rotateToAbsolutePos(degrees);
+            if(prevDegrees != degrees){
+                lazySusan.rotateToDegreesRobotCentric(degrees);
+            }
+            prevDegrees = degrees;
             telemetry.addData("Current Degrees", lazySusan.getDegrees());
             telemetry.addData("Current Degrees", lazySusan.getDegrees());
             telemetry.update();

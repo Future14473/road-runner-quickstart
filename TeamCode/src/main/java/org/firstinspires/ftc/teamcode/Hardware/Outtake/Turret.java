@@ -25,10 +25,12 @@ public class Turret {
         this.opMode = linearOpMode;
     }
 
-    public double calcualteDirection(double Xcur, double Ycur, double Xtar, double Ytar){
+    public double calculateDirection(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
+        Xcur = Xcur + Math.cos(Hcur)*7;
+        Ycur = Ycur + Math.sin(Hcur)*7;
         double Ang = Math.atan((Ytar-Ycur)/(Xtar-Xcur)); // ang finds the angle between the raw X Y target and current (in radians)
 
-        // if loop handles the wrapping cases (i didnt use a case statement deal with it)
+        // if loop handles the wrapping cases
         if (Ang > 0 && Ytar>Ycur){
             Ang = Ang;
         } else if (Ang < 0 && Ytar<Ycur){
@@ -43,7 +45,7 @@ public class Turret {
     }
 
     public void pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
-        double Angle = calcualteDirection(Xcur, Ycur, Xtar, Ytar); // calculates the angle from current to target
+        double Angle = calculateDirection(Xcur, Ycur, Hcur, Xtar, Ytar); // calculates the angle from current to target
         lazySusan.rotateToDegreesRobotCentric(360-Math.toDegrees(Angle-Hcur)); // should point the lazy susan towards xy coordinate
     }
 

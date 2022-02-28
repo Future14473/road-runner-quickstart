@@ -74,7 +74,7 @@ public class HubTrackingTest extends LinearOpMode {
 
 
 
-                turret.pointTo(XcurM,YcurM,HcurM,-12,24);
+                turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
 
                 telemetry.addData("Toggle Pos", Linkages.toggleIndex);
                 telemetry.addData("Turret Angle", lazySusan.getDegrees());

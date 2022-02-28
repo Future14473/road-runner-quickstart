@@ -93,17 +93,19 @@ public class LazySusan {
         lazySusan.setVelocity(velo);
     }
 
-    public void rotateToDegreesRobotCentric(double degrees){
+    public double[] rotateToDegreesRobotCentric(double degrees){
         double option1 = degrees;
         double option2;
         if(degrees < 0) option2 = degrees + 360;
         else option2 = degrees - 360;
 
         if(Math.abs(getDegrees() - option1) > Math.abs(getDegrees() - option2)){
-            rotateToAbsolutePos(option2);
+            incrementPos(- getDegrees() + option2);
         } else {
-            rotateToAbsolutePos(option1);
+            incrementPos(- getDegrees() + option1);
         }
+        double[] options = {option1, option2};
+        return options;
     }
 
     public void turnRightIncrement(){
@@ -119,7 +121,8 @@ public class LazySusan {
         pos %= 360;
 //        return pos + ((pos)<0 ? 360 : 0);
 
-        return pos < 0 ? pos + 360 : pos;
+        //return pos < 0 ? pos + 360 : pos;
+        return pos;
     }
 
     public double getAbsoluteDegrees(){
@@ -127,7 +130,7 @@ public class LazySusan {
         double pos = lazySusan.getCurrentPosition() * (1/TurretConstants.LAZY_SUSAN_TICKS_PER_REVOLUTION) * (1/TurretConstants.MOTOR_ROTATIONS_PER_TURRET_ROTATIONS) * 360;
 //        return pos + ((pos)<0 ? 360 : 0);
 
-        return pos < 0 ? pos + 360 : pos;
+        return pos;
     }
 
     public double getTargetDegrees(){

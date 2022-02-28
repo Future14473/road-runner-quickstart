@@ -23,6 +23,8 @@ public class HubTrackingTest extends LinearOpMode {
     public static double YcurM =0;
     public static double HcurM =0;
 
+    public static double point = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
         Turret turret = new Turret(hardwareMap, this);
@@ -30,12 +32,22 @@ public class HubTrackingTest extends LinearOpMode {
         LazySusan lazySusan = new LazySusan(hardwareMap);
         SampleTankDrive tankDrive = new SampleTankDrive(hardwareMap);
 
+
         Timer timer = new Timer(this);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         boolean rightBumper1PrevState = false, rightBumperCurrState;
 
-        turret.readyToIntake();
+        //turret.readyToIntake();
+
+        /// _____________________________________ INITIALIZE ROBOT LOCATION AT CENTER OF FIELD _____________________
+
+        Pose2d start = new Pose2d(0,0,0);
+        tankDrive.setPoseEstimate(start);
+
+        // lift the slides all the way up
+        turret.preloadUp();
+
 
         waitForStart();
 
@@ -47,13 +59,6 @@ public class HubTrackingTest extends LinearOpMode {
             }
         }).start();
 
-
-        /// _____________________________________ INITIALIZE ROBOT LOCATION AT CENTER OF FIELD _____________________
-        Pose2d start = new Pose2d(0,0,0);
-        tankDrive.setPoseEstimate(start);
-
-        // lift the slides all the way up
-        turret.preloadUp();
 
         // jank variable declaration
 
@@ -73,8 +78,12 @@ public class HubTrackingTest extends LinearOpMode {
                 // last two booleans are the locations pointed to --> the hub location
 
 
+                if(gamepad1.y) {
+                    point = turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
+                }
 
-                turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
+                //point = turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
+                telemetry.addData("Point to ", point*180/Math.PI);
 
                 telemetry.addData("Toggle Pos", Linkages.toggleIndex);
                 telemetry.addData("Turret Angle", lazySusan.getDegrees());

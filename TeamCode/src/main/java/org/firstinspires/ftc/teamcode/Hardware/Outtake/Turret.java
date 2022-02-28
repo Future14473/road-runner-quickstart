@@ -14,7 +14,6 @@ public class Turret {
     Timer timer;
     LinearOpMode opMode;
 
-
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
         lazySusan = new LazySusan(hardwareMap);
         linkages = new Linkages(hardwareMap);
@@ -26,27 +25,30 @@ public class Turret {
     }
 
     public double calculateDirection(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
-        Xcur = Xcur + Math.cos(Hcur)*7;
-        Ycur = Ycur + Math.sin(Hcur)*7;
-        double Ang = Math.atan((Ytar-Ycur)/(Xtar-Xcur)); // ang finds the angle between the raw X Y target and current (in radians)
+        //Xcur = Xcur + Math.cos(Hcur)*7;
+        //Ycur = Ycur + Math.sin(Hcur)*7;
+        double deltaX = Xtar - Xcur;
+        double deltaY = Ytar - Ycur;
+        double Ang = Math.atan(deltaY / deltaX); // ang finds the angle between the raw X Y target and current (in radians)
 
         // if loop handles the wrapping cases
-        if (Ang > 0 && Ytar>Ycur){
+        if (deltaX > 0 && deltaY > 0){
             Ang = Ang;
-        } else if (Ang < 0 && Ytar<Ycur){
-            Ang = Math.PI - Ang;
-        } else if (Ang > 0 && Ytar>Ycur){
+        } else if (deltaX < 0 && deltaY > 0){
             Ang = Math.PI + Ang;
-        } else if (Ang < 0 && Ytar>Ycur){
-            Ang = 2*Math.PI - Ang;
+        } else if (deltaX < 0 && deltaY < 0){
+            Ang = Math.PI + Ang;
+        } else if (deltaX > 0 && deltaY < 0){
+            Ang = 2*Math.PI + Ang;
         }
         // return the angle should be between 0 -2 PI according to the meep meep field view headings
         return Ang;
     }
 
-    public void pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
+    public double pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
         double Angle = calculateDirection(Xcur, Ycur, Hcur, Xtar, Ytar); // calculates the angle from current to target
-        lazySusan.rotateToDegreesRobotCentric(360-Math.toDegrees(Angle-Hcur)); // should point the lazy susan towards xy coordinate
+        lazySusan.rotateToDegreesRobotCentric(Math.toDegrees(-Angle+Hcur)); // should point the lazy susan towards xy coordinate
+        return Angle;
     }
 
     public void preloadUp(){

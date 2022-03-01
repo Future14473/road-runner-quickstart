@@ -23,6 +23,9 @@ public class HubTrackingTest extends LinearOpMode {
     public static double YcurM =0;
     public static double HcurM =0;
 
+    public static double Xtar =-12;
+    public static double Ytar =24;
+
     public static double point = 0;
 
     @Override
@@ -77,10 +80,8 @@ public class HubTrackingTest extends LinearOpMode {
                 // issue how do i turn the getpose2d function into 3 individual booleans to pass into the point to func
                 // last two booleans are the locations pointed to --> the hub location
 
+                    point = turret.pointTo(XcurM,YcurM,HcurM,Xtar,Ytar);
 
-                if(gamepad1.y) {
-                    point = turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
-                }
 
                 //point = turret.pointTo(tankDrive.getPoseEstimate().getX(),tankDrive.getPoseEstimate().getY(),tankDrive.getPoseEstimate().getHeading(),-12,24);
                 telemetry.addData("Point to ", point*180/Math.PI);

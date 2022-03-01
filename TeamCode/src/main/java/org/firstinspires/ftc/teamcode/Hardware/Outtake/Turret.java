@@ -25,8 +25,8 @@ public class Turret {
     }
 
     public double calculateDirection(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
-        //Xcur = Xcur + Math.cos(Hcur)*7;
-        //Ycur = Ycur + Math.sin(Hcur)*7;
+        Xcur = Xcur + Math.cos(Hcur)*7;
+        Ycur = Ycur + Math.sin(Hcur)*7;
         double deltaX = Xtar - Xcur;
         double deltaY = Ytar - Ycur;
         double Ang = Math.atan(deltaY / deltaX); // ang finds the angle between the raw X Y target and current (in radians)
@@ -110,7 +110,7 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
-        lazySusan.rotateToDegreesRobotCentric(-45);
+        //lazySusan.rotateToDegreesRobotCentric(-45);
         timer.safeDelay(500);
         linkages.extend();
         timer.safeDelay(800);
@@ -134,7 +134,7 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
-        lazySusan.rotateToDegreesRobotCentric(45);
+        //lazySusan.rotateToDegreesRobotCentric(45);
         timer.safeDelay(500);
         linkages.extend();
         timer.safeDelay(800);

@@ -25,10 +25,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class AutoBlueDuckFly extends LinearOpMode {
     // pre x: -20   , pre y: 54.5, pre H: 290
     // start x -36-5.5  start y: 70 startH: 270
-    public static double preloadX = -28, preloadY = 50, preloadH = 0,
-                            startX = -35-5.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -58, duckY = 66.5, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 53;
+    public static double preloadX = -30, preloadY = 54, preloadH = 270,
+                            startX = -30, startY = 70, startH = Math.toRadians(270),
+                            duckX = -63, duckY = 57, duckH = 180,
+                            scoreDuckX = -36, scoreDuckY = 44, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
     @Override
@@ -83,6 +83,14 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.closeDumper();
         intake.drop();
 
+        new Thread( () -> {
+            while (opModeIsActive()) {
+                telemetry.addData("Robot X",drive.getPoseEstimate().getX() );
+                telemetry.addData("Robot Y",drive.getPoseEstimate().getY() );
+                telemetry.addData("Robot H",drive.getPoseEstimate().getHeading() );
+            }
+        }).start();
+
         // Get CV Position
 //        location = cv.getLocation();
         timer.safeDelay(5000);
@@ -123,6 +131,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
         // drive from start to preload
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
+        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
+        timer.safeDelay(500);
         turret.down();
 
         // build the duck path
@@ -160,6 +170,9 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.turn(Math.toRadians(20));
         drive.turnTo(Math.toRadians(0));
         turret.duckScorePrepBlue();
+        // duck drop
+        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
+        timer.safeDelay(1000);
         turret.down();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())

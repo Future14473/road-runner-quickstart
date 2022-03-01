@@ -23,15 +23,17 @@ public class AutoBlueDuck extends LinearOpMode {
                             scoreDuckX = -30, scoreDuckY = 49, scoreDuckH = 0, parkX = 50, parkY = 56;
     public static long duckWait = 3000;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
+        // declaring all the robot objects
         SampleTankDrive drive = new SampleTankDrive(hardwareMap);
         Turret turret = new Turret(hardwareMap, this);
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap);
 
+
+        // set the pose 2d
         Pose2d start = new Pose2d(-36,70, Math.toRadians(270));
         Trajectory preload, duckPath, alignDuck, scoreDuck, park;
         preload = drive.trajectoryBuilder(start)

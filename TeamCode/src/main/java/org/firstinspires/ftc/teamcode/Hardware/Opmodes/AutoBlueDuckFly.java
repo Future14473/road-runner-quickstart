@@ -25,10 +25,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class AutoBlueDuckFly extends LinearOpMode {
     // pre x: -20   , pre y: 54.5, pre H: 290
     // start x -36-5.5  start y: 70 startH: 270
-    public static double preloadX = -30, preloadY = 54, preloadH = 270,
-                            startX = -30, startY = 70, startH = Math.toRadians(270),
-                            duckX = -63, duckY = 57, duckH = 180,
-                            scoreDuckX = -36, scoreDuckY = 44, scoreDuckH = 0, parkX = 50, parkY = 53;
+    public static double preloadX = -29, preloadY = 50, preloadH = 270,
+                            startX = -35.5, startY = 70, startH = Math.toRadians(270),
+                            duckX = -55, duckY = 65.5, duckH = 180,
+                            scoreDuckX = -30, scoreDuckY = 53, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
     @Override

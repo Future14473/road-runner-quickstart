@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 
+@Config
 public class Turret {
     Linkages linkages;
     Dumper dumper;
@@ -14,6 +16,7 @@ public class Turret {
     Timer timer;
     LinearOpMode opMode;
     Thread turretThread;
+    public static double duckAngle = 45;
     boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,
             isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
@@ -88,6 +91,10 @@ public class Turret {
         double Angle = calculateDirection(Xcur, Ycur, Hcur, Xtar, Ytar); // calculates the angle from current to target
         lazySusan.rotateToDegreesRobotCentric(Math.toDegrees(-Angle+Hcur)); // should point the lazy susan towards xy coordinate
         return Angle;
+    }
+
+    public void turnTo(double angle){
+        lazySusan.rotateToDegreesRobotCentric(angle);
     }
 
     public void preloadUp(){
@@ -173,7 +180,7 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
-        //lazySusan.rotateToDegreesRobotCentric(45);
+        this.turnTo(duckAngle);
         timer.safeDelay(500);
         linkages.extend();
         timer.safeDelay(800);

@@ -13,6 +13,11 @@ public class Turret {
     BoxSensor boxSensor;
     Timer timer;
     LinearOpMode opMode;
+    Thread turretThread;
+    boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
+            isPreloadDown = false, isPreloadDownLow = false,
+            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
+            isDown = false, isUp = false;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
         lazySusan = new LazySusan(hardwareMap);
@@ -22,7 +27,41 @@ public class Turret {
         boxSensor = new BoxSensor(hardwareMap);
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
+        turretThread = new Thread( () -> {
+            while (opMode.opModeIsActive()){
+                if (isPreloadUp){
+                    preloadUp();
+                    isPreloadUp = false;
+                } else if (isPreloadMid){
+                    preloadMid();
+                    isPreloadMid = false;
+                } else if (isPreloadLow){
+                    preloadLow();
+                    isPreloadLow = false;
+                } else if (isPreloadDown){
+                    preloadDown();
+                    isPreloadDown = false;
+                } else if (isPreloadDownLow){
+                    preloadDownLow();
+                    isPreloadDown = false;
+                } else if (isDuckScorePrepRed){
+                    duckScorePrepRed();
+                    isDuckScorePrepRed = false;
+                } else if (isDuckScorePrepBlue){
+                    duckScorePrepBlue();
+                    isDuckScorePrepBlue = false;
+                } else if (isDown){
+                    down();
+                    isDown = false;
+                } else if (isUp){
+                    up();
+                    isUp = false;
+                }
+            }
+        });
+        turretThread.start();
     }
+
 
     public double calculateDirection(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
         Xcur = Xcur + Math.cos(Hcur)*7;
@@ -58,7 +97,7 @@ public class Turret {
         linkages.extend();
         timer.safeDelay(500);
     }
-    public void preloadUpMid(){
+    public void preloadMid(){
         slides.extendMid();
         timer.safeDelay(500);
         lazySusan.rotateToDegreesRobotCentric(0);
@@ -66,7 +105,7 @@ public class Turret {
         linkages.extend();
         timer.safeDelay(500);
     }
-    public void preloadUpLow(){
+    public void preloadLow(){
         slides.extendLow();
         timer.safeDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
@@ -234,4 +273,32 @@ public class Turret {
     public void toggleLinkages(){linkages.toggle();}
 
     public String getHeight() {return String.valueOf(slides.getHeight());}
+
+    public void preloadUpAsync(){
+        isPreloadUp = true;
+    }
+    public void preloadMidAsync(){
+        isPreloadMid = true;
+    }
+    public void preloadLowAsync(){
+        isPreloadLow = true;
+    }
+    public void preloadDownAsync(){
+        isPreloadDown = true;
+    }
+    public void preloadDownLowAsync(){
+        isPreloadDownLow = true;
+    }
+    public void duckScorePrepRedAsync(){
+        isDuckScorePrepRed = true;
+    }
+    public void duckScorePrepBlueAsync(){
+        isDuckScorePrepBlue = true;
+    }
+    public void downAsync(){
+        isDown = true;
+    }
+    public void upAsync(){
+        isUp = true;
+    }
 }

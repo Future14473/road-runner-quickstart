@@ -83,14 +83,6 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.closeDumper();
         intake.drop();
 
-        new Thread( () -> {
-            while (opModeIsActive()) {
-                telemetry.addData("Robot X",drive.getPoseEstimate().getX() );
-                telemetry.addData("Robot Y",drive.getPoseEstimate().getY() );
-                telemetry.addData("Robot H",drive.getPoseEstimate().getHeading() );
-            }
-        }).start();
-
         // Get CV Position
 //        location = cv.getLocation();
         timer.safeDelay(5000);
@@ -116,10 +108,10 @@ public class AutoBlueDuckFly extends LinearOpMode {
         // Preload
         // decide the preload up pos
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadUpLow();
+            turret.preloadLow();
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadUpMid();
+            turret.preloadMid();
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
             turret.preloadUp();

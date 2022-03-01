@@ -13,7 +13,7 @@ public class DebugSoftware extends LinearOpMode {
         Turret turret = new Turret(hardwareMap, this);
 
         waitForStart();
-        turret.preloadUpLow();
+        turret.preloadLow();
         while (opModeIsActive()){
 
         }

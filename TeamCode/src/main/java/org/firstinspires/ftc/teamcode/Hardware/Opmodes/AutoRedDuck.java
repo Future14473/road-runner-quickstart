@@ -112,10 +112,10 @@ public class AutoRedDuck extends LinearOpMode {
         // Preload
         // decide the preload up pos
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadUpLow();
+            turret.preloadLow();
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadUpMid();
+            turret.preloadMid();
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
             turret.preloadUp();

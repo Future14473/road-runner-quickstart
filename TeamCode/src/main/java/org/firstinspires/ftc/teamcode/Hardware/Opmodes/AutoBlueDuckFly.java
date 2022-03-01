@@ -108,16 +108,16 @@ public class AutoBlueDuckFly extends LinearOpMode {
         // Preload
         // decide the preload up pos
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadLow();
+            turret.preloadLowAsync();
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadMid();
+            turret.preloadMidAsync();
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
-            turret.preloadUp();
+            turret.preloadUpAsync();
         }
         if (location == null){
-            turret.preloadUp();
+            turret.preloadUpAsync();
         }
 
         // drive from start to preload
@@ -125,7 +125,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(500);
-        turret.down();
+        turret.downAsync();
 
         // build the duck path
         duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
@@ -161,11 +161,11 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.followTrajectory(scoreDuck);
         drive.turn(Math.toRadians(20));
         drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrepBlue();
+        turret.duckScorePrepBlueAsync();
         // duck drop
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(1000);
-        turret.down();
+        turret.downAsync();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))

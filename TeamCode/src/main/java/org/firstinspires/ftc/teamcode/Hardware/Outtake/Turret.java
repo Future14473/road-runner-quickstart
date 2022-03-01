@@ -17,7 +17,7 @@ public class Turret {
     LinearOpMode opMode;
     Thread turretThread;
     public static double duckAngle = 45;
-    boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
+    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,
             isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
             isDown = false, isUp = false;
@@ -30,39 +30,38 @@ public class Turret {
         boxSensor = new BoxSensor(hardwareMap);
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
-        turretThread = new Thread( () -> {
-            while (opMode.opModeIsActive()){
-                if (isPreloadUp){
-                    preloadUp();
-                    isPreloadUp = false;
-                } else if (isPreloadMid){
-                    preloadMid();
-                    isPreloadMid = false;
-                } else if (isPreloadLow){
-                    preloadLow();
-                    isPreloadLow = false;
-                } else if (isPreloadDown){
-                    preloadDown();
-                    isPreloadDown = false;
-                } else if (isPreloadDownLow){
-                    preloadDownLow();
-                    isPreloadDown = false;
-                } else if (isDuckScorePrepRed){
-                    duckScorePrepRed();
-                    isDuckScorePrepRed = false;
-                } else if (isDuckScorePrepBlue){
-                    duckScorePrepBlue();
-                    isDuckScorePrepBlue = false;
-                } else if (isDown){
-                    down();
-                    isDown = false;
-                } else if (isUp){
-                    up();
-                    isUp = false;
-                }
-            }
-        });
-        turretThread.start();
+//        new Thread( () -> {
+//            while (opMode.opModeIsActive()){
+//                if (isPreloadUp){
+//                    preloadUp();
+//                    isPreloadUp = false;
+//                } else if (isPreloadMid){
+//                    preloadMid();
+//                    isPreloadMid = false;
+//                } else if (isPreloadLow){
+//                    preloadLow();
+//                    isPreloadLow = false;
+//                } else if (isPreloadDown){
+//                    preloadDown();
+//                    isPreloadDown = false;
+//                } else if (isPreloadDownLow){
+//                    preloadDownLow();
+//                    isPreloadDown = false;
+//                } else if (isDuckScorePrepRed){
+//                    duckScorePrepRed();
+//                    isDuckScorePrepRed = false;
+//                } else if (isDuckScorePrepBlue){
+//                    duckScorePrepBlue();
+//                    isDuckScorePrepBlue = false;
+//                } else if (isDown){
+//                    down();
+//                    isDown = false;
+//                } else if (isUp){
+//                    up();
+//                    isUp = false;
+//                }
+//            }
+//        }).start();
     }
 
 

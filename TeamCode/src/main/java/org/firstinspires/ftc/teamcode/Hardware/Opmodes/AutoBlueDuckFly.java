@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
@@ -20,7 +21,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous
+@TeleOp
 @Config
 public class AutoBlueDuckFly extends LinearOpMode {
     // pre x: -20   , pre y: 54.5, pre H: 290
@@ -30,6 +31,11 @@ public class AutoBlueDuckFly extends LinearOpMode {
                             duckX = -55, duckY = 65.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 53, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
+
+    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
+            isPreloadDown = false, isPreloadDownLow = false,
+            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
+            isDown = false, isUp = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -65,6 +71,41 @@ public class AutoBlueDuckFly extends LinearOpMode {
             }
         });
 
+
+        // async turret setup
+        new Thread( () -> {
+            while (opModeIsActive()){
+                if (isPreloadUp){
+                    turret.preloadUp();
+                    isPreloadUp = false;
+                } else if (isPreloadMid){
+                    turret.preloadMid();
+                    isPreloadMid = false;
+                } else if (isPreloadLow){
+                    turret.preloadLow();
+                    isPreloadLow = false;
+                } else if (isPreloadDown){
+                    turret.preloadDown();
+                    isPreloadDown = false;
+                } else if (isPreloadDownLow){
+                    turret.preloadDownLow();
+                    isPreloadDown = false;
+                } else if (isDuckScorePrepRed){
+                    turret.duckScorePrepRed();
+                    isDuckScorePrepRed = false;
+                } else if (isDuckScorePrepBlue){
+                    turret.duckScorePrepBlue();
+                    isDuckScorePrepBlue = false;
+                } else if (isDown){
+                    turret.down();
+                    isDown = false;
+                } else if (isUp){
+                    turret.up();
+                    isUp = false;
+                }
+            }
+        }).start();
+
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
         Trajectory preload, duckPath, alignDuck, scoreDuck, park;
@@ -85,7 +126,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Get CV Position
 //        location = cv.getLocation();
-        timer.safeDelay(5000);
+//        timer.safeDelay(5000);
         location = cv.location;
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
             telemetry.addData("Position", "Lefts");
@@ -108,24 +149,35 @@ public class AutoBlueDuckFly extends LinearOpMode {
         // Preload
         // decide the preload up pos
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadLowAsync();
+//            turret.preloadLowAsync();
+            isPreloadLow = true;
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadMidAsync();
+//            turret.preloadMidAsync();
+            isPreloadMid = true;
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
-            turret.preloadUpAsync();
+//            turret.preloadUpAsync();
+            isPreloadUp = true;
         }
         if (location == null){
-            turret.preloadUpAsync();
+            isPreloadUp = true;
+//            turret.preloadUpAsync();
+        }
+        isPreloadUp = true;
+        while (opModeIsActive()) {
         }
 
-        // drive from start to preload
+
+            // drive from start to preload
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(500);
-        turret.downAsync();
+//        turret.downAsync();
+        isDown = true;
+
+
 
         // build the duck path
         duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
@@ -161,11 +213,13 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.followTrajectory(scoreDuck);
         drive.turn(Math.toRadians(20));
         drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrepBlueAsync();
+//        turret.duckScorePrepBlueAsync();
+        isDuckScorePrepBlue = true;
         // duck drop
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(1000);
-        turret.downAsync();
+//        turret.downAsync();
+        isDown = true;
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))

@@ -48,6 +48,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.drive.roadrunnerext.ImprovedRamsete;
 import org.firstinspires.ftc.teamcode.drive.roadrunnerext.RamseteConstants;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -212,11 +213,21 @@ public class SampleTankDrive extends TankDrive {
     }
 
     public double turnAngle;
+
     // turn to an angle in radins, todo might need to deal with wrapping cases
     public void turnTo(double angle){
         Pose2d currentPose = getPoseEstimate();
         turnAngle = angle - currentPose.getHeading();
         turn(turnAngle < -Math.toRadians(180) ? turnAngle + Math.toRadians(360) : turnAngle);
+    }
+
+    public void turnToDuckCollect(double angle, Turret turret){
+        Pose2d currentPose = getPoseEstimate();
+        turnAngle = angle - currentPose.getHeading();
+        turnAsync(turnAngle < -Math.toRadians(180) ? turnAngle + Math.toRadians(360) : turnAngle);
+        while (!turret.hasBlock() && !Thread.currentThread().isInterrupted()){
+            //wait
+        }
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {

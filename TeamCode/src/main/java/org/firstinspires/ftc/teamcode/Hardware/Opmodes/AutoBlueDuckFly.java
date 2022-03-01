@@ -147,8 +147,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnToDuckCollect(Math.toRadians(150), turret);
-        drive.turnToDuckCollect(Math.toRadians(0), turret);
+        drive.turnToDuckCollect(Math.toRadians(200), turret);
+        drive.turnTo(Math.toRadians(0));
         turret.closeDumper();
         intake.stop();
         duck.setStop(); duck.move();

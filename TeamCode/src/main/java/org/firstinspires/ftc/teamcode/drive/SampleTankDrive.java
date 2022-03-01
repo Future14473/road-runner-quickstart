@@ -225,9 +225,7 @@ public class SampleTankDrive extends TankDrive {
         Pose2d currentPose = getPoseEstimate();
         turnAngle = angle - currentPose.getHeading();
         turnAsync(turnAngle < -Math.toRadians(180) ? turnAngle + Math.toRadians(360) : turnAngle);
-        while (!turret.hasBlock() && !Thread.currentThread().isInterrupted()){
-            //wait
-        }
+        waitForIdleOrBlock(turret);
     }
 
     public void followTrajectoryAsync(Trajectory trajectory) {
@@ -332,6 +330,12 @@ public class SampleTankDrive extends TankDrive {
 
     public void waitForIdle() {
         while (!Thread.currentThread().isInterrupted() && isBusy()) {
+            update();
+        }
+    }
+
+    public void waitForIdleOrBlock(Turret turret){
+        while (!turret.hasBlock() && !Thread.currentThread().isInterrupted() && isBusy()) {
             update();
         }
     }

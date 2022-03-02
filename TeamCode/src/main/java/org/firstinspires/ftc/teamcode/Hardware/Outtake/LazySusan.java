@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 
 @Config
 public class LazySusan {
@@ -106,6 +107,14 @@ public class LazySusan {
         }
         double[] options = {option1, option2};
         return options;
+    }
+
+    public void setZero(Timer timer){
+        lazySusan.setVelocity(100);
+        timer.safeDelay(1000);
+        lazySusan.setVelocity(0); // stop
+        // zero the turret
+        lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void turnRightIncrement(){

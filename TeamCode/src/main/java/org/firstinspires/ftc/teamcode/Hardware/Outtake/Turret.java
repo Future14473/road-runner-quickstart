@@ -16,6 +16,8 @@ public class Turret {
     Timer timer;
     LinearOpMode opMode;
     Thread turretThread;
+    boolean goingUp, isShared = false;
+
     public static double duckAngle = 45;
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,
@@ -30,6 +32,7 @@ public class Turret {
         boxSensor = new BoxSensor(hardwareMap);
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
+        goingUp = false;
 //        new Thread( () -> {
 //            while (opMode.opModeIsActive()){
 //                if (isPreloadUp){
@@ -204,6 +207,7 @@ public class Turret {
         timer.safeDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
         linkages.extendShared();
+
     }
 
     public void leftSharedHub(){
@@ -257,9 +261,11 @@ public class Turret {
     }
 
     public void up(){
+        goingUp = true;
         dumper.close();
-        timer.safeDelay(200);
+        timer.safeDelay(400);
         slides.extendHigh();
+        goingUp = false;
     }
 
     public void readyToIntake(){

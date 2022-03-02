@@ -63,6 +63,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
                 camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
             }
+            
 
             @Override
             public void onError(int errorCode)

@@ -41,19 +41,30 @@ public class BBBTeleop extends LinearOpMode {
 
         new Thread( () -> {
             while (opModeIsActive()) {
-                tankDrive.setPowerDir(-gamepad2.left_stick_y, gamepad2.right_stick_x * (gamepad2.right_bumper ? 1.0 : 0.85));
+                if(gamepad2.left_trigger > 0.5) {
+                    tankDrive.setPowerDir(gamepad2.left_stick_y, gamepad2.right_stick_x * 0.85);
+                } else if (gamepad2.right_trigger > 0.5){
+                    tankDrive.setPowerDir(gamepad2.left_stick_y * 0.25, gamepad2.right_stick_x * 0.25);
+                } else {
+                    tankDrive.setPowerDir(gamepad2.left_stick_y * 0.65, gamepad2.right_stick_x * 0.65);
+
+                }
             }
         }).start();
 
         while (opModeIsActive()) {
 
-           if (gamepad1.right_trigger > 0){
+           if (gamepad1.right_trigger > 0 && turret.isDown()){
                 intake.in();
                 if(turret.hasBlock() && turret.isDown()){
-                    timer.safeDelay(300);
-//                    intake.out();
+                    timer.safeDelay(100);
+                    intake.out();
                     timer.safeDelay(200);
-                    turret.up();
+                    intake.stop();
+                    timer.safeDelay(100);
+                    if(turret.hasBlock()){
+                        turret.up();
+                    }
                 }
             } else if (gamepad1.left_trigger > 0){
                 intake.out();

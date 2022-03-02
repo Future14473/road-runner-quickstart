@@ -17,7 +17,7 @@ public class BoxSensor {
     NormalizedRGBA colors;
     SwitchableLight light;
 
-    public static double emptyDistance = 7.0;
+    public static double emptyDistance = 6.0;
     public static double dumperHue = 180,
             goldHueHigh = 80, goldHueLow = 60,
             whiteHueLow = 150, whiteHueHigh = 170,

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
     DcMotor intake;
     Servo dropDown;
-    public static double dropPos = 0.35, upPos = 0.0;
+    public static double dropPos = 0, upPos = 0.0;
 
     public Intake(HardwareMap hardwareMap) {
         intake = hardwareMap.get(DcMotor.class, "intake");

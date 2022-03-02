@@ -109,7 +109,7 @@ public class LazySusan {
         return options;
     }
 
-    public void setZero(Timer timer){
+    public void resetTurret(Timer timer){
         lazySusan.setVelocity(100);
         timer.safeDelay(1000);
         lazySusan.setVelocity(0); // stop

@@ -265,7 +265,7 @@ public class Turret {
     }
 
     public void resetTurretZero(){
-        lazySusan.turnLeftIncrement();
+        lazySusan.resetTurret(timer);
     }
 
     public void up(){

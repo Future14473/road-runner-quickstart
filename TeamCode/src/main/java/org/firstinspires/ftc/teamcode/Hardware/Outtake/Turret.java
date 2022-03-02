@@ -206,14 +206,17 @@ public class Turret {
         slides.extendLow();
         timer.safeDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
+        timer.safeDelay(300);
+        slides.scoreShared();
         linkages.extendShared();
-
     }
 
     public void leftSharedHub(){
         slides.extendLow();
         timer.safeDelay(300);
         lazySusan.rotateToDegreesRobotCentric(-90);
+        timer.safeDelay(300);
+        slides.scoreShared();
         linkages.extendShared();
     }
 
@@ -256,7 +259,7 @@ public class Turret {
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
-        timer.safeDelay(500);
+        timer.safeDelay(isShared ? 500 : 850);
         slides.retract();
     }
 
@@ -271,7 +274,7 @@ public class Turret {
         goingUp = true;
         dumper.close();
         timer.safeDelay(400);
-        slides.extendLow();
+        slides.extendMid();
         goingUp = false;
     }
 

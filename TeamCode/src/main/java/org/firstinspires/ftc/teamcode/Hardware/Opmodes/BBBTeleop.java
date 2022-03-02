@@ -60,7 +60,7 @@ public class BBBTeleop extends LinearOpMode {
                 }
             }
             game1aPrevState = gamepad1.a;
-            telemetry.addData("gamepad1aPrev", game1aPrevState);
+            telemetry.addData("isShared", turret.isShared);
 
            if (gamepad1.right_trigger > 0 && turret.isDown()){
                 intake.in();

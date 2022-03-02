@@ -17,6 +17,7 @@ public class Slides {
     public static int highGoal = 737;
     public static int midGoal = 336;
     public static int lowGoal = 265;
+    public static int sharedHeight = 250;
 
 
     public Slides(HardwareMap hardwareMap) {
@@ -34,6 +35,12 @@ public class Slides {
 
     }
 
+    public void scoreShared(){
+        LeftSlide.setTargetPosition(sharedHeight);
+        RightSlide.setTargetPosition(sharedHeight);
+        LeftSlide.setVelocity(velocity);
+        RightSlide.setVelocity(velocity);
+    }
     public int getHeight(){return LeftSlide.getCurrentPosition();}
 
     public boolean isBusy(){return LeftSlide.isBusy();}

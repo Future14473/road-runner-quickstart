@@ -20,9 +20,11 @@ public class Duck {
         duck = hardwareMap.get(CRServo.class, "duck");
     }
 
-    // the blue duck station is to your right if you stand facing the shelf
-    public void setDuckPowerVar(double speed){
-        duckPower = -speed;
+    public void autoDuckBlue(Timer timer){
+        duck.setPower(0.7);
+        timer.safeDelay(1000);
+        duck.setPower(0.3);
+        timer.safeDelay(2300);
     }
 
     public void setPower(double pow){duck.setPower(pow);}

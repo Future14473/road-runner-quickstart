@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -20,15 +21,17 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@TeleOp
+@Autonomous
 @Config
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -55, duckY = 65.5, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0,
+                            duckX = -53.5, duckY = 66.5, duckH = 180,
+                            preScoreDuckX = -35, preScoreDuckY = 65, preScoreDuckH = 290,
+                            scoreDuckX = -25, scoreDuckY = 53, scoreDuckH = 0,
+
                             preParkX = 20, preParkY = 43,
-                            parkX = 55, parkY = 37;
+                            parkX = 55, parkY = 43;
     public static long duckWait = 3300;
     public static double duckPower = 0.7;
 
@@ -68,7 +71,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
                     break;
             }
         }
-
+        telemetry.addData("Voltage", drive.batteryVoltageSensor.getVoltage());
         telemetry.addData("your", "mom test "); // TODO: 3/2/22 get rid of this later 
         
 
@@ -91,7 +94,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
         waitForStart();
         
         intake.setPower(-0.6);
-        camera.closeCameraDevice();
+//        camera.closeCameraDevice();
+        // TODO: 3/2/22 see if this takes out the crashing issue
 
 
         // Preload
@@ -126,8 +130,9 @@ public class AutoBlueDuckFly extends LinearOpMode {
                 .back(1.5)
                 .build();
         drive.followTrajectory(alignDuck);
-        duck.setPower(duckPower);
-        timer.safeDelay(duckWait);
+        duck.autoDuckBlue(timer);
+//        duck.setPower(duckPower);
+//        timer.safeDelay(duckWait);
 
         //Pickup Duck
         intake.in();
@@ -143,6 +148,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Score Duck
         scoreDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
         drive.followTrajectory(scoreDuck);
@@ -156,5 +162,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
                 .build();
         drive.followTrajectory(park);
+//        drive.setPowerDir(1.0,0);
+//        timer.safeDelay(1000);
     }
 }

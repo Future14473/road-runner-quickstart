@@ -110,8 +110,8 @@ public class LazySusan {
     }
 
     public void resetTurret(Timer timer){
-        lazySusan.setVelocity(100);
-        timer.safeDelay(1000);
+        lazySusan.setVelocity(-900);
+        timer.safeDelay(2000);
         lazySusan.setVelocity(0); // stop
         // zero the turret
         lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

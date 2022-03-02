@@ -24,7 +24,7 @@ public class Turret {
             isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
             isDown = false, isUp = false;
 
-    public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode){
+    public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
         linkages = new Linkages(hardwareMap);
         slides = new Slides(hardwareMap);
@@ -33,38 +33,6 @@ public class Turret {
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
         goingUp = false;
-//        new Thread( () -> {
-//            while (opMode.opModeIsActive()){
-//                if (isPreloadUp){
-//                    preloadUp();
-//                    isPreloadUp = false;
-//                } else if (isPreloadMid){
-//                    preloadMid();
-//                    isPreloadMid = false;
-//                } else if (isPreloadLow){
-//                    preloadLow();
-//                    isPreloadLow = false;
-//                } else if (isPreloadDown){
-//                    preloadDown();
-//                    isPreloadDown = false;
-//                } else if (isPreloadDownLow){
-//                    preloadDownLow();
-//                    isPreloadDown = false;
-//                } else if (isDuckScorePrepRed){
-//                    duckScorePrepRed();
-//                    isDuckScorePrepRed = false;
-//                } else if (isDuckScorePrepBlue){
-//                    duckScorePrepBlue();
-//                    isDuckScorePrepBlue = false;
-//                } else if (isDown){
-//                    down();
-//                    isDown = false;
-//                } else if (isUp){
-//                    up();
-//                    isUp = false;
-//                }
-//            }
-//        }).start();
     }
 
 
@@ -103,7 +71,7 @@ public class Turret {
         slides.extendHigh();
         timer.safeDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
-        lazySusan.rotateToDegreesRobotCentric(-45);
+        lazySusan.rotateToDegreesRobotCentric(-55);
         linkages.extend();
         timer.safeDelay(1500);
     }
@@ -156,28 +124,14 @@ public class Turret {
         slides.retract();
     }
 
-    public void duckScorePrepRed(){
+    public void duckScorePrepRed() {
         dumper.close();
         slides.extendHigh();
         timer.safeDelay(500);
         //lazySusan.rotateToDegreesRobotCentric(-45);
         timer.safeDelay(500);
         linkages.extend();
-        timer.safeDelay(800);
-
-        // down
-//        down();
-//        dumper.dump();
-//        timer.safeDelay(500);
-//        linkages.retract();
-//        dumper.intake();
-//        timer.safeDelay(1100);
-//
-//        lazySusan.rotateToDegrees(0);
-//        while(opMode.opModeIsActive() && !lazySusan.isHome()){
-//            // wait
-//        }
-//        slides.retract();
+        timer.safeDelay(1000);
     }
 
     public void duckScorePrepBlue(){
@@ -187,7 +141,7 @@ public class Turret {
         this.turnTo(duckAngle);
         timer.safeDelay(500);
         linkages.extend();
-        timer.safeDelay(400);
+        timer.safeDelay(1000);
 
         // down
 //        down();

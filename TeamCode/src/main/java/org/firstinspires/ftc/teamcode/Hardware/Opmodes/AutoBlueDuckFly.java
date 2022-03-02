@@ -28,14 +28,14 @@ public class AutoBlueDuckFly extends LinearOpMode {
     // start x -36-5.5  start y: 70 startH: 270
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -55, duckY = 67.5, duckH = 180,
+                            duckX = -55, duckY = 66.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
-    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
-            isPreloadDown = false, isPreloadDownLow = false,
-            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
-            isDown = false, isUp = false;
+//    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
+//            isPreloadDown = false, isPreloadDownLow = false,
+//            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
+//            isDown = false, isUp = false;
 
     @Override
     public void runOpMode() throws InterruptedException {

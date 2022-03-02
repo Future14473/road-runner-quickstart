@@ -18,7 +18,7 @@ public class Turret {
     Thread turretThread;
     public boolean goingUp, isShared = false;
 
-    public static double duckAngle = 50;
+    public static double duckAngle = 35;
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,
             isDuckScorePrepRed = false, isDuckScorePrepBlue = false,

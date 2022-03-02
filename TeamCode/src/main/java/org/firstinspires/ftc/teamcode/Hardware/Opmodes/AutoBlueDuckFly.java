@@ -151,21 +151,33 @@ public class AutoBlueDuckFly extends LinearOpMode {
         // decide the preload up pos
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
 //            turret.preloadLowAsync();
-            isPreloadLow = true;
+//            isPreloadLow = true;
+            new Thread ( () -> {
+                turret.preloadLow();
+            }).start();
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
 //            turret.preloadMidAsync();
-            isPreloadMid = true;
+//            isPreloadMid = true;
+            new Thread ( () -> {
+                turret.preloadMid();
+            }).start();
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
 //            turret.preloadUpAsync();
-            isPreloadUp = true;
+//            isPreloadUp = true;
+            new Thread ( () -> {
+                turret.preloadUp();
+            }).start();
         }
         if (location == null){
-            isPreloadUp = true;
+//            isPreloadUp = true;
 //            turret.preloadUpAsync();
+            new Thread ( () -> {
+                turret.preloadUp();
+            }).start();
         }
-        isPreloadUp = true;
+
         while (opModeIsActive()) {
         }
 
@@ -176,7 +188,10 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(500);
 //        turret.downAsync();
-        isDown = true;
+//        isDown = true;
+        new Thread ( () -> {
+            turret.down();
+        }).start();
 
 
 
@@ -215,12 +230,18 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.turn(Math.toRadians(20));
         drive.turnTo(Math.toRadians(0));
 //        turret.duckScorePrepBlueAsync();
-        isDuckScorePrepBlue = true;
+//        isDuckScorePrepBlue = true;
+        new Thread ( () -> {
+            turret.duckScorePrepBlue();
+        }).start();
         // duck drop
         turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
         timer.safeDelay(1000);
 //        turret.downAsync();
-        isDown = true;
+//        isDown = true;
+        new Thread ( () -> {
+            turret.down();
+        }).start();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))

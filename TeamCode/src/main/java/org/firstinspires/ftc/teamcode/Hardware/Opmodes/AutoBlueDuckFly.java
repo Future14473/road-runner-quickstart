@@ -84,36 +84,37 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.closeDumper();
         intake.drop();
 
-        while ((cv.location != null) && opModeIsActive()){
-            telemetry.addData("Looking For April Tag, Value is", cv.location);
-            telemetry.update();
-        }
+//        while ((cv.getLocation() == null) && opModeIsActive()){
+//            telemetry.addData("Looking For April Tag, Value is", cv.location);
+//            telemetry.update();
+//        }
 
-        if (cv.location == AprilBoundBoxPipeline.Location.LEFT) {
+        timer.safeDelay(3000);
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.LEFT) {
             telemetry.addData("Position", "Lefts");
         }
-        if (cv.location == AprilBoundBoxPipeline.Location.MIDDLE) {
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.MIDDLE) {
             telemetry.addData("Position", "Middle");
         }
-        if (cv.location == AprilBoundBoxPipeline.Location.RIGHT) {
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.RIGHT) {
             telemetry.addData("Position", "Right");
         }
-        if (cv.location == null) {
+        if (cv.getLocation() == null) {
             telemetry.addData("Position", "Null");
         }
         telemetry.addData("In ", "Init");
         telemetry.update();
 
         waitForStart();
-        intake.setPower(-0.3);
+        intake.setPower(-0.6);
         camera.closeCameraDevice();
 
         // Preload
         // decide the preload up pos
-        if (cv.location == AprilBoundBoxPipeline.Location.LEFT) {
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.LEFT) {
             turret.preloadLow();
         }
-        if (cv.location == AprilBoundBoxPipeline.Location.MIDDLE) {
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.MIDDLE) {
 //            turret.preloadMidAsync();
 //            isPreloadMid = true;
 //            new Thread ( () -> {
@@ -121,7 +122,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 //            }).start();
             turret.preloadMid();
         }
-        if (cv.location == AprilBoundBoxPipeline.Location.RIGHT) {
+        if (cv.getLocation() == AprilBoundBoxPipeline.Location.RIGHT) {
 //            turret.preloadUpAsync();
 //            isPreloadUp = true;
 //            new Thread ( () -> {
@@ -129,7 +130,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 //            }).start();
             turret.preloadUp();
         }
-        if (cv.location == null){
+        if (cv.getLocation() == null){
 //            isPreloadUp = true;
 //            turret.preloadUpAsync();
 //            new Thread ( () -> {

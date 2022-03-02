@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -29,9 +28,11 @@ public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
                             duckX = -55, duckY = 65.5, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0, parkX = 50, parkY = 53;
-    public static long duckWait = 2000;
-    public static double duckPower = 1.0;
+                            scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0,
+                            preParkX = 20, preParkY = 43,
+                            parkX = 55, parkY = 37;
+    public static long duckWait = 3300;
+    public static double duckPower = 0.7;
 //    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
 //            isPreloadDown = false, isPreloadDownLow = false,
 //            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
@@ -83,6 +84,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.setPoseEstimate(start);
         turret.closeDumper();
         intake.drop();
+        // todo make this power based
+        turret.resetTurretZero();
 
 //        while ((cv.getLocation() == null) && opModeIsActive()){
 //            telemetry.addData("Looking For April Tag, Value is", cv.location);
@@ -109,52 +112,26 @@ public class AutoBlueDuckFly extends LinearOpMode {
         intake.setPower(-0.6);
         camera.closeCameraDevice();
 
+
+        // drive from start to preload
+        drive.followTrajectory(preload);
+        drive.turnTo(Math.toRadians(preloadH));
         // Preload
         // decide the preload up pos
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.LEFT) {
             turret.preloadLow();
         }
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.MIDDLE) {
-//            turret.preloadMidAsync();
-//            isPreloadMid = true;
-//            new Thread ( () -> {
-//                turret.preloadMid();
-//            }).start();
             turret.preloadMid();
         }
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.RIGHT) {
-//            turret.preloadUpAsync();
-//            isPreloadUp = true;
-//            new Thread ( () -> {
-//                turret.preloadUp();
-//            }).start();
             turret.preloadUp();
         }
         if (cv.getLocation() == null){
-//            isPreloadUp = true;
-//            turret.preloadUpAsync();
-//            new Thread ( () -> {
-//                turret.preloadUp();
-//            }).start();
             turret.preloadUp();
         }
-
-//        while (opModeIsActive()) {
-//        }
-
-
-            // drive from start to preload
-        drive.followTrajectory(preload);
-        drive.turnTo(Math.toRadians(preloadH));
-//        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
-        turret.preloadUp();
-        timer.safeDelay(500);
-//        turret.downAsync();
-//        isDown = true;
-//        new Thread ( () -> {
-//            turret.down();
-//        }).start();
         turret.preloadDown();
+        intake.stop();
 
 
 
@@ -172,14 +149,18 @@ public class AutoBlueDuckFly extends LinearOpMode {
                 .build();
         drive.followTrajectory(alignDuck);
 //        drive.turnTo(0);
-        duck.setBlue();
-        duck.move();
+//        duck.setBlue();
+        duck.setPower(duckPower);
+//        duck.move();
         timer.safeDelay(duckWait);
 
         //Pickup Duck
         intake.in();
         drive.turnToDuckCollect(Math.toRadians(90),turret);
-        drive.turnToDuckCollect(Math.toRadians(135), turret);
+        drive.turnToDuckCollect(Math.toRadians(180), turret);
+        if (turret.hasBlock()) {
+            turret.closeDumper();
+        }
         drive.turnTo(Math.toRadians(0));
         turret.closeDumper();
         intake.stop();
@@ -193,7 +174,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.followTrajectory(scoreDuck);
 
         drive.turnTo(Math.toRadians(0));
-        drive.turn(Math.toRadians(-15));
+//        drive.turn(Math.toRadians(-30));
 //        turret.duckScorePrepBlueAsync();
 //        isDuckScorePrepBlue = true;
 //        new Thread ( () -> {
@@ -210,6 +191,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         turret.down();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())
+                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(0))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
                 .build();
 

@@ -18,7 +18,7 @@ public class Turret {
     Thread turretThread;
     public boolean goingUp, isShared = false;
 
-    public static double duckAngle = 35;
+    public static double duckAngle = 45;
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,
             isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
@@ -105,7 +105,7 @@ public class Turret {
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(-45);
         linkages.extend();
-        timer.safeDelay(500);
+        timer.safeDelay(1500);
     }
     public void preloadMid(){
         slides.extendMid();
@@ -262,6 +262,10 @@ public class Turret {
         }
         timer.safeDelay(isShared ? 500 : 850);
         slides.retract();
+    }
+
+    public void resetTurretZero(){
+        lazySusan.turnLeftIncrement();
     }
 
     public void up(){

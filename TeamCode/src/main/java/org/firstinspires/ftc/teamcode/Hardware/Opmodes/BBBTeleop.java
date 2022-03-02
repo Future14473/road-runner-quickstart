@@ -54,6 +54,7 @@ public class BBBTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+//            if ()
            if (gamepad1.right_trigger > 0 && turret.isDown()){
                 intake.in();
                 if(turret.hasBlock() && turret.isDown()){
@@ -118,6 +119,7 @@ public class BBBTeleop extends LinearOpMode {
                     turret.toggleLinkages();
                 }
             }
+
             rightBumper1PrevState = rightBumperCurrState;
 
             duck.setStop();
@@ -128,6 +130,7 @@ public class BBBTeleop extends LinearOpMode {
                 duck.setRed();
             }
             duck.move();
+
 
 
 

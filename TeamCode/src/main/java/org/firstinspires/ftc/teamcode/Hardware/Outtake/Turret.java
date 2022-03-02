@@ -278,7 +278,7 @@ public class Turret {
 
     public boolean hasBlock(){return boxSensor.hasBlock();}
 
-    public boolean isDown(){ return slides.LeftSlide.getCurrentPosition() < 200;}
+    public boolean isDown(){ return (slides.LeftSlide.getCurrentPosition() < 200) && !goingUp;}
 
     public void release(){dumper.dump();}
 

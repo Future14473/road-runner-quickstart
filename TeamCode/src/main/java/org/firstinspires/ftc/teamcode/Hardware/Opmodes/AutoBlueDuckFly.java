@@ -28,10 +28,10 @@ public class AutoBlueDuckFly extends LinearOpMode {
     // start x -36-5.5  start y: 70 startH: 270
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -55, duckY = 66.5, duckH = 180,
+                            duckX = -55, duckY = 65.5, duckH = 180,
                             scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0, parkX = 50, parkY = 53;
-    public static long duckWait = 3000;
-
+    public static long duckWait = 2000;
+    public static double duckPower = 1.0;
 //    public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
 //            isPreloadDown = false, isPreloadDownLow = false,
 //            isDuckScorePrepRed = false, isDuckScorePrepBlue = false,
@@ -72,103 +72,33 @@ public class AutoBlueDuckFly extends LinearOpMode {
             }
         });
 
-
-        // async turret setup
-//        new Thread( () -> {
-//            while (opModeIsActive()){
-//                if (isPreloadUp){
-//                    turret.preloadUp();
-//                    isPreloadUp = false;
-//                } else if (isPreloadMid){
-//                    turret.preloadMid();
-//                    isPreloadMid = false;
-//                } else if (isPreloadLow){
-//                    turret.preloadLow();
-//                    isPreloadLow = false;
-//                } else if (isPreloadDown){
-//                    turret.preloadDown();
-//                    isPreloadDown = false;
-//                } else if (isPreloadDownLow){
-//                    turret.preloadDownLow();
-//                    isPreloadDown = false;
-//                } else if (isDuckScorePrepRed){
-//                    turret.duckScorePrepRed();
-//                    isDuckScorePrepRed = false;
-//                } else if (isDuckScorePrepBlue){
-//                    turret.duckScorePrepBlue();
-//                    isDuckScorePrepBlue = false;
-//                } else if (isDown){
-//                    turret.down();
-//                    isDown = false;
-//                } else if (isUp){
-//                    turret.up();
-//                    isUp = false;
-//                }
-//            }
-//        }).start();
-//        while (opModeIsActive()){
-//            if (isPreloadUp){
-//                turret.preloadUp();
-//                isPreloadUp = false;
-//            } else if (isPreloadMid){
-//                turret.preloadMid();
-//                isPreloadMid = false;
-//            } else if (isPreloadLow){
-//                turret.preloadLow();
-//                isPreloadLow = false;
-//            } else if (isPreloadDown){
-//                turret.preloadDown();
-//                isPreloadDown = false;
-//            } else if (isPreloadDownLow){
-//                turret.preloadDownLow();
-//                isPreloadDown = false;
-//            } else if (isDuckScorePrepRed){
-//                turret.duckScorePrepRed();
-//                isDuckScorePrepRed = false;
-//            } else if (isDuckScorePrepBlue){
-//                turret.duckScorePrepBlue();
-//                isDuckScorePrepBlue = false;
-//            } else if (isDown){
-//                turret.down();
-//                isDown = false;
-//            } else if (isUp){
-//                turret.up();
-//                isUp = false;
-//            }
-//        }
-
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
         Trajectory preload, duckPath, alignDuck, scoreDuck, park;
         preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
-//                .addTemporalMarker(0, () -> {
-//                  turret.preloadUpLow();
-//                })
                 .build();
-
-//        preloadLow = drive.trajectoryBuilder(start)
-//                .splineTo(new Vector2d())
 
         // Position Setup
         drive.setPoseEstimate(start);
         turret.closeDumper();
         intake.drop();
 
-        // Get CV Position
-//        location = cv.getLocation();
-//        timer.safeDelay(5000);
-        location = cv.location;
-        if (location == AprilBoundBoxPipeline.Location.LEFT) {
+        while ((cv.location != null) && opModeIsActive()){
+            telemetry.addData("Looking For April Tag, Value is", cv.location);
+            telemetry.update();
+        }
+
+        if (cv.location == AprilBoundBoxPipeline.Location.LEFT) {
             telemetry.addData("Position", "Lefts");
         }
-        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
+        if (cv.location == AprilBoundBoxPipeline.Location.MIDDLE) {
             telemetry.addData("Position", "Middle");
         }
-        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
+        if (cv.location == AprilBoundBoxPipeline.Location.RIGHT) {
             telemetry.addData("Position", "Right");
         }
-        if (location == null) {
+        if (cv.location == null) {
             telemetry.addData("Position", "Null");
         }
         telemetry.addData("In ", "Init");
@@ -180,15 +110,10 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Preload
         // decide the preload up pos
-        if (location == AprilBoundBoxPipeline.Location.LEFT) {
-//            turret.preloadLowAsync();
-//            isPreloadLow = true;
-//            new Thread ( () -> {
-//                turret.preloadLow();
-//            }).start();
+        if (cv.location == AprilBoundBoxPipeline.Location.LEFT) {
             turret.preloadLow();
         }
-        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
+        if (cv.location == AprilBoundBoxPipeline.Location.MIDDLE) {
 //            turret.preloadMidAsync();
 //            isPreloadMid = true;
 //            new Thread ( () -> {
@@ -196,7 +121,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 //            }).start();
             turret.preloadMid();
         }
-        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
+        if (cv.location == AprilBoundBoxPipeline.Location.RIGHT) {
 //            turret.preloadUpAsync();
 //            isPreloadUp = true;
 //            new Thread ( () -> {
@@ -204,7 +129,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
 //            }).start();
             turret.preloadUp();
         }
-        if (location == null){
+        if (cv.location == null){
 //            isPreloadUp = true;
 //            turret.preloadUpAsync();
 //            new Thread ( () -> {
@@ -220,14 +145,15 @@ public class AutoBlueDuckFly extends LinearOpMode {
             // drive from start to preload
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
-        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
+//        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
+        turret.preloadUp();
         timer.safeDelay(500);
 //        turret.downAsync();
 //        isDown = true;
 //        new Thread ( () -> {
 //            turret.down();
 //        }).start();
-        turret.down();
+        turret.preloadDown();
 
 
 

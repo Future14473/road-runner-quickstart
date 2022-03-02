@@ -103,6 +103,7 @@ public class Turret {
         slides.extendHigh();
         timer.safeDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
+        lazySusan.rotateToDegreesRobotCentric(-45);
         linkages.extend();
         timer.safeDelay(500);
     }
@@ -185,7 +186,7 @@ public class Turret {
         this.turnTo(duckAngle);
         timer.safeDelay(500);
         linkages.extend();
-        timer.safeDelay(800);
+        timer.safeDelay(400);
 
         // down
 //        down();

@@ -25,6 +25,8 @@ public class Duck {
         duckPower = -speed;
     }
 
+    public void setPower(double pow){duck.setPower(pow);}
+
     public void setBlue(){
         duckPower = 1.0;
     }

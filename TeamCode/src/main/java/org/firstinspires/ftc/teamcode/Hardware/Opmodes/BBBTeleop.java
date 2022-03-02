@@ -97,10 +97,10 @@ public class BBBTeleop extends LinearOpMode {
                 lazySusan.turnLeftIncrement();
             }
 
-            if (gamepad1.b){
+            if (gamepad1.x){
                 turret.rightSharedHub();
             }
-            if (gamepad1.x){
+            if (gamepad1.b){
                 turret.leftSharedHub();
             }
 

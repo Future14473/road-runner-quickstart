@@ -248,7 +248,7 @@ public class Turret {
         timer.safeDelay(500);
         linkages.retract();
         dumper.intake();
-        timer.safeDelay(1100);
+        timer.safeDelay(500);
 
         boolean isAngle180 = (lazySusan.getTargetDegrees() - 180) < 0.05;
         lazySusan.rotateToDegreesRobotCentric(0);

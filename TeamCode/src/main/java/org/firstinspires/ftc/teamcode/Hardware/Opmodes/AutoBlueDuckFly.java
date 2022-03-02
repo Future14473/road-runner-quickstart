@@ -26,10 +26,10 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 public class AutoBlueDuckFly extends LinearOpMode {
     // pre x: -20   , pre y: 54.5, pre H: 290
     // start x -36-5.5  start y: 70 startH: 270
-    public static double preloadX = -29, preloadY = 50, preloadH = 270,
+    public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -55, duckY = 65.5, duckH = 180,
-                            scoreDuckX = -30, scoreDuckY = 53, scoreDuckH = 0, parkX = 50, parkY = 53;
+                            duckX = -55, duckY = 67.5, duckH = 180,
+                            scoreDuckX = -30, scoreDuckY = 50, scoreDuckH = 0, parkX = 50, parkY = 53;
     public static long duckWait = 3000;
 
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
@@ -74,38 +74,68 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
 
         // async turret setup
-        new Thread( () -> {
-            while (opModeIsActive()){
-                if (isPreloadUp){
-                    turret.preloadUp();
-                    isPreloadUp = false;
-                } else if (isPreloadMid){
-                    turret.preloadMid();
-                    isPreloadMid = false;
-                } else if (isPreloadLow){
-                    turret.preloadLow();
-                    isPreloadLow = false;
-                } else if (isPreloadDown){
-                    turret.preloadDown();
-                    isPreloadDown = false;
-                } else if (isPreloadDownLow){
-                    turret.preloadDownLow();
-                    isPreloadDown = false;
-                } else if (isDuckScorePrepRed){
-                    turret.duckScorePrepRed();
-                    isDuckScorePrepRed = false;
-                } else if (isDuckScorePrepBlue){
-                    turret.duckScorePrepBlue();
-                    isDuckScorePrepBlue = false;
-                } else if (isDown){
-                    turret.down();
-                    isDown = false;
-                } else if (isUp){
-                    turret.up();
-                    isUp = false;
-                }
-            }
-        }).start();
+//        new Thread( () -> {
+//            while (opModeIsActive()){
+//                if (isPreloadUp){
+//                    turret.preloadUp();
+//                    isPreloadUp = false;
+//                } else if (isPreloadMid){
+//                    turret.preloadMid();
+//                    isPreloadMid = false;
+//                } else if (isPreloadLow){
+//                    turret.preloadLow();
+//                    isPreloadLow = false;
+//                } else if (isPreloadDown){
+//                    turret.preloadDown();
+//                    isPreloadDown = false;
+//                } else if (isPreloadDownLow){
+//                    turret.preloadDownLow();
+//                    isPreloadDown = false;
+//                } else if (isDuckScorePrepRed){
+//                    turret.duckScorePrepRed();
+//                    isDuckScorePrepRed = false;
+//                } else if (isDuckScorePrepBlue){
+//                    turret.duckScorePrepBlue();
+//                    isDuckScorePrepBlue = false;
+//                } else if (isDown){
+//                    turret.down();
+//                    isDown = false;
+//                } else if (isUp){
+//                    turret.up();
+//                    isUp = false;
+//                }
+//            }
+//        }).start();
+//        while (opModeIsActive()){
+//            if (isPreloadUp){
+//                turret.preloadUp();
+//                isPreloadUp = false;
+//            } else if (isPreloadMid){
+//                turret.preloadMid();
+//                isPreloadMid = false;
+//            } else if (isPreloadLow){
+//                turret.preloadLow();
+//                isPreloadLow = false;
+//            } else if (isPreloadDown){
+//                turret.preloadDown();
+//                isPreloadDown = false;
+//            } else if (isPreloadDownLow){
+//                turret.preloadDownLow();
+//                isPreloadDown = false;
+//            } else if (isDuckScorePrepRed){
+//                turret.duckScorePrepRed();
+//                isDuckScorePrepRed = false;
+//            } else if (isDuckScorePrepBlue){
+//                turret.duckScorePrepBlue();
+//                isDuckScorePrepBlue = false;
+//            } else if (isDown){
+//                turret.down();
+//                isDown = false;
+//            } else if (isUp){
+//                turret.up();
+//                isUp = false;
+//            }
+//        }
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
@@ -145,6 +175,7 @@ public class AutoBlueDuckFly extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        intake.setPower(-0.3);
         camera.closeCameraDevice();
 
         // Preload
@@ -152,34 +183,38 @@ public class AutoBlueDuckFly extends LinearOpMode {
         if (location == AprilBoundBoxPipeline.Location.LEFT) {
 //            turret.preloadLowAsync();
 //            isPreloadLow = true;
-            new Thread ( () -> {
-                turret.preloadLow();
-            }).start();
+//            new Thread ( () -> {
+//                turret.preloadLow();
+//            }).start();
+            turret.preloadLow();
         }
         if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
 //            turret.preloadMidAsync();
 //            isPreloadMid = true;
-            new Thread ( () -> {
-                turret.preloadMid();
-            }).start();
+//            new Thread ( () -> {
+//                turret.preloadMid();
+//            }).start();
+            turret.preloadMid();
         }
         if (location == AprilBoundBoxPipeline.Location.RIGHT) {
 //            turret.preloadUpAsync();
 //            isPreloadUp = true;
-            new Thread ( () -> {
-                turret.preloadUp();
-            }).start();
+//            new Thread ( () -> {
+//                turret.preloadUp();
+//            }).start();
+            turret.preloadUp();
         }
         if (location == null){
 //            isPreloadUp = true;
 //            turret.preloadUpAsync();
-            new Thread ( () -> {
-                turret.preloadUp();
-            }).start();
+//            new Thread ( () -> {
+//                turret.preloadUp();
+//            }).start();
+            turret.preloadUp();
         }
 
-        while (opModeIsActive()) {
-        }
+//        while (opModeIsActive()) {
+//        }
 
 
             // drive from start to preload
@@ -189,9 +224,10 @@ public class AutoBlueDuckFly extends LinearOpMode {
         timer.safeDelay(500);
 //        turret.downAsync();
 //        isDown = true;
-        new Thread ( () -> {
-            turret.down();
-        }).start();
+//        new Thread ( () -> {
+//            turret.down();
+//        }).start();
+        turret.down();
 
 
 
@@ -215,7 +251,8 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnToDuckCollect(Math.toRadians(200), turret);
+        drive.turnToDuckCollect(Math.toRadians(90),turret);
+        drive.turnToDuckCollect(Math.toRadians(135), turret);
         drive.turnTo(Math.toRadians(0));
         turret.closeDumper();
         intake.stop();
@@ -227,21 +264,23 @@ public class AutoBlueDuckFly extends LinearOpMode {
 
         // Score Duck
         drive.followTrajectory(scoreDuck);
-        drive.turn(Math.toRadians(20));
+
         drive.turnTo(Math.toRadians(0));
+        drive.turn(Math.toRadians(-15));
 //        turret.duckScorePrepBlueAsync();
 //        isDuckScorePrepBlue = true;
-        new Thread ( () -> {
-            turret.duckScorePrepBlue();
-        }).start();
+//        new Thread ( () -> {
+//            turret.duckScorePrepBlue();
+//        }).start();
+        turret.duckScorePrepBlue();
         // duck drop
-        turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
-        timer.safeDelay(1000);
+        //turret.pointTo(drive.getPoseEstimate().getX(),drive.getPoseEstimate().getY(),drive.getPoseEstimate().getHeading(),-12,24);
 //        turret.downAsync();
 //        isDown = true;
-        new Thread ( () -> {
-            turret.down();
-        }).start();
+//        new Thread ( () -> {
+//            turret.down();
+//        }).start();
+        turret.down();
 
         park = drive.trajectoryBuilder(drive.getPoseEstimate())
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))

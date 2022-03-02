@@ -18,6 +18,8 @@ public class Intake {
         dropDown = hardwareMap.get(Servo.class, "dropDown");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
+    public void setPower(double pow){intake.setPower(pow);}
     public void in(){
         intake.setPower(1.0);
     }

@@ -29,7 +29,7 @@ public class BBBTeleop extends LinearOpMode {
         Timer timer = new Timer(this);
         BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        boolean rightBumper1PrevState = false, rightBumperCurrState;
+        boolean rightBumper1PrevState = false, rightBumperCurrState, game1aPrevState = false;
 
         turret.readyToIntake();
 
@@ -54,17 +54,27 @@ public class BBBTeleop extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-//            if ()
+            if (game1aPrevState != gamepad1.a){
+                if (gamepad1.a){
+                    turret.isShared = !turret.isShared;
+                }
+            }
+            game1aPrevState = gamepad1.a;
+            telemetry.addData("gamepad1aPrev", game1aPrevState);
+
            if (gamepad1.right_trigger > 0 && turret.isDown()){
                 intake.in();
                 if(turret.hasBlock() && turret.isDown()){
                     timer.safeDelay(100);
                     intake.out();
                     timer.safeDelay(200);
-                    intake.stop();
-                    timer.safeDelay(100);
                     if(turret.hasBlock()){
-                        turret.up();
+                        if (turret.isShared) {
+                            turret.upShared();
+                        } else {
+                            turret.up();
+                        }
+                        intake.stop();
                     }
                 }
             } else if (gamepad1.left_trigger > 0){

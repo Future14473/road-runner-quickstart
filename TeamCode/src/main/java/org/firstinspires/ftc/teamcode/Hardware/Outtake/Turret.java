@@ -16,7 +16,7 @@ public class Turret {
     Timer timer;
     LinearOpMode opMode;
     Thread turretThread;
-    boolean goingUp, isShared = false;
+    public boolean goingUp, isShared = false;
 
     public static double duckAngle = 45;
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
@@ -265,6 +265,13 @@ public class Turret {
         dumper.close();
         timer.safeDelay(400);
         slides.extendHigh();
+        goingUp = false;
+    }
+    public void upShared(){
+        goingUp = true;
+        dumper.close();
+        timer.safeDelay(400);
+        slides.extendLow();
         goingUp = false;
     }
 

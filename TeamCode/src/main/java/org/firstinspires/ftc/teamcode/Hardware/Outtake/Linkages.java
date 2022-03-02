@@ -17,14 +17,14 @@ public class Linkages {
     public static double rightExtenderOutPos = 0.18,
                             rightExtenderInPos = 0.7,
 
-                            rightExtenderSharedOutPos = 0.465,
-                            rightHalfOutPos = 0.5,
+                            rightExtenderSharedOutPos = 0.3,
+                            rightHalfOutPos = 0.4,
                             rightCloseOutPos = 0.6,
                             rightLowAuto = 0.43,
                             leftLowAuto = 0.3;
 
 
-    public static double[] sharedHubPoses = {rightExtenderSharedOutPos, rightHalfOutPos, rightCloseOutPos};
+    public static double[] sharedHubPoses = {rightCloseOutPos, rightExtenderSharedOutPos, rightHalfOutPos, };
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");

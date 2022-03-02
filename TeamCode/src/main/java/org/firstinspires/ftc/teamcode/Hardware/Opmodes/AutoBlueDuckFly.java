@@ -54,18 +54,21 @@ public class AutoBlueDuckFly extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         timer.safeDelay(3000);
-        switch (cv.getLocation()){
-            case RIGHT:
-                telemetry.addData("Position", "Right");
-                break;
-            case LEFT:
-                telemetry.addData("Position", "Left");
-                break;
-            case MIDDLE:
-                telemetry.addData("Position", "Middle");
-                break;
-        }
         if (cv.getLocation() == null) { telemetry.addData("Capstone Position", "Null"); }
+        else {
+            switch (cv.getLocation()) {
+                case RIGHT:
+                    telemetry.addData("Position", "Right");
+                    break;
+                case LEFT:
+                    telemetry.addData("Position", "Left");
+                    break;
+                case MIDDLE:
+                    telemetry.addData("Position", "Middle");
+                    break;
+            }
+        }
+
         telemetry.addData("your", "mom test "); // TODO: 3/2/22 get rid of this later 
         
 
@@ -96,17 +99,19 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         
         // decide the preload up pos
-        switch (cv.getLocation()){
-            case RIGHT:
-                turret.preloadUp();
-                break;
-            case LEFT:
-                turret.preloadLow();
-                break;
-            case MIDDLE:
-                turret.preloadMid();
-        }
         if (cv.getLocation() == null){  turret.preloadUp(); }
+        else {
+            switch (cv.getLocation()) {
+                case RIGHT:
+                    turret.preloadUp();
+                    break;
+                case LEFT:
+                    turret.preloadLow();
+                    break;
+                case MIDDLE:
+                    turret.preloadMid();
+            }
+        }
         
         turret.preloadDown();
         intake.stop();

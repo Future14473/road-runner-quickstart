@@ -20,7 +20,7 @@ public class Turret {
     public boolean isShared = true;
     public static boolean RESET = false; // default shared bot
 
-    public static double duckAngle = 45;
+    public static double duckAngle = 55;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
@@ -69,7 +69,7 @@ public class Turret {
         slides.extendHigh();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
-        lazySusan.rotateToDegreesRobotCentric(-55);
+        lazySusan.rotateToDegreesRobotCentric(-45);
         linkages.extend();
         timer.safeTurretDelay(1500);
     }
@@ -139,7 +139,7 @@ public class Turret {
         this.turnTo(duckAngle);
         timer.safeTurretDelay(500);
         linkages.extend();
-        timer.safeTurretDelay(1000);
+        timer.safeTurretDelay(800);
     }
 
     public void rightSharedHub(){
@@ -194,7 +194,7 @@ public class Turret {
         dumper.intake();
         timer.safeTurretDelay(500);
         lazySusan.rotateToDegreesRobotCentric(0);
-        timer.safeTurretDelay(isShared ? 475 : 1000);
+        timer.safeTurretDelay(isShared ? 475 : 1500);
         slides.retract();
     }
 

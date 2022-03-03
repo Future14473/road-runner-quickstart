@@ -118,18 +118,16 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         
 //         decide the preload up pos
-        if (cv.getLocation() == null){  turret.preloadUp(); }
-        else {
-            switch (cv.getLocation()) {
-                case RIGHT:
-                    turret.preloadMid();
-                    break;
-                case LEFT:
-                    turret.preloadLow();
-                    break;
-                case OUT_OF_FRAME:
-                    turret.preloadUp();
-            }
+        switch (cv.getLocation()) {
+            case RIGHT:
+                turret.preloadMid();
+                break;
+            case LEFT:
+                turret.preloadLow();
+                break;
+            case OUT_OF_FRAME:
+                turret.preloadUp();
+                break;
         }
         turret.preloadDown();
         intake.stop();

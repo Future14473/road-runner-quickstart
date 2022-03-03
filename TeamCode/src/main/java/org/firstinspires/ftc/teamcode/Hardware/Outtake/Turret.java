@@ -82,12 +82,12 @@ public class Turret {
         timer.safeTurretDelay(900);
     }
     public void preloadLow(){
-        slides.extendLow();
+        slides.extendLowPrep();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(-45);
         linkages.extendLowAuto();
-        timer.safeTurretDelay(500);
+        timer.safeTurretDelay(1200);
     }
 
     public void preloadDownLow(){
@@ -143,7 +143,7 @@ public class Turret {
     }
 
     public void rightSharedHub(){
-        slides.extendLow();
+        slides.extendLowPrep();
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
         timer.safeTurretDelay(300);
@@ -152,7 +152,7 @@ public class Turret {
     }
 
     public void leftSharedHub(){
-        slides.extendLow();
+        slides.extendLowPrep();
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(-90);
         timer.safeTurretDelay(300);
@@ -216,7 +216,7 @@ public class Turret {
         dumper.close();
         timer.safeTurretDelay(400);
         if (isShared){
-            slides.extendLow();
+            slides.extendLowPrep();
         } else {
             slides.extendHigh();
         }

@@ -20,7 +20,7 @@ public class Linkages {
                             rightFarShared = 0.35,
                             rightMidShared = 0.4,
                             rightCloseOutPos = 0.6,
-                            rightLowAuto = 0.43,
+                            rightLowAuto = 0.33,
                             leftLowAuto = 0.3;
 
 

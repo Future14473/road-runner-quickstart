@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware.Outtake;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
@@ -16,7 +15,8 @@ public class Slides {
     public static int retractInPos = 0;
     public static int highGoal = 737;
     public static int midGoal = 356;
-    public static int lowGoal = 265;
+    public static int preLowGoal = 265;
+    public static int lowGoal = 235;
     public static int sharedHeight = 250;
 
 
@@ -61,6 +61,12 @@ public class Slides {
 
 
     // todo make the shared hub less dump and lower
+    public void extendLowPrep() {
+        LeftSlide.setTargetPosition(preLowGoal);
+        RightSlide.setTargetPosition(preLowGoal);
+        LeftSlide.setVelocity(velocity);
+        RightSlide.setVelocity(velocity);
+    }
     public void extendLow() {
         LeftSlide.setTargetPosition(lowGoal);
         RightSlide.setTargetPosition(lowGoal);

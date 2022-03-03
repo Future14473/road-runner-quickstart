@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -23,6 +24,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
+@Disabled
 public class AutoBlueCycling extends LinearOpMode {
     OpenCvWebcam camera;
     public static double
@@ -30,7 +32,7 @@ public class AutoBlueCycling extends LinearOpMode {
             preloadX = startX, preloadY = startY - 16, preloadH = 270,
             preWharehouseX = 11, preWharehouseY = 72, preWhareHouseH = 0,
             whareHouseX = 62, whareHouseY = 72, whareHouseH = 0,
-            scoreX = 62, scoreY = 62, scoreH = 235;;
+            scoreX = 62, scoreY = 62, scoreH = 235;
 
     @Override
     public void runOpMode() throws InterruptedException {

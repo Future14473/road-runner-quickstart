@@ -27,7 +27,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
     OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -54.5, duckY = 66, duckH = 181,
+                            duckX = -54.5, duckY = 64.5, duckH = 183.5,
                             preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
                             scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
                             alignDuckTurn = 17,
@@ -81,10 +81,10 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();
-//        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end().plus(new Pose2d(0, 0, Math.toRadians(alignDuckTurn))))
-//                .back(1.5)
-//                .build();
-        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
+        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
+                .back(1.5)
+                .build();
+        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end().plus(new Pose2d(-1.5,0,0)))
                 .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
@@ -105,7 +105,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         waitForStart();
         camera.stopStreaming();
         
-//        intake.setPower(-0.6);
+        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue
 
@@ -142,6 +142,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
+        drive.followTrajectory(alignDuck);
         drive.turnToDuckCollect(Math.toRadians(90),turret);
         drive.turnToDuckCollect(Math.toRadians(180), turret);
         if (turret.hasBlock()) {

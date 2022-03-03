@@ -177,7 +177,8 @@ public class Turret {
     }
 
     public void right(){
-        lazySusan.rotateToDegreesRobotCentric(135);
+        slides.extendHigh();
+        lazySusan.rotateToAbsolutePos(180);
         linkages.extend();
     }
 
@@ -191,13 +192,13 @@ public class Turret {
     }
 
     public void left(){
-        lazySusan.rotateToDegreesRobotCentric(-135);
+        slides.extendHigh();
+        lazySusan.rotateToAbsolutePos(-180);
         linkages.extend();
     }
 
     public void back(){
         // make it go up first so it doesn't break the REV hubs
-        up();
         lazySusan.rotateToDegreesRobotCentric(180);
         linkages.extend();
     }
@@ -212,10 +213,10 @@ public class Turret {
         boolean isAngle180 = (lazySusan.getTargetDegrees() - 180) < 0.05;
         lazySusan.rotateToDegreesRobotCentric(0);
 //        timer.safeDelay(isAngle180 ? 950 : 800);
-        while(opMode.opModeIsActive() && !lazySusan.isHome()){
-            // wait
-        }
-        timer.safeDelay(isShared ? 500 : 850);
+//        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+//            // wait
+//        }
+        timer.safeDelay(isShared ? 450 : 1000);
         slides.retract();
     }
 

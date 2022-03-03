@@ -88,7 +88,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
 

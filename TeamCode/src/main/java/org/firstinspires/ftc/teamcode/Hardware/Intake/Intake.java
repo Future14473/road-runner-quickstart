@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
+import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
+
 @Config
 public class Intake {
     DcMotor intake;
@@ -20,6 +23,24 @@ public class Intake {
     }
 
     public void setPower(double pow){intake.setPower(pow);}
+
+    public void smartIn(Turret turret, Timer timer){
+        in();
+        if(turret.hasBlock() && turret.isDown()){
+            timer.safeDelay(300);
+            out();
+            timer.safeDelay(200);
+            if(turret.hasBlock()){
+                if (turret.isShared) {
+                    turret.upShared();
+                } else {
+                    turret.up();
+                }
+                stop();
+            }
+        }
+    }
+
     public void in(){
         intake.setPower(1.0);
     }

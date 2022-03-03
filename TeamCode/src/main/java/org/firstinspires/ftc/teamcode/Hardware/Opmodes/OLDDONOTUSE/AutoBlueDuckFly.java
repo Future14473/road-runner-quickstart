@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes.OLDDONOTUSE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -23,6 +24,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 @Config
+@Disabled
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),

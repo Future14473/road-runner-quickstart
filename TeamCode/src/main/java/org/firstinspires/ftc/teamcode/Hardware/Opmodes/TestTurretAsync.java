@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 
 @TeleOp
+@Disabled
 public class TestTurretAsync extends LinearOpMode {
     public volatile boolean isPreloadUp = false, isPreloadMid = false, isPreloadLow = false,
             isPreloadDown = false, isPreloadDownLow = false,

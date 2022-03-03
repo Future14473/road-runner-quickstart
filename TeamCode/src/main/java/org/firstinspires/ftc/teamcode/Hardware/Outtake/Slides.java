@@ -16,7 +16,8 @@ public class Slides {
     public static int highGoal = 737;
     public static int midGoal = 356;
     public static int preLowGoal = 265;
-    public static int lowGoal = 235;
+    public static int prepReturnFromLowHeight = 300;
+    public static int lowGoal = 175;
     public static int sharedHeight = 250;
 
 
@@ -70,6 +71,13 @@ public class Slides {
     public void extendLow() {
         LeftSlide.setTargetPosition(lowGoal);
         RightSlide.setTargetPosition(lowGoal);
+        LeftSlide.setVelocity(velocity);
+        RightSlide.setVelocity(velocity);
+    }
+
+    public void preRetract(){
+        LeftSlide.setTargetPosition(prepReturnFromLowHeight);
+        RightSlide.setTargetPosition(prepReturnFromLowHeight);
         LeftSlide.setVelocity(velocity);
         RightSlide.setVelocity(velocity);
     }

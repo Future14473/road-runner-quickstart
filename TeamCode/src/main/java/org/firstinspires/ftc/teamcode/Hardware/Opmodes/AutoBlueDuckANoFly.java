@@ -30,10 +30,10 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
                             duckX = -54.5, duckY = 66, duckH = 181,
                             preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
-                            scoreDuckX = -23, scoreDuckY = 53, scoreDuckH = 0,
+                            scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
                             alignDuckTurn = 17,
-//                            preParkX = 20, preParkY = 60, preParkH = 15,
-                            parkX = 55, parkY = 63, parkH = 0;
+                            preParkX = 20, preParkY = 55, preParkH = 0,
+                            parkX = 55, parkY = 55, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,8 +73,6 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
             }
         }
         telemetry.addData("Voltage", drive.batteryVoltageSensor.getVoltage());
-        telemetry.addData("your", "mom test "); // TODO: 3/2/22 get rid of this later 
-        
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
@@ -92,7 +90,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
-//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
 
@@ -108,7 +106,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         waitForStart();
         camera.stopStreaming();
         
-        intake.setPower(-0.6);
+//        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue
 
@@ -121,15 +119,18 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         switch (cv.getLocation()) {
             case RIGHT:
                 turret.preloadMid();
+                turret.preloadDown();
                 break;
             case LEFT:
                 turret.preloadLow();
+                turret.preloadDownLow();
                 break;
             case OUT_OF_FRAME:
                 turret.preloadUp();
+                turret.preloadDown();
                 break;
         }
-        turret.preloadDown();
+
         intake.stop();
 
         // Duck Drop

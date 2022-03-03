@@ -247,10 +247,10 @@ public class SampleTankDrive extends TankDrive {
         waitForIdle();
     }
 
-    public void followTrajectoryBreakHasBlock(Trajectory trajectory, Turret turret) {
-        followTrajectoryAsync(trajectory);
-        waitForIdleOrBlock(turret);
-    }
+//    public void followTrajectoryBreakHasBlock(Trajectory trajectory, Turret turret) {
+//        followTrajectoryAsync(trajectory);
+//        waitForIdleOrBlock(turret);
+//    }
 
     public Pose2d getLastError() {
         switch (mode) {

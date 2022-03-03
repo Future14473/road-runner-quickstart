@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes.OLDDONOTUSE;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
+@Disabled
 public class DriveOnly extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes.OLDDONOTUSE;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,13 +23,13 @@ public class TestTurretAsync extends LinearOpMode {
         new Thread( () -> {
             while (opModeIsActive()){
                 if (isPreloadUp){
-                    turret.preloadUp();
+                    turret.preloadUpBlue();
                     isPreloadUp = false;
                 } else if (isPreloadMid){
-                    turret.preloadMid();
+                    turret.preloadMidBlue();
                     isPreloadMid = false;
                 } else if (isPreloadLow){
-                    turret.preloadLow();
+                    turret.preloadLowBlue();
                     isPreloadLow = false;
                 } else if (isPreloadDown){
                     turret.preloadDown();

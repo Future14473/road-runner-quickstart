@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
-import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
+import org.firstinspires.ftc.teamcode.ComputerVision.RedCapstonePipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
@@ -26,13 +25,13 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Config
 public class AutoRedDuck extends LinearOpMode {
     OpenCvWebcam camera;
-    public static double preloadX = -29, preloadY = 49, preloadH = 270,
-            startX = -35.5, startY = 70, startH = Math.toRadians(270),
-            duckX = -54.5, duckY = 66, duckH = 181,
-            preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
-            scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
+    public static double preloadX = -29, preloadY = -49, preloadH = 270-180,
+            startX = -35.5, startY = -70, startH = Math.toRadians(270-180),
+            duckX = -54.5, duckY = -66, duckH = 91,
+            preScoreDuckX = -37, preScoreDuckY = -65, preScoreDuckH = 290-180,
+            scoreDuckX = -23, scoreDuckY = -50, scoreDuckH = 0,
             alignDuckTurn = 17,
-            preParkX = 20, preParkY = 55, preParkH = 0,
+            preParkX = 20, preParkY = -55, preParkH = 0,
             parkX = 55, parkY = 55, parkH = 0;
 
     @Override
@@ -49,7 +48,7 @@ public class AutoRedDuck extends LinearOpMode {
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 //        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
-        CapstonePipeline cv = new CapstonePipeline(telemetry);
+        RedCapstonePipeline cv = new RedCapstonePipeline(telemetry);
         camera.setPipeline(cv);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {@Override public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
             camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
@@ -62,13 +61,13 @@ public class AutoRedDuck extends LinearOpMode {
         else {
             switch (cv.getLocation()) {
                 case RIGHT:
-                    telemetry.addData("Position", "Middle");
+                    telemetry.addData("Position", "Right");
                     break;
                 case LEFT:
                     telemetry.addData("Position", "Left");
                     break;
                 case OUT_OF_FRAME:
-                    telemetry.addData("Position", "Right");
+                    telemetry.addData("Position", "OUT OF FRAME");
                     break;
             }
         }
@@ -118,16 +117,16 @@ public class AutoRedDuck extends LinearOpMode {
 //         decide the preload up pos
         switch (cv.getLocation()) {
             case RIGHT:
-                turret.preloadMid();
+                turret.preloadUpRed();
                 turret.preloadDown();
                 break;
             case LEFT:
-                turret.preloadLow();
-                turret.preloadDownLow();
+                turret.preloadMidRed();
+                turret.preloadDown();
                 break;
             case OUT_OF_FRAME:
-                turret.preloadUp();
-                turret.preloadDown();
+                turret.preloadLowRed();
+                turret.preloadDownLow();
                 break;
         }
 
@@ -143,8 +142,8 @@ public class AutoRedDuck extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnToDuckCollect(Math.toRadians(90),turret);
-        drive.turnToDuckCollect(Math.toRadians(180), turret);
+        drive.turnToDuckCollect(Math.toRadians(270),turret);
+        drive.turnToDuckCollect(Math.toRadians(0), turret);
         if (turret.hasBlock()) {
             turret.closeDumper();
         }

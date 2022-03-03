@@ -20,7 +20,8 @@ public class Turret {
     public boolean isShared = true;
     public static boolean RESET = false; // default shared bot
 
-    public static double duckAngle = 55;
+    public static double duckAngleBlue = 55;
+    public static double duckAngleRed = -55;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
@@ -65,7 +66,16 @@ public class Turret {
         lazySusan.rotateToDegreesRobotCentric(angle);
     }
 
-    public void preloadUp(){
+    public void preloadUpRed(){
+        slides.extendHigh();
+        timer.safeTurretDelay(500);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        lazySusan.rotateToDegreesRobotCentric(45);
+        linkages.extend();
+        timer.safeTurretDelay(1500);
+    }
+
+    public void preloadUpBlue(){
         slides.extendHigh();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
@@ -73,7 +83,7 @@ public class Turret {
         linkages.extend();
         timer.safeTurretDelay(1500);
     }
-    public void preloadMid(){
+    public void preloadMidBlue(){
         slides.extendMid();
         timer.safeTurretDelay(500);
         lazySusan.rotateToDegreesRobotCentric(-45);
@@ -81,11 +91,29 @@ public class Turret {
         linkages.extend();
         timer.safeTurretDelay(900);
     }
-    public void preloadLow(){
+    public void preloadMidRed(){
+        slides.extendMid();
+        timer.safeTurretDelay(500);
+        lazySusan.rotateToDegreesRobotCentric(45);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        linkages.extend();
+        timer.safeTurretDelay(900);
+    }
+    public void preloadLowBlue(){
         slides.extendLowPrep();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(-45);
+        linkages.extendLowAuto();
+        timer.safeTurretDelay(1000);
+        slides.extendLow();
+        timer.safeTurretDelay(800);
+    }
+    public void preloadLowRed(){
+        slides.extendLowPrep();
+        timer.safeTurretDelay(500);
+//        while (slides.isBusy() && opMode.opModeIsActive()){}
+        lazySusan.rotateToDegreesRobotCentric(45);
         linkages.extendLowAuto();
         timer.safeTurretDelay(1000);
         slides.extendLow();
@@ -129,17 +157,17 @@ public class Turret {
         dumper.close();
         slides.extendHigh();
         timer.safeTurretDelay(500);
-        //lazySusan.rotateToDegreesRobotCentric(-45);
+        this.turnTo(duckAngleRed);
         timer.safeTurretDelay(500);
         linkages.extend();
-        timer.safeTurretDelay(1000);
+        timer.safeTurretDelay(800);
     }
 
     public void duckScorePrepBlue(){
         dumper.close();
         slides.extendHigh();
         timer.safeTurretDelay(500);
-        this.turnTo(duckAngle);
+        this.turnTo(duckAngleBlue);
         timer.safeTurretDelay(500);
         linkages.extend();
         timer.safeTurretDelay(800);

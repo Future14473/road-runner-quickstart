@@ -39,7 +39,7 @@ public class AutoBlueDuck extends LinearOpMode {
         preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .addTemporalMarker(0, () -> {
-                  turret.preloadUp();
+                  turret.preloadUpBlue();
                 })
                 .build();
         duckPath = drive.trajectoryBuilder(preload.end(), true)

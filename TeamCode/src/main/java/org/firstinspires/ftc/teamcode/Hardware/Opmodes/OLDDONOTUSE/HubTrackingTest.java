@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes.OLDDONOTUSE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,9 +7,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Hardware.Outtake.BoxSensor;
-import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
-import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.LazySusan;
@@ -51,7 +48,7 @@ public class HubTrackingTest extends LinearOpMode {
         tankDrive.setPoseEstimate(start);
 
         // lift the slides all the way up
-        turret.preloadUp();
+        turret.preloadUpBlue();
 
 
         waitForStart();

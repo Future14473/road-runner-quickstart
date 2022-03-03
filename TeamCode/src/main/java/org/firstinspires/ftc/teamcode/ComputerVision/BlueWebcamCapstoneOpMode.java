@@ -32,7 +32,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @TeleOp
-public class WebcamCapstoneOpMode extends LinearOpMode
+public class BlueWebcamCapstoneOpMode extends LinearOpMode
 {
     OpenCvWebcam webcam;
 
@@ -42,7 +42,7 @@ public class WebcamCapstoneOpMode extends LinearOpMode
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 //        CapstonePipeline cv = new CapstonePipeline(telemetry)
-        webcam.setPipeline(new CapstonePipeline(telemetry));
+        webcam.setPipeline(new BlueCapstonePipeline(telemetry));
         FtcDashboard.getInstance().startCameraStream(webcam, 0);
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {

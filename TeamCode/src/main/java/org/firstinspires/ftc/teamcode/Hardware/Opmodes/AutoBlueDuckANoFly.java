@@ -10,8 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
-import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
+import org.firstinspires.ftc.teamcode.ComputerVision.BlueCapstonePipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
@@ -49,7 +48,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         
 //        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
-        CapstonePipeline cv = new CapstonePipeline(telemetry);
+        BlueCapstonePipeline cv = new BlueCapstonePipeline(telemetry);
         camera.setPipeline(cv);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {@Override public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
             camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
@@ -118,15 +117,15 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 //         decide the preload up pos
         switch (cv.getLocation()) {
             case RIGHT:
-                turret.preloadMid();
+                turret.preloadMidBlue();
                 turret.preloadDown();
                 break;
             case LEFT:
-                turret.preloadLow();
+                turret.preloadLowBlue();
                 turret.preloadDownLow();
                 break;
             case OUT_OF_FRAME:
-                turret.preloadUp();
+                turret.preloadUpBlue();
                 turret.preloadDown();
                 break;
         }

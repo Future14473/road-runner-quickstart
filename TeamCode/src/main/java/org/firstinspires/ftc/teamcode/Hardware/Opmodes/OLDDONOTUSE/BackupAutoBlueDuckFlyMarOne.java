@@ -121,16 +121,16 @@ public class BackupAutoBlueDuckFlyMarOne extends LinearOpMode {
         // Preload
         // decide the preload up pos
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadLow();
+            turret.preloadLowBlue();
         }
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadMid();
+            turret.preloadMidBlue();
         }
         if (cv.getLocation() == AprilBoundBoxPipeline.Location.RIGHT) {
-            turret.preloadUp();
+            turret.preloadUpBlue();
         }
         if (cv.getLocation() == null){
-            turret.preloadUp();
+            turret.preloadUpBlue();
         }
         turret.preloadDown();
         intake.stop();

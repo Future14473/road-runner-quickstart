@@ -14,7 +14,7 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 @Config
-public class    CapstonePipeline extends OpenCvPipeline {
+public class RedCapstonePipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
     // location is relative to the camera
@@ -25,15 +25,15 @@ public class    CapstonePipeline extends OpenCvPipeline {
     }
     private Location location;
 
-    public static int leftX1 = 60, leftX2 = 130, rightX1 = 250, rightX2 = 310;
-    public static int  height1 = 120,  height2 = 220;
+    public static int leftX1 = 20, leftX2 = 110, rightX1 = 190, rightX2 = 270;
+    public static int  height1 = 140,  height2 = 230;
 
     public static double PERCENT_COLOR_THRESHOLD = 0.3;
 
     public static int lowH = 90, lowS = 90, lowV = 30;
     public static int highH = 255, highS = 255, highV = 255;
 
-    public CapstonePipeline(Telemetry t) { telemetry = t; }
+    public RedCapstonePipeline(Telemetry t) { telemetry = t; }
 
     @Override
     public Mat processFrame(Mat input) {

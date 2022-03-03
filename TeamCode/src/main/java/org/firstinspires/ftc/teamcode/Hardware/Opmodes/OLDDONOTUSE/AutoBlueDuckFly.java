@@ -9,7 +9,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
@@ -105,17 +104,17 @@ public class AutoBlueDuckFly extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         
         // decide the preload up pos
-        if (cv.getLocation() == null){  turret.preloadUp(); }
+        if (cv.getLocation() == null){  turret.preloadUpBlue(); }
         else {
             switch (cv.getLocation()) {
                 case RIGHT:
-                    turret.preloadUp();
+                    turret.preloadUpBlue();
                     break;
                 case LEFT:
-                    turret.preloadLow();
+                    turret.preloadLowBlue();
                     break;
                 case MIDDLE:
-                    turret.preloadMid();
+                    turret.preloadMidBlue();
             }
         }
         

@@ -17,10 +17,11 @@ import org.openftc.easyopencv.OpenCvPipeline;
 public class    CapstonePipeline extends OpenCvPipeline {
     Telemetry telemetry;
     Mat mat = new Mat();
+    // location is relative to the camera
     public enum Location {
-        LEFT,
+        OUT_OF_FRAME,
         RIGHT,
-        MIDDLE,
+        LEFT,
     }
     private Location location;
 
@@ -68,18 +69,18 @@ public class    CapstonePipeline extends OpenCvPipeline {
         telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
         telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
 
-        boolean capMiddle = leftValue > PERCENT_COLOR_THRESHOLD;
+        boolean capLeft = leftValue > PERCENT_COLOR_THRESHOLD;
         boolean capRight = rightValue > PERCENT_COLOR_THRESHOLD;
 
-        if (capMiddle) {
-            location = Location.MIDDLE;
-            telemetry.addData("Capstone Location", "Middle");
+        if (capLeft) {
+            location = Location.LEFT;
+            telemetry.addData("Capstone Location", "Left of Camera");
         } else if (capRight){
             location = Location.RIGHT;
-            telemetry.addData("Capstone Location", "Right");
+            telemetry.addData("Capstone Location", "Right of Camera");
         } else {
-            location = Location.LEFT;
-            telemetry.addData("Capstone Location", "Left");
+            location = Location.OUT_OF_FRAME;
+            telemetry.addData("Capstone Location", "Out Of Frame");
         }
         telemetry.update();
 
@@ -88,7 +89,7 @@ public class    CapstonePipeline extends OpenCvPipeline {
         Scalar notDetectedColor = new Scalar(255, 0, 0);
         Scalar detectedColor = new Scalar(0, 255, 0);
 
-        Imgproc.rectangle(mat, LEFT_ROI, location == Location.MIDDLE? detectedColor:notDetectedColor);
+        Imgproc.rectangle(mat, LEFT_ROI, location == Location.LEFT ? detectedColor:notDetectedColor);
         Imgproc.rectangle(mat, RIGHT_ROI, location == Location.RIGHT? detectedColor:notDetectedColor);
 
         return mat;

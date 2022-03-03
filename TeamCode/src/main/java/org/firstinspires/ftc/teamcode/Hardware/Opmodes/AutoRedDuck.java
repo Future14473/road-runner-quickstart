@@ -25,9 +25,10 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Config
 public class AutoRedDuck extends LinearOpMode {
     OpenCvWebcam camera;
-    public static double preloadX = -29, preloadY = -49, preloadH = 270-180,
+    public static double
             startX = -35.5, startY = -70, startH = Math.toRadians(270-180),
-            duckX = -54.5, duckY = -66, duckH = 91,
+            preloadX = -29, preloadY = -49, preloadH = 270-180,
+            duckX = -57.5, duckY = -66, duckH = 97-180,
             preScoreDuckX = -37, preScoreDuckY = -65, preScoreDuckH = 290-180,
             scoreDuckX = -23, scoreDuckY = -50, scoreDuckH = 0,
             alignDuckTurn = 17,
@@ -100,7 +101,7 @@ public class AutoRedDuck extends LinearOpMode {
         // todo make this power based
         turret.resetTurretZero();
 
-        telemetry.addData("Status ", "Ready to Start");
+        telemetry.addData("Status ", "Not ready to Start");
         telemetry.update();
         waitForStart();
         camera.stopStreaming();
@@ -117,16 +118,16 @@ public class AutoRedDuck extends LinearOpMode {
 //         decide the preload up pos
         switch (cv.getLocation()) {
             case RIGHT:
-                turret.preloadUpRed();
-                turret.preloadDown();
-                break;
-            case LEFT:
                 turret.preloadMidRed();
                 turret.preloadDown();
                 break;
-            case OUT_OF_FRAME:
+            case LEFT:
                 turret.preloadLowRed();
-                turret.preloadDownLow();
+                turret.preloadDownLowRed();
+                break;
+            case OUT_OF_FRAME:
+                turret.preloadUpRed();
+                turret.preloadDown();
                 break;
         }
 
@@ -139,7 +140,7 @@ public class AutoRedDuck extends LinearOpMode {
         duck.autoDuckBlue(timer);
 //        duck.setPower(duckPower);
 //        timer.safeDelay(duckWait);
-
+/*
         //Pickup Duck
         intake.in();
         drive.turnToDuckCollect(Math.toRadians(270),turret);
@@ -160,6 +161,6 @@ public class AutoRedDuck extends LinearOpMode {
         //park
         drive.followTrajectory(park);
 //        drive.setPowerDir(1.0,0);
-//        timer.safeDelay(1000);
+//        timer.safeDelay(1000);*/
     }
 }

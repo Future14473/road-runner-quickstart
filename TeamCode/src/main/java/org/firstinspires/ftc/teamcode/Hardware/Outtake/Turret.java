@@ -100,7 +100,7 @@ public class Turret {
         timer.safeTurretDelay(900);
     }
     public void preloadLowBlue(){
-        slides.extendLowPrep();
+        slides.extendLowPrepBlue();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(-45);
@@ -110,7 +110,7 @@ public class Turret {
         timer.safeTurretDelay(800);
     }
     public void preloadLowRed(){
-        slides.extendLowPrep();
+        slides.preRetract();
         timer.safeTurretDelay(500);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(45);
@@ -120,11 +120,11 @@ public class Turret {
         timer.safeTurretDelay(800);
     }
 
-    public void preloadDownLow(){
+    public void preloadDownLowBlue(){
         // down
         dumper.dump();
         timer.safeTurretDelay(500);
-        slides.extendLowPrep();
+        slides.extendLowPrepBlue();
         timer.safeTurretDelay(500);
         linkages.retract();
         dumper.intake();
@@ -136,7 +136,22 @@ public class Turret {
         }
         slides.retract();
     }
+    public void preloadDownLowRed(){
+        // down
+        dumper.dump();
+        timer.safeTurretDelay(500);
+        slides.preRetract();
+        timer.safeTurretDelay(500);
+        linkages.retract();
+        dumper.intake();
+        timer.safeTurretDelay(1100);
 
+        lazySusan.rotateToDegreesRobotCentric(0);
+        while(opMode.opModeIsActive() && !lazySusan.isHome()){
+            // wait
+        }
+        slides.retract();
+    }
 
     public void preloadDown(){
         // down
@@ -174,7 +189,7 @@ public class Turret {
     }
 
     public void rightSharedHub(){
-        slides.extendLowPrep();
+        slides.extendLowPrepBlue();
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
         timer.safeTurretDelay(300);
@@ -183,7 +198,7 @@ public class Turret {
     }
 
     public void leftSharedHub(){
-        slides.extendLowPrep();
+        slides.extendLowPrepBlue();
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(-90);
         timer.safeTurretDelay(300);
@@ -247,7 +262,7 @@ public class Turret {
         dumper.close();
         timer.safeTurretDelay(400);
         if (isShared){
-            slides.extendLowPrep();
+            slides.extendLowPrepBlue();
         } else {
             slides.extendHigh();
         }

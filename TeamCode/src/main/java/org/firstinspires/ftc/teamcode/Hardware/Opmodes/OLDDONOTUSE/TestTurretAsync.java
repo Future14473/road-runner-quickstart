@@ -35,7 +35,7 @@ public class TestTurretAsync extends LinearOpMode {
                     turret.preloadDown();
                     isPreloadDown = false;
                 } else if (isPreloadDownLow){
-                    turret.preloadDownLow();
+                    turret.preloadDownLowBlue();
                     isPreloadDown = false;
                 } else if (isDuckScorePrepRed){
                     turret.duckScorePrepRed();

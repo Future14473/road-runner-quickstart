@@ -62,7 +62,7 @@ public class Slides {
 
 
     // todo make the shared hub less dump and lower
-    public void extendLowPrep() {
+    public void extendLowPrepBlue() {
         LeftSlide.setTargetPosition(preLowGoal);
         RightSlide.setTargetPosition(preLowGoal);
         LeftSlide.setVelocity(velocity);

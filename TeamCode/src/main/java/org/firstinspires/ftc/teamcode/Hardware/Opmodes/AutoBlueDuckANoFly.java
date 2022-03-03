@@ -100,7 +100,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         // todo make this power based
         turret.resetTurretZero();
 
-        telemetry.addData("Status ", "Ready to Start");
+        telemetry.addData("Status ", "Not Ready to Start");
         telemetry.update();
         waitForStart();
         camera.stopStreaming();
@@ -122,7 +122,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
                 break;
             case LEFT:
                 turret.preloadLowBlue();
-                turret.preloadDownLow();
+                turret.preloadDownLowBlue();
                 break;
             case OUT_OF_FRAME:
                 turret.preloadUpBlue();

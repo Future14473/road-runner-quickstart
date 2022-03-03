@@ -251,6 +251,22 @@ public class SampleTankDrive extends TankDrive {
 //        followTrajectoryAsync(trajectory);
 //        waitForIdleOrBlock(turret);
 //    }
+    public void followTrajectoryAsyncTask(Trajectory trajectory, Runnable asyncMethod){
+        followTrajectoryAsync(trajectory);
+        asyncMethod.run();
+        waitForIdle();
+    }
+
+    public void followTrajectoryAsyncTaskBreakBlock(Trajectory trajectory, Turret turret, Runnable asyncMethod){
+        followTrajectoryAsync(trajectory);
+        asyncMethod.run();
+        waitForIdleOrBlock(turret);
+    }
+    public void followTrajectoryBreakBlock(Trajectory trajectory, Turret turret){
+        followTrajectoryAsync(trajectory);
+        waitForIdleOrBlock(turret);
+    }
+
 
     public Pose2d getLastError() {
         switch (mode) {

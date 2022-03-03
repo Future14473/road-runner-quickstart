@@ -21,7 +21,7 @@ public class Turret {
     public static boolean RESET = false; // default shared bot
 
     public static double duckAngleBlue = 55;
-    public static double duckAngleRed = -55;
+    public static double duckAngleRed = -75;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
@@ -84,7 +84,7 @@ public class Turret {
         timer.safeTurretDelay(1500);
     }
     public void preloadMidBlue(){
-        slides.extendMid();
+        slides.extendMidBlue();
         timer.safeTurretDelay(500);
         lazySusan.rotateToDegreesRobotCentric(-45);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
@@ -92,7 +92,7 @@ public class Turret {
         timer.safeTurretDelay(900);
     }
     public void preloadMidRed(){
-        slides.extendMid();
+        slides.extendMidRed();
         timer.safeTurretDelay(500);
         lazySusan.rotateToDegreesRobotCentric(45);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
@@ -273,7 +273,7 @@ public class Turret {
         goingUp = true;
         dumper.close();
         timer.safeTurretDelay(400);
-        slides.extendMid();
+        slides.extendMidBlue();
         while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
         goingUp = false;
     }

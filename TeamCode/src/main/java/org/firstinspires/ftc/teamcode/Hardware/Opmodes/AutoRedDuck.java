@@ -28,8 +28,8 @@ public class AutoRedDuck extends LinearOpMode {
     public static double
             startX = -35.5, startY = -70, startH = Math.toRadians(270-180),
             preloadX = -29, preloadY = -49, preloadH = 270-180,
-            duckX = -57.5, duckY = -66, duckH = 97-180,
-            preScoreDuckX = -37, preScoreDuckY = -65, preScoreDuckH = 290-180,
+            duckX = -61.5, duckY = -66, duckH = 97-180,
+            preScoreDuckX = -34, preScoreDuckY = -58, preScoreDuckH = 290-180,
             scoreDuckX = -23, scoreDuckY = -50, scoreDuckH = 0,
             alignDuckTurn = 17,
             preParkX = 20, preParkY = -55, preParkH = 0,
@@ -137,10 +137,10 @@ public class AutoRedDuck extends LinearOpMode {
         drive.followTrajectory(duckPath);
 //        drive.turn(Math.toRadians(alignDuckTurn));
 //        drive.followTrajectory(alignDuck);
-        duck.autoDuckBlue(timer);
+        duck.autoDuckRed(timer);
 //        duck.setPower(duckPower);
 //        timer.safeDelay(duckWait);
-/*
+
         //Pickup Duck
         intake.in();
         drive.turnToDuckCollect(Math.toRadians(270),turret);
@@ -150,17 +150,18 @@ public class AutoRedDuck extends LinearOpMode {
         }
         drive.turnTo(Math.toRadians(0));
         duck.setStop(); duck.move();
-
         // Score Duck
         drive.followTrajectoryCloseDump(scoreDuck, turret);
         intake.stop();
         drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrepBlue();
+        turret.duckScorePrepRed();
         turret.down();
 
+        /*
         //park
         drive.followTrajectory(park);
 //        drive.setPowerDir(1.0,0);
-//        timer.safeDelay(1000);*/
+//        timer.safeDelay(1000);
+*/
     }
 }

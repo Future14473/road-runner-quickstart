@@ -14,7 +14,8 @@ public class Slides {
 
     public static int retractInPos = 0;
     public static int highGoal = 737;
-    public static int midGoal = 356;
+    public static int midGoalBlue = 356;
+    public static int midGoalRed = 370;
     public static int preLowGoal = 265;
     public static int prepReturnFromLowHeight = 300;
     public static int lowGoal = 175;
@@ -53,9 +54,16 @@ public class Slides {
         RightSlide.setVelocity(velocity);
     }
 
-    public void extendMid() {
-        LeftSlide.setTargetPosition(midGoal);
-        RightSlide.setTargetPosition(midGoal);
+    public void extendMidBlue() {
+        LeftSlide.setTargetPosition(midGoalBlue);
+        RightSlide.setTargetPosition(midGoalBlue);
+        LeftSlide.setVelocity(velocity);
+        RightSlide.setVelocity(velocity);
+    }
+
+    public void extendMidRed() {
+        LeftSlide.setTargetPosition(midGoalRed);
+        RightSlide.setTargetPosition(midGoalRed);
         LeftSlide.setVelocity(velocity);
         RightSlide.setVelocity(velocity);
     }

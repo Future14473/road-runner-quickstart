@@ -11,16 +11,17 @@ import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 public class MeepMeepTest {
     public static void main(String[] args) {
 
-        double preloadX = -29, preloadY = -49, preloadH = 270-180,
-                duckX = -54.5, duckY = -66, duckH = 9;
+        double duckX = -61.5, duckY = -66, duckH = 97-180,
+                preScoreDuckX = -34, preScoreDuckY = -58, preScoreDuckH = 290-180,
+                scoreDuckX = -23, scoreDuckY = -50, scoreDuckH = 0;
         MeepMeep meepMeep = new MeepMeep(600);
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 .setDriveTrainType(DriveTrainType.TANK)
                 .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(driveShim ->
-                        driveShim.trajectorySequenceBuilder(new Pose2d(preloadX, preloadY, Math.toRadians(preloadH)))
-//                                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
-                                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
+                        driveShim.trajectorySequenceBuilder(new Pose2d(duckX, duckY, Math.toRadians(duckH)))
+                                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
+                                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                         //.splineTo(new Vector2d(37, 65), Math.toRadians(180))
                                // .splineTo(new Vector2d(5, 65),Math.toRadians(0))
                                // .splineTo(new Vector2d(-4, 59), Math.toRadians(0))

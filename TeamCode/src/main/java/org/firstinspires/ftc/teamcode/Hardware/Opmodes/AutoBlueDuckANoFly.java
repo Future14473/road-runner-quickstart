@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
+import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
@@ -19,10 +20,12 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
 public class AutoBlueDuckANoFly extends LinearOpMode {
+    OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
                             duckX = -54.5, duckY = 66, duckH = 181,
@@ -43,31 +46,32 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 
         // Computer Vision Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         
 //        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
-//        camera.setPipeline(cv);
+        CapstonePipeline cv = new CapstonePipeline(telemetry);
+        camera.setPipeline(cv);
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {@Override public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
-            camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
-        
-//        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-//        FtcDashboard.getInstance().startCameraStream(camera, 0);
+            camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         timer.safeDelay(3000);
-//        if (cv.getLocation() == null) { telemetry.addData("Capstone Position", "Null"); }
-//        else {
-//            switch (cv.getLocation()) {
-//                case RIGHT:
-//                    telemetry.addData("Position", "Right");
-//                    break;
-//                case LEFT:
-//                    telemetry.addData("Position", "Left");
-//                    break;
-//                case MIDDLE:
-//                    telemetry.addData("Position", "Middle");
-//                    break;
-//            }
-//        }
+        if (cv.getLocation() == null) { telemetry.addData("Capstone Position", "Null"); }
+        else {
+            switch (cv.getLocation()) {
+                case RIGHT:
+                    telemetry.addData("Position", "Middle");
+                    break;
+                case LEFT:
+                    telemetry.addData("Position", "Left");
+                    break;
+                case OUT_OF_FRAME:
+                    telemetry.addData("Position", "Right");
+                    break;
+            }
+        }
         telemetry.addData("Voltage", drive.batteryVoltageSensor.getVoltage());
         telemetry.addData("your", "mom test "); // TODO: 3/2/22 get rid of this later 
         
@@ -102,6 +106,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         telemetry.addData("Status ", "Ready to Start");
         telemetry.update();
         waitForStart();
+        camera.stopStreaming();
         
         intake.setPower(-0.6);
 //        camera.closeCameraDevice();
@@ -112,21 +117,20 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
         
-        // decide the preload up pos
-//        if (cv.getLocation() == null){  turret.preloadUp(); }
-//        else {
-//            switch (cv.getLocation()) {
-//                case RIGHT:
-//                    turret.preloadUp();
-//                    break;
-//                case LEFT:
-//                    turret.preloadLow();
-//                    break;
-//                case MIDDLE:
-//                    turret.preloadMid();
-//            }
-//        }
-        turret.preloadUp();
+//         decide the preload up pos
+        if (cv.getLocation() == null){  turret.preloadUp(); }
+        else {
+            switch (cv.getLocation()) {
+                case RIGHT:
+                    turret.preloadMid();
+                    break;
+                case LEFT:
+                    turret.preloadLow();
+                    break;
+                case OUT_OF_FRAME:
+                    turret.preloadUp();
+            }
+        }
         turret.preloadDown();
         intake.stop();
 

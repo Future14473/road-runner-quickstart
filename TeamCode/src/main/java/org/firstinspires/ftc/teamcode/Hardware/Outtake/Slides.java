@@ -15,7 +15,7 @@ public class Slides {
 
     public static int retractInPos = 0;
     public static int highGoal = 737;
-    public static int midGoal = 336;
+    public static int midGoal = 356;
     public static int lowGoal = 265;
     public static int sharedHeight = 250;
 

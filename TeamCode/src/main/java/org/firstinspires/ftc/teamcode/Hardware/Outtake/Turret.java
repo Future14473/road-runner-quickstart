@@ -79,7 +79,7 @@ public class Turret {
         lazySusan.rotateToDegreesRobotCentric(-45);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         linkages.extend();
-        timer.safeTurretDelay(500);
+        timer.safeTurretDelay(900);
     }
     public void preloadLow(){
         slides.extendLow();

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.ComputerVision.RedCapstonePipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
@@ -28,12 +29,13 @@ public class AutoRedDuck extends LinearOpMode {
     public static double
             startX = -35.5, startY = -70, startH = Math.toRadians(270-180),
             preloadX = -29, preloadY = -49, preloadH = 270-180,
-            duckX = -61.5, duckY = -66, duckH = 97-180,
-            preScoreDuckX = -34, preScoreDuckY = -58, preScoreDuckH = 290-180,
-            scoreDuckX = -23, scoreDuckY = -50, scoreDuckH = 0,
+            preDuckX = -45, preDuckY = -56, preDuckH = 15,
+            duckX = -59.5, duckY = -68.5, duckH = 267,
+            preScoreDuckX = -15, preScoreDuckY = -67.6, preScoreDuckH = 0,
+            scoreDuckX = -23, scoreDuckY = -52.5, scoreDuckH = 0,
             alignDuckTurn = 17,
-            preParkX = 20, preParkY = -55, preParkH = 0,
-            parkX = 55, parkY = 55, parkH = 0;
+            preParkX = 20, preParkY = -59, preParkH = 0,
+            parkX = 55, parkY = -59, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,15 +53,24 @@ public class AutoRedDuck extends LinearOpMode {
 //        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
         RedCapstonePipeline cv = new RedCapstonePipeline(telemetry);
         camera.setPipeline(cv);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {@Override public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
-            camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+            }
+        });
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
         timer.safeDelay(3000);
-        if (cv.getLocation() == null) { telemetry.addData("Capstone Position", "Null"); }
-        else {
+        if (cv.getLocation() == null) {
+            telemetry.addData("Capstone Position", "Null");
+        } else {
             switch (cv.getLocation()) {
                 case RIGHT:
                     telemetry.addData("Position", "Right");
@@ -75,24 +86,27 @@ public class AutoRedDuck extends LinearOpMode {
         telemetry.addData("Voltage", drive.batteryVoltageSensor.getVoltage());
 
         // Trajectory Setup
-        Pose2d start = new Pose2d(startX,startY,startH);
+        Pose2d start = new Pose2d(startX, startY, startH);
         Trajectory preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .build();
         Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
+//                .splineTo(new Vector2d(preDuckX, preDuckY), Math.toRadians(preDuckH))
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();
 //        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end().plus(new Pose2d(0, 0, Math.toRadians(alignDuckTurn))))
 //                .back(1.5)
 //                .build();
-        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
-                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
+        Trajectory scoreDuck = drive.trajectoryBuilder(new Pose2d(duckX, duckY, 0))
+//                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
+        ;
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
                 .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
+        ;
 
         // Position Setup
         drive.setPoseEstimate(start);
@@ -112,6 +126,9 @@ public class AutoRedDuck extends LinearOpMode {
 
 
         // Preload
+        if (cv.getLocation() == RedCapstonePipeline.Location.RIGHT){
+            intake.setPower(-0.6);
+        }
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
 
@@ -135,6 +152,7 @@ public class AutoRedDuck extends LinearOpMode {
 
         // Duck Drop
         drive.followTrajectory(duckPath);
+        drive.turn(Math.toRadians(-15));
 //        drive.turn(Math.toRadians(alignDuckTurn));
 //        drive.followTrajectory(alignDuck);
         duck.autoDuckRed(timer);
@@ -143,25 +161,27 @@ public class AutoRedDuck extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.turnToDuckCollect(Math.toRadians(270),turret);
+        drive.turnToDuckCollect(Math.toRadians(270), turret);
         drive.turnToDuckCollect(Math.toRadians(0), turret);
         if (turret.hasBlock()) {
             turret.closeDumper();
         }
         drive.turnTo(Math.toRadians(0));
-        duck.setStop(); duck.move();
+        duck.setStop();
+        duck.move();
         // Score Duck
+
         drive.followTrajectoryCloseDump(scoreDuck, turret);
         intake.stop();
         drive.turnTo(Math.toRadians(0));
         turret.duckScorePrepRed();
         turret.down();
 
-        /*
+
         //park
+
         drive.followTrajectory(park);
 //        drive.setPowerDir(1.0,0);
 //        timer.safeDelay(1000);
-*/
     }
 }

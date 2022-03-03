@@ -26,11 +26,11 @@ import org.openftc.easyopencv.OpenCvWebcam;
 public class AutoBlueCycling extends LinearOpMode {
     OpenCvWebcam camera;
     public static double
-        startX = -35.5+48, startY = 70, startH = Math.toRadians(270),
-        preloadX = startX, preloadY = startY - 16, preloadH = 270,
-        preWharehouseX = 11, preWharehouseY = 61, preWhareHouseH = 0,
-        whareHouseX = 62, whareHouseY = 62, whareHouseH = 0,
-            scoreX = 62, scoreY = 62, scoreH = 0;;
+            startX = -35.5+48, startY = 70, startH = Math.toRadians(270),
+            preloadX = startX, preloadY = startY - 16, preloadH = 270,
+            preWharehouseX = 11, preWharehouseY = 72, preWhareHouseH = 0,
+            whareHouseX = 62, whareHouseY = 72, whareHouseH = 0,
+            scoreX = 62, scoreY = 62, scoreH = 235;;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -80,6 +80,14 @@ public class AutoBlueCycling extends LinearOpMode {
                 .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
                 .splineTo(new Vector2d(whareHouseX, whareHouseY), Math.toRadians(whareHouseH))
                 .build();
+        Trajectory toScore = drive.trajectoryBuilder(firstToBlocks.end(), true)
+                .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
+                .splineTo(new Vector2d(scoreX, scoreY), Math.toRadians(scoreH))
+                .build();
+        Trajectory toBlocksCycling = drive.trajectoryBuilder(toScore.end())
+                .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
+                .splineTo(new Vector2d(whareHouseX, whareHouseY), Math.toRadians(whareHouseH))
+                .build();
 
         // Position Setup
         drive.setPoseEstimate(start);
@@ -118,43 +126,15 @@ public class AutoBlueCycling extends LinearOpMode {
                 break;
         }
 
-        intake.smartIn(turret,timer);
-
 //        drive.turnTo(Math.toRadians(90));
+
+        // INTAKE first block
+        intake.smartIn(turret,timer);
         drive.followTrajectoryBreakBlock(firstToBlocks, turret);
 
-//        drive.followTrajectoryAsyncTask(preload, () -> turret.up());
-
-
-        /// STOOOOOOPPPP OLD STUFFF
-        // Duck Drop
-        /*drive.followTrajectory(duckPath);
-//        drive.turn(Math.toRadians(alignDuckTurn));
-//        drive.followTrajectory(alignDuck);
-        duck.autoDuckBlue(timer);
-//        duck.setPower(duckPower);
-//        timer.safeDelay(duckWait);
-
-        //Pickup Duck
-        intake.in();
-        drive.turnToDuckCollect(Math.toRadians(90),turret);
-        drive.turnToDuckCollect(Math.toRadians(180), turret);
-        if (turret.hasBlock()) {
-            turret.closeDumper();
-        }
-        drive.turnTo(Math.toRadians(0));
-        duck.setStop(); duck.move();
-
-        // Score Duck
-        drive.followTrajectoryCloseDump(scoreDuck, turret);
-        intake.stop();
-        drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrepBlue();
-        turret.down();
-
-        //park
-        drive.followTrajectory(park);
-//        drive.setPowerDir(1.0,0);
-//        timer.safeDelay(1000);*/
+        //Score and go back to wharehouse
+        // TODO: 3/3/22 for loop
+        drive.followTrajectoryAsyncTask(toScore, () -> turret.right());
+        drive.followTrajectoryAsyncTaskBreakBlock(toBlocksCycling, turret, () -> turret.down());
     }
 }

@@ -13,12 +13,12 @@ public class MeepMeepTest {
 
         double  startX = -35.5+48, startY = 70, startH = Math.toRadians(270),
                 preloadX = startX, preloadY = startY - 16, preloadH = 270,
-                preWharehouseX = 11, preWharehouseY = 61, preWahreHouseH = 0,
-                whareHouseX = 62, whareHouseY = 62, whareHouseH = 0;
+                preWharehouseX = 11, preWharehouseY = 72, preWahreHouseH = 0,
+                whareHouseX = 62, whareHouseY = 72, whareHouseH = 0;
         MeepMeep meepMeep = new MeepMeep(600);
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 .setDriveTrainType(DriveTrainType.TANK)
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 11.5)
                 .followTrajectorySequence(driveShim ->
                         driveShim.trajectorySequenceBuilder(new Pose2d(preloadX, preloadY, Math.toRadians(preloadH)))
 //                                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))

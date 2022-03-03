@@ -25,7 +25,9 @@ public class Intake {
     public void setPower(double pow){intake.setPower(pow);}
 
     public void smartIn(Turret turret, Timer timer){
-        in();
+        if (turret.isDown()) {
+            in();
+        }
         if(turret.hasBlock() && turret.isDown()){
             timer.safeDelay(300);
             out();
@@ -36,6 +38,7 @@ public class Intake {
                 } else {
                     turret.up();
                 }
+                timer.safeDelay(100);
                 stop();
             }
         }

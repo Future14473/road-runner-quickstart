@@ -29,7 +29,7 @@ public class BBBTeleop extends LinearOpMode {
         Timer timer = new Timer(this);
         BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        boolean rightBumper1PrevState = false, rightBumperCurrState, game1aPrevState = false;
+        boolean rightBumper1PrevState = false, rightBumperCurrState, game1aPrevState = false, game1yPrevState = false;
 
         turret.readyToIntake();
 
@@ -82,9 +82,14 @@ public class BBBTeleop extends LinearOpMode {
             if (gamepad1.dpad_down){
                 turret.down();
             }
-            if(gamepad1.y) {
-                turret.back();
+
+            if (game1yPrevState != gamepad1.y) {
+                if (gamepad1.y) {
+//                turret.back();
+                    turret.toggleLinkages();
+                }
             }
+            game1yPrevState = gamepad1.y;
 
             if ((gamepad1.right_stick_x > 0) && !turret.isDown()){
                 lazySusan.turnRightIncrement();
@@ -106,16 +111,27 @@ public class BBBTeleop extends LinearOpMode {
                 timer.safeDelay(800);
             }
 
-            rightBumperCurrState = gamepad1.right_bumper;
-            // if the button wasn't just pressed
-            if (rightBumperCurrState != rightBumper1PrevState) {
-                // and you really did press right bumper
-                if (rightBumperCurrState == true) {
-                    turret.toggleLinkages();
-                }
+//            rightBumperCurrState = gamepad1.right_bumper;
+//            // if the button wasn't just pressed
+//            if (rightBumperCurrState != rightBumper1PrevState) {
+//                // and you really did press right bumper
+//                if (rightBumperCurrState == true) {
+//                    turret.toggleLinkages();
+//                }
+//            }
+
+            if (gamepad1.right_bumper){
+                turret.linkOutShared();
+            }
+            if (gamepad1.y){
+                turret.toggleLinkages();
             }
 
-            rightBumper1PrevState = rightBumperCurrState;
+            if (gamepad1.left_stick_button){
+                turret.resetWholeTurret();
+            }
+
+//            rightBumper1PrevState = rightBumperCurrState;
 
             duck.setStop();
             if (gamepad2.right_bumper){

@@ -17,14 +17,14 @@ public class Linkages {
     public static double rightExtenderOutPos = 0.18,
                             rightExtenderInPos = 0.7,
 
-                            rightExtenderSharedOutPos = 0.3,
-                            rightHalfOutPos = 0.4,
+                            rightFarShared = 0.35,
+                            rightMidShared = 0.4,
                             rightCloseOutPos = 0.6,
                             rightLowAuto = 0.43,
                             leftLowAuto = 0.3;
 
 
-    public static double[] sharedHubPoses = {rightCloseOutPos, rightHalfOutPos, /*rightExtenderSharedOutPos*/};
+    public static double[] sharedHubPoses = {rightCloseOutPos, rightMidShared, /*rightExtenderSharedOutPos*/};
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");
@@ -56,19 +56,22 @@ public class Linkages {
         rightExtender.setPosition(rightExtenderInPos);
     }
 
-    public void extendShared(){
-        rightExtender.setPosition(rightCloseOutPos);
+    public void extendSharedMid(){
+        rightExtender.setPosition(rightMidShared);
     }
+    public void extendShareFar(){ rightExtender.setPosition(rightFarShared);}
+    public void extendShareClose(){ rightExtender.setPosition(rightCloseOutPos);}
 
     public void toggle(){
         // see if it is at the out position
-        if (rightExtender.getPosition() - rightExtenderSharedOutPos < 0.05){
-            toggleIndex = 1;
-        }
+//        if (rightExtender.getPosition() - rightExtenderSharedOutPos < 0.05){
+//            toggleIndex = 1;
+//        }
         toggleIndex++;
         toggleIndex %= 2;
         rightExtender.setPosition(sharedHubPoses[toggleIndex]);
     }
+
 }
 
 

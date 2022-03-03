@@ -37,8 +37,6 @@ public class BBBTeleop extends LinearOpMode {
 
         waitForStart();
 
-
-
         new Thread( () -> {
             while (opModeIsActive()) {
                 if(gamepad2.left_trigger > 0.5) {
@@ -47,7 +45,6 @@ public class BBBTeleop extends LinearOpMode {
                     tankDrive.setPowerDir(gamepad2.left_stick_y * 0.25, gamepad2.right_stick_x * 0.25);
                 } else {
                     tankDrive.setPowerDir(gamepad2.left_stick_y * 0.65, gamepad2.right_stick_x * 0.65);
-
                 }
             }
         }).start();
@@ -62,26 +59,14 @@ public class BBBTeleop extends LinearOpMode {
             game1aPrevState = gamepad1.a;
             telemetry.addData("isShared", turret.isShared);
 
-           if (gamepad1.right_trigger > 0 && turret.isDown()){
-                intake.in();
-                if(turret.hasBlock() && turret.isDown()){
-                    timer.safeDelay(100);
-                    intake.out();
-                    timer.safeDelay(200);
-                    if(turret.hasBlock()){
-                        if (turret.isShared) {
-                            turret.upShared();
-                        } else {
-                            turret.up();
-                        }
-                        intake.stop();
-                    }
-                }
-            } else if (gamepad1.left_trigger > 0){
+           if (gamepad1.right_trigger > 0) {
+               intake.smartIn(turret, timer);
+           }
+           else if (gamepad1.left_trigger > 0){
                 intake.out();
-            } else{
-                intake.stop();
-
+            } else {
+               intake.stop();
+           }
 
 
             if (gamepad1.dpad_up) {
@@ -152,6 +137,5 @@ public class BBBTeleop extends LinearOpMode {
         telemetry.addData("Slide Height", turret.getHeight());
         telemetry.update();
         }
-    }
     }
 }

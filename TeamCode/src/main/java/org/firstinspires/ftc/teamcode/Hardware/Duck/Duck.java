@@ -23,8 +23,8 @@ public class Duck {
     public void autoDuckBlue(Timer timer){
         duck.setPower(0.7);
         timer.safeDelay(1000);
-        duck.setPower(0.3);
-        timer.safeDelay(2300);
+        duck.setPower(0.2);
+        timer.safeDelay(3300);
     }
 
     public void setPower(double pow){duck.setPower(pow);}

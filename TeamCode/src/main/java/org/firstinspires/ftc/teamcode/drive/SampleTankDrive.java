@@ -239,6 +239,14 @@ public class SampleTankDrive extends TankDrive {
         waitForIdle();
     }
 
+    public void followTrajectoryCloseDump(Trajectory trajectory, Turret turret){
+        followTrajectoryAsync(trajectory);
+        waitForIdleOrBlock(turret);
+        // this will break if there is a block
+        turret.closeDumper();
+        waitForIdle();
+    }
+
     public void followTrajectoryBreakHasBlock(Trajectory trajectory, Turret turret) {
         followTrajectoryAsync(trajectory);
         waitForIdleOrBlock(turret);

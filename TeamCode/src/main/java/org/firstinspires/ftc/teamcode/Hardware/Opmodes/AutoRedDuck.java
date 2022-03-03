@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.AprilTag.AprilBoundBoxPipeline;
+import org.firstinspires.ftc.teamcode.ComputerVision.CapstonePipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
@@ -19,21 +20,20 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
 public class AutoRedDuck extends LinearOpMode {
-//    public static double preloadX = -20, preloadY = -54.5, preloadH = 290,
-//            duckX = -60, duckY = -66.5, duckH = 180,
-//            scoreDuckX = -30, scoreDuckY = -49, scoreDuckH = 0, parkX = 50, parkY = -42;
-//    public static long duckWait = 3000;
-
-    public static double preloadX = -20, preloadY = -54.5, preloadH = 90,
-            startX = -36-5.5, startY = -70, startH = Math.toRadians(90),
-            duckX = -62, duckY = -65, duckH = 270,
-            scoreDuckX = -30, scoreDuckY = -49, scoreDuckH = 0, parkX = 50, parkY = -53;
-    public static long duckWait = 3000;
-
+    OpenCvWebcam camera;
+    public static double preloadX = -29, preloadY = 49, preloadH = 270,
+            startX = -35.5, startY = 70, startH = Math.toRadians(270),
+            duckX = -54.5, duckY = 66, duckH = 181,
+            preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
+            scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
+            alignDuckTurn = 17,
+            preParkX = 20, preParkY = 55, preParkH = 0,
+            parkX = 55, parkY = 55, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -45,133 +45,122 @@ public class AutoRedDuck extends LinearOpMode {
         Intake intake = new Intake(hardwareMap);
 
         // Computer Vision Setup
-        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        OpenCvCamera camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+
+//        AprilBoundBoxPipeline cv = new AprilBoundBoxPipeline(0.166, 578.272, 578.272, 402.145, 221.506, telemetry);
+        CapstonePipeline cv = new CapstonePipeline(telemetry);
         camera.setPipeline(cv);
-        AprilBoundBoxPipeline.Location location;
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {@Override public void onOpened() { //                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+            camera.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT); } @Override public void onError(int errorCode) { }});
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         FtcDashboard.getInstance().startCameraStream(camera, 0);
-        telemetry.setMsTransmissionInterval(50);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-//                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
-                camera.startStreaming(1280,720, OpenCvCameraRotation.UPRIGHT);
-            }
 
-            @Override
-            public void onError(int errorCode)
-            {
-
+        timer.safeDelay(3000);
+        if (cv.getLocation() == null) { telemetry.addData("Capstone Position", "Null"); }
+        else {
+            switch (cv.getLocation()) {
+                case RIGHT:
+                    telemetry.addData("Position", "Middle");
+                    break;
+                case LEFT:
+                    telemetry.addData("Position", "Left");
+                    break;
+                case OUT_OF_FRAME:
+                    telemetry.addData("Position", "Right");
+                    break;
             }
-        });
+        }
+        telemetry.addData("Voltage", drive.batteryVoltageSensor.getVoltage());
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
-        Trajectory preload, duckPath, alignDuck, scoreDuck, park;
-        preload = drive.trajectoryBuilder(start)
+        Trajectory preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
-//                .addTemporalMarker(0, () -> {
-//                  turret.preloadUpLow();
-//                })
                 .build();
-
-//        preloadLow = drive.trajectoryBuilder(start)
-//                .splineTo(new Vector2d())
+        Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
+                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
+                .build();
+//        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end().plus(new Pose2d(0, 0, Math.toRadians(alignDuckTurn))))
+//                .back(1.5)
+//                .build();
+        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
+                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
+                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
+                .build();
+        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
+                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+                .build();
 
         // Position Setup
         drive.setPoseEstimate(start);
         turret.closeDumper();
         intake.drop();
+        // todo make this power based
+        turret.resetTurretZero();
 
-        // Get CV Position
-//        location = cv.getLocation();
-        timer.safeDelay(5000);
-        location = cv.location;
-        if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            telemetry.addData("Position", "Lefts");
-        }
-        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            telemetry.addData("Position", "Middle");
-        }
-        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
-            telemetry.addData("Position", "Right");
-        }
-        if (location == null) {
-            telemetry.addData("Position", "Null");
-        }
-        telemetry.addData("In ", "Init");
+        telemetry.addData("Status ", "Ready to Start");
         telemetry.update();
-
         waitForStart();
-        camera.closeCameraDevice();
+        camera.stopStreaming();
+
+//        intake.setPower(-0.6);
+//        camera.closeCameraDevice();
+        // TODO: 3/2/22 see if this takes out the crashing issue
+
 
         // Preload
-        // decide the preload up pos
-        if (location == AprilBoundBoxPipeline.Location.LEFT) {
-            turret.preloadLow();
-        }
-        if (location == AprilBoundBoxPipeline.Location.MIDDLE) {
-            turret.preloadMid();
-        }
-        if (location == AprilBoundBoxPipeline.Location.RIGHT) {
-            turret.preloadUp();
-        }
-        if (location == null){
-            turret.preloadUp();
-        }
-
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
-        turret.down();
 
-        duckPath = drive.trajectoryBuilder(drive.getPoseEstimate(), true)
-                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
-                .build();
+//         decide the preload up pos
+        switch (cv.getLocation()) {
+            case RIGHT:
+                turret.preloadMid();
+                turret.preloadDown();
+                break;
+            case LEFT:
+                turret.preloadLow();
+                turret.preloadDownLow();
+                break;
+            case OUT_OF_FRAME:
+                turret.preloadUp();
+                turret.preloadDown();
+                break;
+        }
 
+        intake.stop();
 
         // Duck Drop
         drive.followTrajectory(duckPath);
-        drive.turnTo(Math.toRadians(90));
-        drive.turn(Math.toRadians(-30));
-        alignDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .back(3.5)
-                .build();
-        drive.followTrajectory(alignDuck);
-//        drive.turnTo(0);
-        duck.setRed();
-        duck.move();
-        timer.safeDelay(duckWait);
-
+//        drive.turn(Math.toRadians(alignDuckTurn));
+//        drive.followTrajectory(alignDuck);
+        duck.autoDuckBlue(timer);
+//        duck.setPower(duckPower);
+//        timer.safeDelay(duckWait);
 
         //Pickup Duck
         intake.in();
-        drive.turnTo(Math.toRadians(230));
+        drive.turnToDuckCollect(Math.toRadians(90),turret);
+        drive.turnToDuckCollect(Math.toRadians(180), turret);
+        if (turret.hasBlock()) {
+            turret.closeDumper();
+        }
         drive.turnTo(Math.toRadians(0));
-        turret.closeDumper();
-        intake.stop();
         duck.setStop(); duck.move();
 
-        scoreDuck = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
-                .build();
-
         // Score Duck
-        drive.followTrajectory(scoreDuck);
-        drive.turn(Math.toRadians(20));
+        drive.followTrajectoryCloseDump(scoreDuck, turret);
+        intake.stop();
         drive.turnTo(Math.toRadians(0));
-        turret.duckScorePrepRed();
+        turret.duckScorePrepBlue();
         turret.down();
-
-        park = drive.trajectoryBuilder(drive.getPoseEstimate())
-                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(0))
-                .build();
 
         //park
         drive.followTrajectory(park);
-
+//        drive.setPowerDir(1.0,0);
+//        timer.safeDelay(1000);
     }
 }

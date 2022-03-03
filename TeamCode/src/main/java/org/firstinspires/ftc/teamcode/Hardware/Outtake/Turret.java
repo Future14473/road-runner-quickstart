@@ -21,7 +21,7 @@ public class Turret {
     public static boolean RESET = false; // default shared bot
 
     public static double duckAngleBlue = 55;
-    public static double duckAngleRed = -75;
+    public static double duckAngleRed = -65;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
@@ -97,7 +97,7 @@ public class Turret {
         lazySusan.rotateToDegreesRobotCentric(45);
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         linkages.extend();
-        timer.safeTurretDelay(900);
+        timer.safeTurretDelay(1100);
     }
     public void preloadLowBlue(){
         slides.extendLowPrepBlue();

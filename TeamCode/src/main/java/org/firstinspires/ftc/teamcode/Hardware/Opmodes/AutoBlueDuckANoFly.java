@@ -27,11 +27,11 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
     OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                            duckX = -54.5, duckY = 64.5, duckH = 183.5,
+                            duckX = -54.5, duckY = 64.5, duckH = 182,
                             preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
                             scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
-                            alignDuckTurn = 17,
-                            preParkX = 20, preParkY = 55, preParkH = 0,
+                            alignDuckTurn = -17,
+                            preParkX = 10, preParkY = 55, preParkH = 0,
                             parkX = 55, parkY = 55, parkH = 0;
 
     @Override
@@ -81,15 +81,21 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
                 .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
                 .build();
-        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
-                .back(1.5)
-                .build();
-        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end().plus(new Pose2d(-1.5,0,0)))
+//        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
+//                .back(1.5)
+//                .build();
+        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
                 .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
                 .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+                .build();
+        Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())
+                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+                .build();
+        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end())
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
 
@@ -134,7 +140,7 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 
         // Duck Drop
         drive.followTrajectory(duckPath);
-//        drive.turn(Math.toRadians(alignDuckTurn));
+        drive.turn(Math.toRadians(alignDuckTurn));
 //        drive.followTrajectory(alignDuck);
         duck.autoDuckBlue(timer);
 //        duck.setPower(duckPower);
@@ -142,12 +148,12 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 
         //Pickup Duck
         intake.in();
-        drive.followTrajectory(alignDuck);
         drive.turnToDuckCollect(Math.toRadians(90),turret);
-        drive.turnToDuckCollect(Math.toRadians(180), turret);
+        drive.turnToDuckCollect(Math.toRadians(200), turret);
         if (turret.hasBlock()) {
             turret.closeDumper();
         }
+        drive.turnToDuckCollect(Math.toRadians(90), turret);
         drive.turnTo(Math.toRadians(0));
         duck.setStop(); duck.move();
 
@@ -159,7 +165,17 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         turret.down();
 
         //park
-        drive.followTrajectory(park);
+        intake.out();
+        drive.turn(Math.toRadians(15));
+        if (cv.getLocation() == BlueCapstonePipeline.Location.LEFT){
+            drive.followTrajectory(preParkLeft);
+            drive.turn(Math.toRadians(15));
+            drive.followTrajectory(parkLeft);
+//            drive.setPowerDir(1.0,0);
+//            timer.safeDelay(1000);
+        } else {
+            drive.followTrajectory(park);
+        }
 //        drive.setPowerDir(1.0,0);
 //        timer.safeDelay(1000);
     }

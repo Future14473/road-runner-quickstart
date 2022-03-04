@@ -37,7 +37,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera;
 import java.util.ArrayList;
 
 @TeleOp
-@Disabled
+//@Disabled
 public class BBBAprilTagBoundingBoxDemo extends LinearOpMode
 {
     OpenCvCamera camera;

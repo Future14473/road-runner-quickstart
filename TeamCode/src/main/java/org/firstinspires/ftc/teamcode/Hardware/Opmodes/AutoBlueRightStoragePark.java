@@ -110,8 +110,9 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
         telemetry.update();
         waitForStart();
         camera.stopStreaming();
-        
-        intake.setPower(-0.6);
+
+        //        //take out output at beginning
+//        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue
 

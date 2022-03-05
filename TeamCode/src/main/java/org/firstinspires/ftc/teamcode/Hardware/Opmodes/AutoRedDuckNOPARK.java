@@ -119,6 +119,7 @@ public class AutoRedDuckNOPARK extends LinearOpMode {
         waitForStart();
         camera.stopStreaming();
 
+//        //take out output at beginning
 //        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue

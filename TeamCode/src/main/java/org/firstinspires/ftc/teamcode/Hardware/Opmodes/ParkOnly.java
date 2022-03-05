@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
-public class AutoBlueDuckANoFly extends LinearOpMode {
+public class ParkOnly extends LinearOpMode {
     OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
@@ -75,32 +75,35 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
 
         // Trajectory Setup
         Pose2d start = new Pose2d(startX,startY,startH);
-        Trajectory preload = drive.trajectoryBuilder(start)
-                .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
-                .build();
-        Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
-                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
-                .build();
-//        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
-//                .back(1.5)
+//        Trajectory preload = drive.trajectoryBuilder(start)
+//                .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
 //                .build();
-        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
-                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
-                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
-                .build();
-        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
-                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
-                .build();
-        Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
-                .build();
-        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end())
-                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+//        Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
+//                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
+//                .build();
+////        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
+////                .back(1.5)
+////                .build();
+//        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
+//                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
+//                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
+//                .build();
+//        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+//                .build();
+//        Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .build();
+//        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end())
+//                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+//                .build();
+        Trajectory parkOnly = drive.trajectoryBuilder(new Pose2d())
+                .forward(35)
                 .build();
 
         // Position Setup
-        drive.setPoseEstimate(start);
+//        drive.setPoseEstimate(start);
         turret.closeDumper();
         intake.drop();
         // todo make this power based
@@ -110,12 +113,12 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
         telemetry.update();
         waitForStart();
         camera.stopStreaming();
-        
-        intake.setPower(-0.6);
+        drive.followTrajectory(parkOnly);
+//        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue
 
-
+/*
         // Preload
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
@@ -177,6 +180,6 @@ public class AutoBlueDuckANoFly extends LinearOpMode {
             drive.followTrajectory(park);
         }
 //        drive.setPowerDir(1.0,0);
-//        timer.safeDelay(1000);
+//        timer.safeDelay(1000);*/
     }
 }

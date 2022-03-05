@@ -25,10 +25,10 @@ public class BlueCapstonePipeline extends OpenCvPipeline {
     }
     private Location location;
 
-    public static int leftX1 = 60, leftX2 = 130, rightX1 = 250, rightX2 = 310;
-    public static int  height1 = 120,  height2 = 220;
+    public static int leftX1 = 60, leftX2 = 170, rightX1 = 250, rightX2 = 320;
+    public static int  height1 = 80,  height2 = 220;
 
-    public static double PERCENT_COLOR_THRESHOLD = 0.3;
+    public static double PERCENT_COLOR_THRESHOLD = 0.25;
 
     public static int lowH = 90, lowS = 90, lowV = 30;
     public static int highH = 255, highS = 255, highV = 255;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes.OLDDONOTUSE;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -25,14 +25,16 @@ import org.openftc.easyopencv.OpenCvWebcam;
 @Autonomous
 @Config
 @Disabled
-public class AutoBlueCycling extends LinearOpMode {
+public class AutoBlueLeft extends LinearOpMode {
     OpenCvWebcam camera;
-    public static double
-            startX = -35.5+48, startY = 70, startH = Math.toRadians(270),
-            preloadX = startX, preloadY = startY - 16, preloadH = 270,
-            preWharehouseX = 11, preWharehouseY = 72, preWhareHouseH = 0,
-            whareHouseX = 62, whareHouseY = 72, whareHouseH = 0,
-            scoreX = 62, scoreY = 62, scoreH = 235;
+    public static double preloadX = -29, preloadY = -49, preloadH = 270,
+                            startX = -35.5+48, startY = 70, startH = Math.toRadians(270),
+//                            duckX = -54.5, duckY = 64.5, duckH = 182,
+//                            preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
+//                            scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
+//                            alignDuckTurn = -17,
+                            preParkX = 10, preParkY = 55, preParkH = 0,
+                            parkX = 55, parkY = 55, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -78,18 +80,26 @@ public class AutoBlueCycling extends LinearOpMode {
         Trajectory preload = drive.trajectoryBuilder(start)
                 .splineTo(new Vector2d(preloadX, preloadY), Math.toRadians(preloadH))
                 .build();
-        Trajectory firstToBlocks = drive.trajectoryBuilder(preload.end())
-                .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
-                .splineTo(new Vector2d(whareHouseX, whareHouseY), Math.toRadians(whareHouseH))
-                .build();
-        Trajectory toScore = drive.trajectoryBuilder(firstToBlocks.end(), true)
-                .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
-                .splineTo(new Vector2d(scoreX, scoreY), Math.toRadians(scoreH))
-                .build();
-        Trajectory toBlocksCycling = drive.trajectoryBuilder(toScore.end())
-                .splineTo(new Vector2d(preWharehouseX, preWharehouseY), Math.toRadians(preWhareHouseH))
-                .splineTo(new Vector2d(whareHouseX, whareHouseY), Math.toRadians(whareHouseH))
-                .build();
+//        Trajectory duckPath = drive.trajectoryBuilder(preload.end(), true)
+//                .splineTo(new Vector2d(duckX, duckY), Math.toRadians(duckH))
+//                .build();
+////        Trajectory alignDuck = drive.trajectoryBuilder(duckPath.end())
+////                .back(1.5)
+////                .build();
+//        Trajectory scoreDuck = drive.trajectoryBuilder(duckPath.end())
+//                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
+//                .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
+//                .build();
+//        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+//                .build();
+//        Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .build();
+//        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end())
+//                .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
+//                .build();
 
         // Position Setup
         drive.setPoseEstimate(start);
@@ -103,7 +113,7 @@ public class AutoBlueCycling extends LinearOpMode {
         waitForStart();
         camera.stopStreaming();
         
-//        intake.setPower(-0.6);
+        intake.setPower(-0.6);
 //        camera.closeCameraDevice();
         // TODO: 3/2/22 see if this takes out the crashing issue
 
@@ -112,31 +122,63 @@ public class AutoBlueCycling extends LinearOpMode {
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
         
-//         decide the preload up pos, take red because it's flipped
+//         decide the preload up pos
         switch (cv.getLocation()) {
             case RIGHT:
-                turret.preloadMidRed();
+                turret.preloadMidBlue();
                 turret.preloadDown();
                 break;
             case LEFT:
-                turret.preloadLowRed();
-                turret.preloadDownLowRed();
+                turret.preloadLowBlue();
+                turret.preloadDownLowBlue();
                 break;
             case OUT_OF_FRAME:
-                turret.preloadUpRed();
+                turret.preloadUpBlue();
                 turret.preloadDown();
                 break;
         }
 
-//        drive.turnTo(Math.toRadians(90));
+        intake.stop();
+/*
+        // Duck Drop
+        drive.followTrajectory(duckPath);
+        drive.turn(Math.toRadians(alignDuckTurn));
+//        drive.followTrajectory(alignDuck);
+        duck.autoDuckBlue(timer);
+//        duck.setPower(duckPower);
+//        timer.safeDelay(duckWait);
 
-        // INTAKE first block
-        intake.smartIn(turret,timer);
-        drive.followTrajectoryBreakBlock(firstToBlocks, turret);
+        //Pickup Duck
+        intake.in();
+        drive.turnToDuckCollect(Math.toRadians(90),turret);
+        drive.turnToDuckCollect(Math.toRadians(200), turret);
+        if (turret.hasBlock()) {
+            turret.closeDumper();
+        }
+        drive.turnToDuckCollect(Math.toRadians(90), turret);
+        drive.turnTo(Math.toRadians(0));
+        duck.setStop(); duck.move();
 
-        //Score and go back to wharehouse
-        // TODO: 3/3/22 for loop
-        drive.followTrajectoryAsyncTask(toScore, () -> turret.right());
-        drive.followTrajectoryAsyncTaskBreakBlock(toBlocksCycling, turret, () -> turret.down());
+        // Score Duck
+        drive.followTrajectoryCloseDump(scoreDuck, turret);
+        intake.stop();
+        drive.turnTo(Math.toRadians(0));
+        turret.duckScorePrepBlue();
+        turret.down();
+
+        //park
+        intake.out();
+        drive.turn(Math.toRadians(15));
+        if (cv.getLocation() == BlueCapstonePipeline.Location.LEFT){
+            drive.followTrajectory(preParkLeft);
+            drive.turn(Math.toRadians(15));
+            drive.followTrajectory(parkLeft);
+//            drive.setPowerDir(1.0,0);
+//            timer.safeDelay(1000);
+        } else {
+            drive.followTrajectory(park);
+        }
+//        drive.setPowerDir(1.0,0);
+//        timer.safeDelay(1000);*/
     }
 }

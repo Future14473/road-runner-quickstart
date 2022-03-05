@@ -15,14 +15,11 @@ public class MeepMeepTest {
 //                preloadX = startX, preloadY = startY - 16, preloadH = 270,
 //                preWharehouseX = 11, preWharehouseY = 72, preWahreHouseH = 0,
 //                whareHouseX = 62, whareHouseY = 72, whareHouseH = 0;
-        double preloadX = -29, preloadY = 49, preloadH = 270,
-                startX = -35.5, startY = 70, startH = Math.toRadians(270),
-                duckX = -54.5, duckY = 64.5, duckH = 182,
-                preScoreDuckX = -37, preScoreDuckY = 65, preScoreDuckH = 290,
-                scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
-                alignDuckTurn = -17,
-                preParkX = 10, preParkY = 55, preParkH = 0,
-                parkX = -69, parkY = 34, parkH = 0;
+        double preScoreDuckX = -15, preScoreDuckY = -67.6, preScoreDuckH = 0,
+                scoreDuckX = -23, scoreDuckY = -52.5, scoreDuckH = 0,
+                alignDuckTurn = 17,
+                preParkX = 20, preParkY = -59, preParkH = 0,
+                parkX = -69, parkY = -34, parkH = 0;
         MeepMeep meepMeep = new MeepMeep(600);
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 .setDriveTrainType(DriveTrainType.TANK)

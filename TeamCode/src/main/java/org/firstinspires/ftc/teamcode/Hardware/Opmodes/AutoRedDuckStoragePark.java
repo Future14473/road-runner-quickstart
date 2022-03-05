@@ -109,13 +109,13 @@ public class AutoRedDuckStoragePark extends LinearOpMode {
         // Position Setup
         drive.setPoseEstimate(start);
         turret.closeDumper();
-        intake.drop();
         // todo make this power based
         turret.resetTurretZero();
 
         telemetry.addData("Status ", "Not ready to Start");
         telemetry.update();
         waitForStart();
+        intake.drop();
         camera.stopStreaming();
 
 //        //take out output at beginning

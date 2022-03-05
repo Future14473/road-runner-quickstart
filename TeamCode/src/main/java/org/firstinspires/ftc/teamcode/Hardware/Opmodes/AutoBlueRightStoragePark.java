@@ -102,13 +102,14 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
         // Position Setup
         drive.setPoseEstimate(start);
         turret.closeDumper();
-        intake.drop();
+
         // todo make this power based
         turret.resetTurretZero();
 
         telemetry.addData("Status ", "Not Ready to Start");
         telemetry.update();
         waitForStart();
+        intake.drop();
         camera.stopStreaming();
 
         //        //take out output at beginning

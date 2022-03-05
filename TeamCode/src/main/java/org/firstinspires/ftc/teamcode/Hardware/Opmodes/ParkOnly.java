@@ -105,13 +105,14 @@ public class ParkOnly extends LinearOpMode {
         // Position Setup
 //        drive.setPoseEstimate(start);
         turret.closeDumper();
-        intake.drop();
+
         // todo make this power based
         turret.resetTurretZero();
 
         telemetry.addData("Status ", "Not Ready to Start");
         telemetry.update();
         waitForStart();
+        intake.drop();
         camera.stopStreaming();
         drive.followTrajectory(parkOnly);
 //        intake.setPower(-0.6);

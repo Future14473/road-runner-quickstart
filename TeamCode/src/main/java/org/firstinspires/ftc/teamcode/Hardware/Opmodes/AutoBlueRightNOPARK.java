@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
-public class AutoBlueRight extends LinearOpMode {
+public class AutoBlueRightNOPARK extends LinearOpMode {
     OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
@@ -176,7 +176,6 @@ public class AutoBlueRight extends LinearOpMode {
 //        } else {
 //            drive.followTrajectory(park);
 //        }
-        drive.followTrajectory(park);
 //        drive.setPowerDir(1.0,0);
 //        timer.safeDelay(1000);
     }

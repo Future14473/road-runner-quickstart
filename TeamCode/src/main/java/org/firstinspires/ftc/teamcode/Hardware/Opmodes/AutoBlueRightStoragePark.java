@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
 @Config
-public class AutoBlueRight extends LinearOpMode {
+public class AutoBlueRightStoragePark extends LinearOpMode {
     OpenCvWebcam camera;
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),
@@ -32,7 +32,7 @@ public class AutoBlueRight extends LinearOpMode {
                             scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
                             alignDuckTurn = -17,
                             preParkX = 10, preParkY = 55, preParkH = 0,
-                            parkX = 55, parkY = 55, parkH = 0;
+                            parkX = -69, parkY = 34, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -88,8 +88,8 @@ public class AutoBlueRight extends LinearOpMode {
                 .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
-        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+        Trajectory park = drive.trajectoryBuilder(scoreDuck.end(), true)
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
         Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())

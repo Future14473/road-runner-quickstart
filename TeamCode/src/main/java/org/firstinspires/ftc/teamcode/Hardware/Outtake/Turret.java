@@ -42,6 +42,11 @@ public class Turret {
         slides.resetEncoders();
     }
 
+    public void lazySusanIncrementLeft(){lazySusan.turnLeftIncrement();}
+    public void lazySusanIncrementRight(){lazySusan.turnRightIncrement();}
+    public void slidesIncrementDown(){slides.incrementDown();}
+    public void slidesIncrementUp(){slides.incrementUp();}
+
 
     public double calculateDirection(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
         Xcur = Xcur + Math.cos(Hcur)*7;
@@ -290,7 +295,7 @@ public class Turret {
         dumper.close();
         timer.safeTurretDelay(400);
         if (isShared){
-            slides.extendLowPrepBlue();
+            upShared();
         } else {
             slides.extendHigh();
         }
@@ -337,7 +342,7 @@ public class Turret {
         return false;
     }
 
-    public boolean isDown(){ return (slides.LeftSlide.getCurrentPosition() < 10) && !goingUp;}
+    public boolean isDown(){ return (slides.frontSlide.getCurrentPosition() < 10) && !goingUp;}
 
     public void release(){dumper.dump();}
 

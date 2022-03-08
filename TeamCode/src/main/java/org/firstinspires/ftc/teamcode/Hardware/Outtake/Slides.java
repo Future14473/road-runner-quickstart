@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class Slides {
-    DcMotorEx LeftSlide;
-    DcMotorEx RightSlide;
+    DcMotorEx frontSlide;
+    DcMotorEx backSlide;
 
     public static int velocity = 5000;
 
@@ -20,80 +20,101 @@ public class Slides {
     public static int prepReturnFromLowHeight = 300;
     public static int lowGoal = 175;
     public static int sharedHeight = 250;
+    public static int incrementAmt = 50;
 
 
     public Slides(HardwareMap hardwareMap) {
-        LeftSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
-        RightSlide = hardwareMap.get(DcMotorEx.class, "backSlide");
+        frontSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
+        backSlide = hardwareMap.get(DcMotorEx.class, "backSlide");
+        frontSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontSlide.setTargetPosition(0);
+        backSlide.setTargetPosition(0);
+        frontSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void resetEncoders(){
-        LeftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftSlide.setTargetPosition(0);
-        RightSlide.setTargetPosition(0);
-        LeftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontSlide.setTargetPosition(0);
+        backSlide.setTargetPosition(0);
+        frontSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void incrementDown(){
+        frontSlide.setTargetPosition(frontSlide.getCurrentPosition() - incrementAmt);
+        backSlide.setTargetPosition(frontSlide.getCurrentPosition() - incrementAmt);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
+    }
+
+    public void incrementUp(){
+        frontSlide.setTargetPosition(frontSlide.getCurrentPosition() + incrementAmt);
+        backSlide.setTargetPosition(frontSlide.getCurrentPosition() + incrementAmt);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
     public void scoreShared(){
-        LeftSlide.setTargetPosition(sharedHeight);
-        RightSlide.setTargetPosition(sharedHeight);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(sharedHeight);
+        backSlide.setTargetPosition(sharedHeight);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
-    public int getHeight(){return LeftSlide.getCurrentPosition();}
+    public int getHeight(){return frontSlide.getCurrentPosition();}
 
-    public boolean isBusy(){return LeftSlide.isBusy();}
+    public boolean isBusy(){return frontSlide.isBusy();}
 
     public void extendHigh() {
-        LeftSlide.setTargetPosition(highGoal);
-        RightSlide.setTargetPosition(highGoal);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(highGoal);
+        backSlide.setTargetPosition(highGoal);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
     public void extendMidBlue() {
-        LeftSlide.setTargetPosition(midGoalBlue);
-        RightSlide.setTargetPosition(midGoalBlue);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(midGoalBlue);
+        backSlide.setTargetPosition(midGoalBlue);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
     public void extendMidRed() {
-        LeftSlide.setTargetPosition(midGoalRed);
-        RightSlide.setTargetPosition(midGoalRed);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(midGoalRed);
+        backSlide.setTargetPosition(midGoalRed);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
 
     // todo make the shared hub less dump and lower
     public void extendLowPrepBlue() {
-        LeftSlide.setTargetPosition(preLowGoal);
-        RightSlide.setTargetPosition(preLowGoal);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(preLowGoal);
+        backSlide.setTargetPosition(preLowGoal);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
     public void extendLow() {
-        LeftSlide.setTargetPosition(lowGoal);
-        RightSlide.setTargetPosition(lowGoal);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(lowGoal);
+        backSlide.setTargetPosition(lowGoal);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
     public void preRetract(){
-        LeftSlide.setTargetPosition(prepReturnFromLowHeight);
-        RightSlide.setTargetPosition(prepReturnFromLowHeight);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(prepReturnFromLowHeight);
+        backSlide.setTargetPosition(prepReturnFromLowHeight);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 
     public void retract() {
-        LeftSlide.setTargetPosition(retractInPos);
-        RightSlide.setTargetPosition(retractInPos);
-        LeftSlide.setVelocity(velocity);
-        RightSlide.setVelocity(velocity);
+        frontSlide.setTargetPosition(retractInPos);
+        backSlide.setTargetPosition(retractInPos);
+        frontSlide.setVelocity(velocity);
+        backSlide.setVelocity(velocity);
     }
 }
 

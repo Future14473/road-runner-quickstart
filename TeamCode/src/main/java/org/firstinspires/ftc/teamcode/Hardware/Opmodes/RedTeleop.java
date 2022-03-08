@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Hardware.Duck.Capstone;
 import org.firstinspires.ftc.teamcode.Hardware.Duck.Duck;
 import org.firstinspires.ftc.teamcode.Hardware.Intake.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.BoxSensor;
@@ -46,7 +44,6 @@ public class RedTeleop extends LinearOpMode {
             while (opModeIsActive()) {
 //                tankDrive.setWeightedDrivePower(new Pose2d(gamepad1.left_stick_y * forwardSpeed, 0, gamepad1.right_stick_x * turnSpeed));
                 tankDrive.setPowerDir(gamepad1.left_stick_y * forwardSpeed, gamepad1.right_stick_x * turnSpeed);
-
             }
         }).start();
 
@@ -63,13 +60,12 @@ public class RedTeleop extends LinearOpMode {
             }
 
             if (gamepad1.dpad_up){
+                turret.up();
                 turret.outputRed();
             }
 
             // Toggle Linkages
-            // if the button wasn't just pressed
             if (rightBumperPrev != gamepad1.right_bumper) {
-                // and you really did press right bumper
                 if (gamepad1.right_bumper) {
                     turret.toggleLinkages();
                 }
@@ -79,15 +75,32 @@ public class RedTeleop extends LinearOpMode {
             duck.setStop();
             if (gamepad1.left_bumper){
                 duck.setRed();
-            }
-            duck.move();
+            } duck.move();
 
-            // Turret Changes
+            // Scoring Height Changes
             if (aPrevState != gamepad1.a){
                 if (gamepad1.a){
                     turret.isShared = !turret.isShared;
                 }
             } aPrevState = gamepad1.a;
+
+            // Manual Override Turret
+            if(gamepad1.dpad_left){
+               turret.lazySusanIncrementLeft();
+            }
+            if(gamepad1.dpad_right){
+                turret.lazySusanIncrementRight();
+            }
+            if(gamepad1.dpad_up){
+                turret.slidesIncrementUp();
+            }
+            if(gamepad1.dpad_down){
+                turret.slidesIncrementDown();
+            }
+            if(gamepad1.circle){
+                // puts the current turret and lazy susan position to 0
+                turret.resetEncoders();
+            }
 
             // Drivetrain speed increases ______________________
             if (leftButton != gamepad1.left_stick_button){

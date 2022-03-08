@@ -11,27 +11,68 @@ public class Linkages {
     public static int toggleIndex = 0;
 
     public static double incrementAmt = 0.005;
-    public static double leftExtenderOutPos = 0.675;
-    public static double leftExtenderInPos = 0.975;
 
-    public static double rightExtenderOutPos = 0.18,
-                            rightExtenderInPos = 0.7,
+    public static double fullOut = 0.18,
+//                            leftFullOut = 0.5,
+                              in = 1.0,
+//                            leftIn = 1.0,
 
-                            rightFarShared = 0.35,
-                            rightMidShared = 0.4,
-                            rightCloseOutPos = 0.6,
-                            rightLowAuto = 0.33,
-                            leftLowAuto = 0.3;
+                            farShared = 0.2,
+                            midShared = 0.4,
+                            closeShared = 0.6,
+
+                            lowAuto = 0.25;
+//                            leftLowAuto = 0.3;
 
 
-    public static double[] sharedHubPoses = {rightCloseOutPos, rightMidShared, /*rightExtenderSharedOutPos*/};
+    public static double[] sharedHubPoses = {closeShared, midShared, farShared};
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");
         leftExtender = hardwareMap.get(Servo.class, "LeftExtender");
-        leftExtender.setDirection(Servo.Direction.REVERSE);
+//        leftExtender.setDirection(Servo.Direction.REVERSE);
     }
 
+    public void extend(){
+        leftExtender.setPosition(fullOut);
+        rightExtender.setPosition(fullOut);
+    }
+
+    public void extendLowAuto(){
+        leftExtender.setPosition(lowAuto);
+        rightExtender.setPosition(lowAuto);
+    }
+
+    public void retract(){
+        leftExtender.setPosition(in);
+        rightExtender.setPosition(in);
+    }
+
+    public void extendSharedMid(){
+        leftExtender.setPosition(midShared);
+        rightExtender.setPosition(midShared);
+    }
+    public void extendShareFar(){
+        leftExtender.setPosition(farShared);
+        rightExtender.setPosition(farShared);
+    }
+    public void extendShareClose(){
+        leftExtender.setPosition(closeShared);
+        rightExtender.setPosition(closeShared);
+    }
+
+    public void toggle(){
+        // see if it is at the out position
+//        if (rightExtender.getPosition() - rightExtenderSharedOutPos < 0.05){
+//            toggleIndex = 1;
+//        }
+        toggleIndex++;
+        toggleIndex %= 3;
+        leftExtender.setPosition(sharedHubPoses[toggleIndex]);
+        rightExtender.setPosition(sharedHubPoses[toggleIndex]);
+    }
+
+    // deprecated
     public void increment(){
         leftExtender.setPosition(leftExtender.getPosition()+incrementAmt);
         rightExtender.setPosition(rightExtender.getPosition()+incrementAmt);
@@ -40,38 +81,6 @@ public class Linkages {
         leftExtender.setPosition(leftExtender.getPosition()-incrementAmt);
         rightExtender.setPosition(rightExtender.getPosition()-incrementAmt);
     }
-
-    public void extend(){
-        leftExtender.setPosition(leftExtenderOutPos);
-        rightExtender.setPosition(rightExtenderOutPos);
-    }
-
-    public void extendLowAuto(){
-        leftExtender.setPosition(leftLowAuto);
-        rightExtender.setPosition(rightLowAuto);
-    }
-
-    public void retract(){
-        leftExtender.setPosition(leftExtenderInPos);
-        rightExtender.setPosition(rightExtenderInPos);
-    }
-
-    public void extendSharedMid(){
-        rightExtender.setPosition(rightMidShared);
-    }
-    public void extendShareFar(){ rightExtender.setPosition(rightFarShared);}
-    public void extendShareClose(){ rightExtender.setPosition(rightCloseOutPos);}
-
-    public void toggle(){
-        // see if it is at the out position
-//        if (rightExtender.getPosition() - rightExtenderSharedOutPos < 0.05){
-//            toggleIndex = 1;
-//        }
-        toggleIndex++;
-        toggleIndex %= 2;
-        rightExtender.setPosition(sharedHubPoses[toggleIndex]);
-    }
-
 }
 
 

@@ -67,7 +67,17 @@ public class RedTeleop extends LinearOpMode {
             // Toggle Linkages
             if (rightBumperPrev != gamepad1.right_bumper) {
                 if (gamepad1.right_bumper) {
-                    turret.toggleLinkages();
+                    // the mid position is before the close position
+                    if(Linkages.toggleIndex == Linkages.MID){
+                        turret.setHeightShareClose();
+                        //todo vikram
+                        timer.safeDelay(300);
+                        turret.toggleLinkages();
+                    } else{
+                        turret.toggleLinkages();
+                        timer.safeDelay(300);
+                        turret.setHeightShareMidFar();
+                    }
                 }
             } rightBumperPrev = gamepad1.right_bumper;
 
@@ -120,7 +130,16 @@ public class RedTeleop extends LinearOpMode {
             telemetry.addData("Forward Speed", forwardSpeed);
             telemetry.addData("Turn Speed", turnSpeed);
             telemetry.addData("Dumper Block", colorSensor.getColor());
-            telemetry.addData("Toggle Pos", Linkages.toggleIndex);
+            if(Linkages.toggleIndex == Linkages.CLOSE){
+                telemetry.addData("Toggle Pos", "CLOSE");
+            }
+            if(Linkages.toggleIndex == Linkages.FAR){
+                telemetry.addData("Toggle Pos", "FAR");
+            }
+            if(Linkages.toggleIndex == Linkages.MID){
+                telemetry.addData("Toggle Pos", "MID");
+            }
+
             telemetry.addData("ColorSensor Detect", colorSensor.hasBlock() ? "filled" : "empty");
             telemetry.addData("Dumper isFilled", turret.hasBlock() ? "filled" : "empty");
             telemetry.addData("Turret Angle", lazySusan.getDegrees());

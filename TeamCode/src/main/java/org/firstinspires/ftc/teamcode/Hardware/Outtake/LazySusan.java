@@ -23,6 +23,7 @@ public class LazySusan {
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
 //        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
+        resetEncoders();
     }
 
     public LazySusan(HardwareMap hardwareMap, Telemetry telemetry){

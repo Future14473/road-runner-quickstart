@@ -12,14 +12,19 @@ public class Slides {
 
     public static int velocity = 5000;
 
-    public static int retractInPos = 0;
+    public static int home = 0;
+
     public static int highGoal = 737;
+
     public static int midGoalBlue = 376;
     public static int midGoalRed = 379;
+
     public static int preLowGoal = 265;
     public static int prepReturnFromLowHeight = 300;
     public static int lowGoal = 175;
-    public static int sharedHeight = 250;
+
+    public static int sharedHeight = 160;
+
     public static int incrementAmt = 50;
 
 
@@ -111,8 +116,8 @@ public class Slides {
     }
 
     public void retract() {
-        frontSlide.setTargetPosition(retractInPos);
-        backSlide.setTargetPosition(retractInPos);
+        frontSlide.setTargetPosition(home);
+        backSlide.setTargetPosition(home);
         frontSlide.setVelocity(velocity);
         backSlide.setVelocity(velocity);
     }

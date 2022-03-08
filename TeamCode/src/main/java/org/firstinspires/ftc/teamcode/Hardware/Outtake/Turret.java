@@ -218,13 +218,20 @@ public class Turret {
         timer.safeTurretDelay(800);
     }
 
+    public void setHeightShareMidFar(){slides.scoreShared();}
+    public void setHeightShareClose(){slides.extendLowPrepBlue();}
+
     public void rightSharedHub(){
         slides.extendLowPrepBlue();
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
         timer.safeTurretDelay(300);
-        slides.scoreShared();
-        linkages.extendSharedMid();
+        linkages.extendToToggle();
+        // vikram
+        if(Linkages.toggleIndex != Linkages.CLOSE){
+            timer.safeTurretDelay(450);
+            setHeightShareMidFar();
+        }
     }
 
     public void leftSharedHub(){
@@ -232,8 +239,12 @@ public class Turret {
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(-90);
         timer.safeTurretDelay(300);
-        slides.scoreShared();
-        linkages.extendSharedMid();
+        linkages.extendToToggle();
+        // vikram
+        if(Linkages.toggleIndex != Linkages.CLOSE){
+            timer.safeTurretDelay(450);
+            setHeightShareMidFar();
+        }
     }
 
     public void right(){
@@ -266,6 +277,10 @@ public class Turret {
     public void down(){
         dumper.dump();
         timer.safeTurretDelay(500);
+        if (isShared){
+            slides.preRetract();
+            timer.safeDelay(300);
+        }
         linkages.retract();
         dumper.intake();
         timer.safeTurretDelay(500);
@@ -346,7 +361,9 @@ public class Turret {
 
     public void release(){dumper.dump();}
 
-    public void toggleLinkages(){linkages.toggle();}
+    public void toggleLinkages(){
+        linkages.toggle();
+    }
 
     public void linkOutShared(){linkages.extendShareFar();}
     public void linkMidShared(){linkages.extendSharedMid();}

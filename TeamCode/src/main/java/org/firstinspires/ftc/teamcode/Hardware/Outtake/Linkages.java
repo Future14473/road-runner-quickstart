@@ -9,23 +9,23 @@ public class Linkages {
     Servo leftExtender, rightExtender;
 
     public static int toggleIndex = 0;
+    public final static int MID = 0, CLOSE = 1, FAR = 2;
 
     public static double incrementAmt = 0.005;
 
+    // REMEMBER Ins is 1.0 (big) and Out is 0 (small)
+    // Out Small || In Big
     public static double fullOut = 0.18,
-//                            leftFullOut = 0.5,
                               in = 1.0,
-//                            leftIn = 1.0,
-
-                            farShared = 0.2,
-                            midShared = 0.4,
+// vikram
                             closeShared = 0.6,
+                            midShared = 0.35,
+                            farShared = 0.3,
 
                             lowAuto = 0.25;
-//                            leftLowAuto = 0.3;
 
-
-    public static double[] sharedHubPoses = {closeShared, midShared, farShared};
+    // DO NOT change the order, turret uses the toggle index to find the position
+    public static double[] sharedHubPoses = {midShared, closeShared, farShared};
 
     public Linkages(HardwareMap hardwareMap) {
         rightExtender = hardwareMap.get(Servo.class, "RightExtender");
@@ -53,12 +53,12 @@ public class Linkages {
         rightExtender.setPosition(midShared);
     }
     public void extendShareFar(){
-        leftExtender.setPosition(farShared);
-        rightExtender.setPosition(farShared);
-    }
-    public void extendShareClose(){
         leftExtender.setPosition(closeShared);
         rightExtender.setPosition(closeShared);
+    }
+    public void extendShareClose(){
+        leftExtender.setPosition(farShared);
+        rightExtender.setPosition(farShared);
     }
 
     public void toggle(){
@@ -68,9 +68,15 @@ public class Linkages {
 //        }
         toggleIndex++;
         toggleIndex %= 3;
+        extendToToggle();
+    }
+
+    public void extendToToggle(){
         leftExtender.setPosition(sharedHubPoses[toggleIndex]);
         rightExtender.setPosition(sharedHubPoses[toggleIndex]);
     }
+
+    public int getToggleIndex() {return toggleIndex;}
 
     // deprecated
     public void increment(){

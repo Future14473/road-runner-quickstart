@@ -88,14 +88,14 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
                 .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
-        Trajectory park = drive.trajectoryBuilder(scoreDuck.end(), true)
+        Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
 //                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
         Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())
                 .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .build();
-        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end())
+        Trajectory parkLeft = drive.trajectoryBuilder(preParkLeft.end(), true)
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
 
@@ -123,6 +123,7 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
         drive.turnTo(Math.toRadians(preloadH));
         
 //         decide the preload up pos
+
         switch (cv.getLocation()) {
             case RIGHT:
                 turret.preloadMidBlue();
@@ -137,6 +138,8 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
                 turret.preloadDown();
                 break;
         }
+//        turret.preloadUpBlue();
+//        turret.preloadDown();
 
         intake.stop();
 
@@ -178,7 +181,7 @@ public class AutoBlueRightStoragePark extends LinearOpMode {
 //        } else {
 //            drive.followTrajectory(park);
 //        }
-        drive.followTrajectory(park);
+//        drive.followTrajectory(park);
 //        drive.setPowerDir(1.0,0);
 //        timer.safeDelay(1000);
     }

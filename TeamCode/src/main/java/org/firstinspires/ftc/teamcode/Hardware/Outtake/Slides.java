@@ -14,7 +14,7 @@ public class Slides {
 
     public static int retractInPos = 0;
     public static int highGoal = 737;
-    public static int midGoalBlue = 356;
+    public static int midGoalBlue = 376;
     public static int midGoalRed = 379;
     public static int preLowGoal = 265;
     public static int prepReturnFromLowHeight = 300;
@@ -23,18 +23,17 @@ public class Slides {
 
 
     public Slides(HardwareMap hardwareMap) {
-
         LeftSlide = hardwareMap.get(DcMotorEx.class, "frontSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "backSlide");
+    }
 
-
+    public void resetEncoders(){
         LeftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftSlide.setTargetPosition(0);
         RightSlide.setTargetPosition(0);
         LeftSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
     }
 
     public void scoreShared(){

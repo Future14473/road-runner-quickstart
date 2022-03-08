@@ -44,6 +44,58 @@ public class Intake {
         }
     }
 
+    public void smartInAggressive(Turret turret, Timer timer){
+        if (turret.isDown()) {
+            in();
+        }
+        if(turret.hasBlock() && turret.isDown()){
+            out();
+            if (turret.isShared) {
+                turret.upShared();
+            } else {
+                turret.up();
+            }
+            timer.safeDelay(100);
+            stop();
+        }
+    }
+
+    public void smartInAggressiveOutRed(Turret turret, Timer timer){
+        if (turret.isDown()) {
+            in();
+        }
+        if(turret.hasBlock() && turret.isDown()){
+            out();
+            if (turret.isShared) {
+                turret.upShared();
+                timer.safeDelay(300);
+            } else {
+                turret.up();
+            }
+            turret.outputRed();
+            timer.safeDelay(100);
+            stop();
+        }
+    }
+
+    public void smartInAggressiveOutBlue(Turret turret, Timer timer){
+        if (turret.isDown()) {
+            in();
+        }
+        if(turret.hasBlock() && turret.isDown()){
+            out();
+            if (turret.isShared) {
+                turret.upShared();
+                timer.safeDelay(300);
+            } else {
+                turret.up();
+            }
+            turret.leftSharedHub();
+            timer.safeDelay(100);
+            stop();
+        }
+    }
+
     public void in(){
         intake.setPower(1.0);
     }

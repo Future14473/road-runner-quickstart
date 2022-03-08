@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
-import androidx.appcompat.view.SupportActionModeWrapper;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -9,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
@@ -29,7 +29,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
  * is recommended that you use the FollowerPIDTuner opmode for further fine tuning.
  */
 @Config
-@Disabled
 @Autonomous(group = "drive")
 public class BackAndForth extends LinearOpMode {
 
@@ -38,6 +37,7 @@ public class BackAndForth extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        Timer timer = new Timer(this);
 
         Trajectory trajectoryForward = drive.trajectoryBuilder(new Pose2d())
                 .forward(DISTANCE)
@@ -51,6 +51,7 @@ public class BackAndForth extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             drive.followTrajectory(trajectoryForward);
+            timer.safeDelay(1000);
             drive.followTrajectory(trajectoryBackward);
         }
     }

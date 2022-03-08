@@ -12,5 +12,6 @@ public class RamseteConstants {
     public static double kLinear = 0.15;
     // Ramsette doesn't account for heading error, this is for accounting for like
     // doesn't turn fast enough
-    public static double kHeading = 1.2;
+//    public static double kHeading = 1.2;
+    public static double kHeading = 0.7;
 }

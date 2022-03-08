@@ -21,7 +21,6 @@ public class LazySusan {
 
     public LazySusan(HardwareMap hardwareMap){
         lazySusan = hardwareMap.get(DcMotorEx.class, "lazySusan");
-        lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
@@ -32,6 +31,10 @@ public class LazySusan {
 //        lazySusan.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
         this.telemetry = telemetry;
+    }
+
+    public void resetEncoders(){
+        lazySusan.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public Integer getVelo(){

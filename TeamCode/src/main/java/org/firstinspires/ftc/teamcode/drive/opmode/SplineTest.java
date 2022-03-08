@@ -20,7 +20,6 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous(group = "drive")
-@Disabled
 public class SplineTest extends LinearOpMode {
     enum Mode {
         DRIVER_MODE,

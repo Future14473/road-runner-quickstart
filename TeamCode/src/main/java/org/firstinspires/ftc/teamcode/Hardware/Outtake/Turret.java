@@ -15,10 +15,13 @@ public class Turret {
     BoxSensor boxSensor;
     Timer timer;
     LinearOpMode opMode;
-    Thread turretThread;
     public boolean goingUp;
-    public boolean isShared = true;
-    public static boolean RESET = false; // default shared bot
+    public boolean isShared = true;// default shared bot
+    public static boolean RESET = false;
+    //amount of time the block needs to detect to actually be considered "has block"
+    public long hasBlockTime = 500;
+    public boolean firstTimeSeeBlock = true;
+    long start = System.currentTimeMillis();
 
     public static double duckAngleBlue = 55;
     public static double duckAngleRed = -65;
@@ -32,6 +35,11 @@ public class Turret {
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
         goingUp = false;
+    }
+
+    public void resetEncoders(){
+        lazySusan.resetEncoders();
+        slides.resetEncoders();
     }
 
 
@@ -54,6 +62,23 @@ public class Turret {
         }
         // return the angle should be between 0 -2 PI according to the meep meep field view headings
         return Ang;
+    }
+
+//    chooses to either shared output or alliance output on red
+    public void outputRed(){
+        if(isShared){
+            rightSharedHub();
+        } else{
+            right();
+        }
+    }
+
+    public void outputBlue(){
+        if(isShared){
+            leftSharedHub();
+        } else{
+            left();
+        }
     }
 
     public double pointTo(double Xcur, double Ycur, double Hcur, double Xtar, double Ytar){
@@ -239,6 +264,7 @@ public class Turret {
         linkages.retract();
         dumper.intake();
         timer.safeTurretDelay(500);
+        firstTimeSeeBlock = true;
         lazySusan.rotateToDegreesRobotCentric(0);
         timer.safeTurretDelay(isShared ? 475 : 1500);
         slides.retract();
@@ -248,13 +274,15 @@ public class Turret {
         linkages.retract();
         dumper.intake();
         timer.safeTurretDelay(500);
+        firstTimeSeeBlock = true;
         lazySusan.rotateToDegreesRobotCentric(0);
         timer.safeTurretDelay(isShared ? 350 : 1000);
         slides.retract();
     }
 
     public void resetTurretZero(){
-        lazySusan.resetTurret(timer);
+//        lazySusan.resetTurret(timer);
+        resetEncoders();
     }
 
     public void up(){
@@ -286,7 +314,28 @@ public class Turret {
         dumper.close();
     }
 
-    public boolean hasBlock(){return boxSensor.hasBlock();}
+    public boolean hasBlock(){
+        // first time you intake a block, start the countdown
+        if(firstTimeSeeBlock && boxSensor.hasBlock()) {
+            start = System.currentTimeMillis();
+            firstTimeSeeBlock = false;
+            return false;
+        }
+
+        if(!boxSensor.hasBlock()) {
+            start = System.currentTimeMillis();
+            firstTimeSeeBlock = true;
+        }
+
+        // if you have the block in the intake
+        if (!firstTimeSeeBlock && boxSensor.hasBlock()){
+            // and you have the block for more than 0.5 seconds
+            // if so, you have a block and hasBlock returns True
+            // tell the robot it is seeing the block for the first time only after you output see "down" method
+            return (System.currentTimeMillis() - start) > hasBlockTime;
+        }
+        return false;
+    }
 
     public boolean isDown(){ return (slides.LeftSlide.getCurrentPosition() < 200) && !goingUp;}
 

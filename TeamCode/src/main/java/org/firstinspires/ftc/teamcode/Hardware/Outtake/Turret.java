@@ -337,7 +337,7 @@ public class Turret {
         return false;
     }
 
-    public boolean isDown(){ return (slides.LeftSlide.getCurrentPosition() < 200) && !goingUp;}
+    public boolean isDown(){ return (slides.LeftSlide.getCurrentPosition() < 10) && !goingUp;}
 
     public void release(){dumper.dump();}
 

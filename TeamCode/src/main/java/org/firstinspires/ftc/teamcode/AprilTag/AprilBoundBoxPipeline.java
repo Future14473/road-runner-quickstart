@@ -146,8 +146,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
     {
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
-        return grey;
-/*
+
         synchronized (decimationSync)
         {
             if(needToSetDecimation)
@@ -203,7 +202,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
                 draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
             }
         }
-        return input;*/
+        return input;
     }
 
     public void setDecimation(float decimation)

@@ -101,12 +101,12 @@ public class AutoRedDuck extends LinearOpMode {
 //                .splineTo(new Vector2d(preScoreDuckX, preScoreDuckY), Math.toRadians(preScoreDuckH))
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
-        ;
+
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
                 .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
-        ;
+
 
         // Position Setup
         drive.setPoseEstimate(start);
@@ -127,9 +127,10 @@ public class AutoRedDuck extends LinearOpMode {
 
 
         // Preload
-        if (cv.getLocation() == RedCapstonePipeline.Location.RIGHT){
-            intake.setPower(-0.6);
-        }
+//        if (cv.getLocation() == RedCapstonePipeline.Location.RIGHT){
+//            intake.setPower(-0.6);
+//        }
+
         drive.followTrajectory(preload);
         drive.turnTo(Math.toRadians(preloadH));
 

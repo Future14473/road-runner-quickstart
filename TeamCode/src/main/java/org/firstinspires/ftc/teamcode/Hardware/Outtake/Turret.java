@@ -229,7 +229,7 @@ public class Turret {
         linkages.extendToToggle();
         // vikram
         if(Linkages.toggleIndex != Linkages.CLOSE){
-            timer.safeTurretDelay(450);
+            timer.safeTurretDelay(550);
             setHeightShareMidFar();
         }
     }
@@ -286,7 +286,7 @@ public class Turret {
         timer.safeTurretDelay(500);
         firstTimeSeeBlock = true;
         lazySusan.rotateToDegreesRobotCentric(0);
-        timer.safeTurretDelay(isShared ? 475 : 1500);
+        timer.safeTurretDelay(isShared ? 275 : 1500);
         slides.retract();
     }
 

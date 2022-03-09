@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class RedTeleop extends LinearOpMode {
+public class BBARedTeleop extends LinearOpMode {
     public static double forwardSpeed = 0.6;
     public static double turnSpeed = 0.6;
 
@@ -50,7 +50,7 @@ public class RedTeleop extends LinearOpMode {
         while (opModeIsActive()) {
             // Cycling
             if(gamepad1.right_trigger > 0){
-                intake.stop();
+                intake.out();
             } else {
                 intake.smartInAggressiveOutRed(turret, timer);
             }
@@ -59,7 +59,7 @@ public class RedTeleop extends LinearOpMode {
                 turret.down();
             }
 
-            if (gamepad1.dpad_up){
+            if (gamepad1.y){
                 turret.up();
                 turret.outputRed();
             }
@@ -71,11 +71,11 @@ public class RedTeleop extends LinearOpMode {
                     if(Linkages.toggleIndex == Linkages.MID){
                         turret.setHeightShareClose();
                         //todo vikram
-                        timer.safeDelay(300);
+                        timer.safeDelay(400);
                         turret.toggleLinkages();
                     } else{
                         turret.toggleLinkages();
-                        timer.safeDelay(300);
+                        timer.safeDelay(400);
                         turret.setHeightShareMidFar();
                     }
                 }

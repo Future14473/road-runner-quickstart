@@ -67,6 +67,7 @@ public class Intake {
         if(turret.hasBlock() && turret.isDown()){
             out();
             if (turret.isShared) {
+                timer.safeDelay(300);
                 turret.upShared();
                 timer.safeDelay(300);
             } else {

@@ -138,6 +138,7 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
     public void finalize()
     {
         // Delete the native context we created in the init() function
+        telemetry.addData("AprilTag Pointer", nativeApriltagPtr);
         AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
     }
 

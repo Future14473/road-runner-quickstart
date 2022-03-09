@@ -403,4 +403,5 @@ public class Turret {
     public boolean naiveHasBlock(){
         return boxSensor.hasBlock();
     }
+    public boolean slidesBusy(){return slides.isBusy();}
 }

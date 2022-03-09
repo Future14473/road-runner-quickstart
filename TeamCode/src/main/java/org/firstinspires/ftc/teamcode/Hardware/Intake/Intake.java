@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Hardware.Outtake.Dumper;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 
@@ -15,11 +16,14 @@ public class Intake {
     DcMotor intake;
     Servo dropDown;
     public static double dropPos = 0, upPos = 0.0;
+    Dumper dumper;
 
     public Intake(HardwareMap hardwareMap) {
         intake = hardwareMap.get(DcMotor.class, "intake");
         dropDown = hardwareMap.get(Servo.class, "dropDown");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        dumper = new Dumper(hardwareMap);
+
     }
 
     public void setPower(double pow){intake.setPower(pow);}
@@ -73,9 +77,17 @@ public class Intake {
             } else {
                 turret.up();
             }
-            turret.outputRed();
-            timer.safeDelay(100);
-            stop();
+            if(turret.naiveHasBlock()) {
+                turret.outputRed();
+                timer.safeDelay(100);
+                stop();
+            } else {
+                turret.slidesIncrementUp();
+                timer.safeDelay(100);
+                dumper.intake();
+                timer.safeDelay(100);
+                turret.letGoEmergency();
+            }
         }
     }
 

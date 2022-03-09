@@ -25,6 +25,7 @@ public class Turret {
 
     public static double duckAngleBlue = 55;
     public static double duckAngleRed = -65;
+    public static double degreeError = 4;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {
         lazySusan = new LazySusan(hardwareMap);
@@ -277,7 +278,9 @@ public class Turret {
     public void down(){
         if (isShared){
             dumper.halfDump();
-            timer.safeDelay(250);
+            timer.safeDelay(200);
+            dumper.moreHalfDump();
+            timer.safeDelay(200);
             dumper.dump();
             timer.safeDelay(250);
         } else {
@@ -295,7 +298,9 @@ public class Turret {
         lazySusan.rotateToDegreesRobotCentric(0);
 //        timer.safeTurretDelay(isShared ? 475 : 1500);
         // vikram
-        while ((Math.abs(lazySusan.getDegrees()) < 3) && opMode.opModeIsActive())
+        while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
+
+        }
         slides.retract();
     }
 
@@ -326,13 +331,19 @@ public class Turret {
         while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
         goingUp = false;
     }
+
     public void upShared(){
         goingUp = true;
         dumper.close();
         timer.safeTurretDelay(400);
-        slides.extendMidBlue();
-        while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
-        goingUp = false;
+        if(naiveHasBlock()) {
+            slides.extendMidBlue();
+            while (slides.isBusy()) {
+            } // slides.extend is async so make sure to only go up after it goes up
+            goingUp = false;
+        }else {
+            dumper.intake();
+        }
     }
 
     public void readyToIntake(){
@@ -366,6 +377,8 @@ public class Turret {
         return false;
     }
 
+
+
     public boolean isDown(){ return (slides.frontSlide.getCurrentPosition() < 10) && !goingUp;}
 
     public void release(){dumper.dump();}
@@ -385,5 +398,9 @@ public class Turret {
         slides.extendHigh();
         RESET = false;
         downKeepBlock();
+    }
+
+    public boolean naiveHasBlock(){
+        return boxSensor.hasBlock();
     }
 }

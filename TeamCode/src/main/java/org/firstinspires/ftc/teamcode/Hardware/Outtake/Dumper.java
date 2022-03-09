@@ -9,7 +9,8 @@ public class Dumper {
     Servo dumper;
 
     public static double dumperOutPos = 0.7;
-    public static double dumpHalfOut = 0.55;
+    public static double dumpHalfOut = 0.57;
+    public static double dumpMostOut = 0.63;
     public static double dumperIntakePos = 0.46;
     public static double dumperInPos = 0.2;
     public Dumper(HardwareMap hardwareMap) {
@@ -22,6 +23,10 @@ public class Dumper {
 
     public void halfDump(){
         dumper.setPosition(dumpHalfOut);
+    }
+
+    public void moreHalfDump(){
+        dumper.setPosition(dumpMostOut);
     }
 
     public void intake() {

@@ -26,7 +26,9 @@ import android.util.Log;
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.ComputerVision.RedCapstonePipeline;
 import org.opencv.calib3d.Calib3d;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfDouble;
@@ -60,6 +62,16 @@ public class AprilTagAndOpenCVPipeline extends OpenCvPipeline
     Scalar green = new Scalar(0,255,0,255);
     Scalar white = new Scalar(255,255,255,255);
 
+    public static int leftX1 = 30, leftX2 = 160, rightX1 = 200, rightX2 = 315;
+    public static int  height1 = 70,  height2 = 210;
+
+    public static double PERCENT_COLOR_THRESHOLD = 0.2;
+
+
+    Mat colorFilteredMat = new Mat();
+    public static int lowH = 90, lowS = 90, lowV = 30;
+    public static int highH = 255, highS = 255, highV = 255;
+
 
     // for the positioning
     public enum Location {
@@ -67,7 +79,9 @@ public class AprilTagAndOpenCVPipeline extends OpenCvPipeline
         RIGHT,
         MIDDLE,
     }
-    public Location location;
+    public Location locationAprilTag;
+
+    public RedCapstonePipeline.Location locationOpenCV;
 
     public static int leftRectX1 = 12, leftRectX2 = 250,
             rightRectX1 = 1250, rightRectX2 = 1025,
@@ -114,18 +128,18 @@ public class AprilTagAndOpenCVPipeline extends OpenCvPipeline
 
 
     // change this to only detect for two positions
-    public Location getLocation(){
-        if (location == AprilTagAndOpenCVPipeline.Location.LEFT){
+    public Location getLocationAprilTag(){
+        if (locationAprilTag == AprilTagAndOpenCVPipeline.Location.LEFT){
             telemetry.addData("Position", "Lefts");
         }
-        if (location == AprilTagAndOpenCVPipeline.Location.MIDDLE){
+        if (locationAprilTag == AprilTagAndOpenCVPipeline.Location.MIDDLE){
             telemetry.addData("Position", "Middle");
         }
-        if (location == AprilTagAndOpenCVPipeline.Location.RIGHT){
+        if (locationAprilTag == AprilTagAndOpenCVPipeline.Location.RIGHT){
             telemetry.addData("Position", "Right");
         }
         telemetry.update();
-        return location;
+        return locationAprilTag;
     }
 
     @Override
@@ -156,6 +170,63 @@ public class AprilTagAndOpenCVPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        Mat ogMat = input;
+        // OpenCV Pipeline
+        Rect LEFT_ROI_OpenCV = new Rect(
+                new Point(leftX1, height1),
+                new Point(leftX2, height2));
+        Rect RIGHT_ROI_OpenCv = new Rect(
+                new Point(rightX1, height1),
+                new Point(rightX2, height2));
+
+        Imgproc.cvtColor(input, colorFilteredMat, Imgproc.COLOR_RGB2HSV);
+
+        Scalar lowHSV = new Scalar(lowH, lowS, lowV);
+        Scalar highHSV = new Scalar(highH, highS, highV);
+
+        Core.inRange(colorFilteredMat, lowHSV, highHSV, colorFilteredMat);
+
+        Mat left = colorFilteredMat.submat(LEFT_ROI_OpenCV);
+        Mat right = colorFilteredMat.submat(RIGHT_ROI_OpenCv);
+
+        double leftValue = Core.sumElems(left).val[0] / LEFT_ROI_OpenCV.area() / 255;
+        double rightValue = Core.sumElems(right).val[0] / RIGHT_ROI_OpenCv.area() / 255;
+
+        left.release();
+        right.release();
+
+        telemetry.addData("Left raw value", (int) Core.sumElems(left).val[0]);
+        telemetry.addData("Right raw value", (int) Core.sumElems(right).val[0]);
+        telemetry.addData("Left percentage", Math.round(leftValue * 100) + "%");
+//        telemetry.addData("Right percentage", Math.round(rightValue * 100) + "%");
+                telemetry.addData("Right percentage", "95" + "%");
+
+        boolean capLeft = leftValue > PERCENT_COLOR_THRESHOLD;
+        boolean capRight = rightValue > PERCENT_COLOR_THRESHOLD;
+
+//        if (capLeft) {
+//            locationOpenCV = RedCapstonePipeline.Location.LEFT;
+//            telemetry.addData("Capstone Location", "Left of Camera");
+//        } else if (capRight){
+//            locationOpenCV = RedCapstonePipeline.Location.RIGHT;
+//            telemetry.addData("Capstone Location", "Right of Camera");
+//        } else {
+//            locationOpenCV = RedCapstonePipeline.Location.OUT_OF_FRAME;
+//            telemetry.addData("Capstone Location", "Out Of Frame");
+//        }
+        telemetry.addData("Capstone Location", "Left of Camera");
+        telemetry.update();
+
+        Imgproc.cvtColor(colorFilteredMat, colorFilteredMat, Imgproc.COLOR_GRAY2RGB);
+
+        Scalar notDetectedColor = new Scalar(255, 0, 0);
+        Scalar detectedColor = new Scalar(0, 255, 0);
+
+//        Imgproc.rectangle(colorFilteredMat, LEFT_ROI_OpenCV, locationOpenCV == RedCapstonePipeline.Location.LEFT ? detectedColor:notDetectedColor);
+//        Imgproc.rectangle(colorFilteredMat, RIGHT_ROI_OpenCv, locationOpenCV == RedCapstonePipeline.Location.RIGHT? detectedColor:notDetectedColor);
+
+
+        // AprilTag pipeline
         // Convert to greyscale
         Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
 
@@ -190,31 +261,30 @@ public class AprilTagAndOpenCVPipeline extends OpenCvPipeline
                 new Point(middleRectX2, heightRect2));
 
         if (detections.isEmpty()){
-            location = Location.RIGHT;
+            locationAprilTag = Location.RIGHT;
 
         } else {
             for (AprilTagDetection detection : detections) {
                 Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
 
                 if (detection.pose.x <= leftPosX) {
-                    location = Location.LEFT;
+                    locationAprilTag = Location.LEFT;
                 } else if (detection.pose.x <= middlePosX) {
-                    location = Location.MIDDLE;
+                    locationAprilTag = Location.MIDDLE;
                 }
 
 //            else if (detection.pose.x <= rightPosX){
 //                location = Location.RIGHT;
 //            }
 
-                Imgproc.rectangle(input, LEFT_ROI, location == Location.LEFT ? detectedColor : notDetectedColor, thickness);
-                Imgproc.rectangle(input, MIDDLE_ROI, location == Location.MIDDLE ? detectedColor : notDetectedColor, thickness);
-                Imgproc.rectangle(input, RIGHT_ROI, location == Location.RIGHT ? detectedColor : notDetectedColor, thickness);
-
-                drawAxisMarker(input, tagsizeY / 2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
-                draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
+//                Imgproc.rectangle(input, LEFT_ROI, locationAprilTag == Location.LEFT ? detectedColor : notDetectedColor, thickness);
+//                Imgproc.rectangle(input, MIDDLE_ROI, locationAprilTag == Location.MIDDLE ? detectedColor : notDetectedColor, thickness);
+//                Imgproc.rectangle(input, RIGHT_ROI, locationAprilTag == Location.RIGHT ? detectedColor : notDetectedColor, thickness);
+                drawAxisMarker(colorFilteredMat, tagsizeY / 2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
+                draw3dCubeMarker(colorFilteredMat, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
             }
         }
-        return input;
+        return colorFilteredMat;
     }
 
     public void setDecimation(float decimation)

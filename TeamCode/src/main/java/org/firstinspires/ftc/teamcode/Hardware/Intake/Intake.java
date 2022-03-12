@@ -77,7 +77,7 @@ public class Intake {
                 timer.safeDelay(300);
             } if (!turret.isShared && turret.naiveHasBlock()) {
                 turret.up();
-            }x
+            }
 //            if(turret.naiveHasBlock()) {
 //                turret.outputRed();
 //                timer.safeDelay(100);

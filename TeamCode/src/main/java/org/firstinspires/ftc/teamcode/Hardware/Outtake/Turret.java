@@ -15,7 +15,7 @@ public class Turret {
     BoxSensor boxSensor;
     Timer timer;
     LinearOpMode opMode;
-    public boolean goingUp;
+//    public boolean goingUp;
     public boolean isShared = true;// default shared bot
     public static boolean RESET = false;
     //amount of time the block needs to detect to actually be considered "has block"
@@ -35,7 +35,7 @@ public class Turret {
         boxSensor = new BoxSensor(hardwareMap);
         timer = new Timer(linearOpMode);
         this.opMode = linearOpMode;
-        goingUp = false;
+//        goingUp = false;
     }
 
     public void resetEncoders(){
@@ -320,7 +320,7 @@ public class Turret {
     }
 
     public void up(){
-        goingUp = true;
+//        goingUp = true;
         dumper.close();
         timer.safeTurretDelay(400);
         if (isShared){
@@ -329,18 +329,18 @@ public class Turret {
             slides.extendHigh();
         }
         while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
-        goingUp = false;
+//        goingUp = false;
     }
 
     public void upShared(){
-        goingUp = true;
+//        goingUp = true;
         dumper.close();
         timer.safeTurretDelay(400);
         if(naiveHasBlock()) {
             slides.extendMidBlue();
             while (slides.isBusy()) {
             } // slides.extend is async so make sure to only go up after it goes up
-            goingUp = false;
+//            goingUp = false;
         }else {
             dumper.intake();
         }
@@ -379,7 +379,7 @@ public class Turret {
 
 
 
-    public boolean isDown(){ return (slides.frontSlide.getCurrentPosition() < 10) && !goingUp;}
+    public boolean isDown(){ return (slides.frontSlide.getCurrentPosition() < 10) /*&& !goingUp*/;}
 
     public void release(){dumper.dump();}
 

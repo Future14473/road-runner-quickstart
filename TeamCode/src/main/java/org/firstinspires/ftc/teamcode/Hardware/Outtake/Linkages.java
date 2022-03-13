@@ -19,7 +19,7 @@ public class Linkages {
                               in = 1.0,
 // vikram
                             closeShared = 0.6,
-                            midShared = 0.5,
+                            midShared = 0.46,
                             farShared = 0.3,
 
                             lowAuto = 0.25;

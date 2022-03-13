@@ -466,6 +466,10 @@ public class Turret {
         linkages.toggle();
     }
 
+    public void extendToToggle(){
+        linkages.extendToToggle();
+    }
+
     public void linkOutShared(){linkages.extendShareFar();}
     public void linkMidShared(){linkages.extendSharedMid();}
     public void linkCloseShared(){linkages.extendShareClose();}

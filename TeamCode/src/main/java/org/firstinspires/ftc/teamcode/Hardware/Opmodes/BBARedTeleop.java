@@ -76,6 +76,9 @@ public class BBARedTeleop extends LinearOpMode {
                 intake.smartInAggressiveOutRed(turret, timer);
             }
 
+            if(gamepad1.right_bumper){
+                intake.in();
+            }
             if (gamepad1.left_bumper){
                 intake.out();
             }
@@ -89,22 +92,34 @@ public class BBARedTeleop extends LinearOpMode {
                 turret.outputRed();
             }
 
+            if(gamepad1.dpad_right){
+                turret.setHeightShareClose();
+                timer.safeDelay(400);
+                Linkages.toggleIndex = Linkages.CLOSE;
+                turret.extendToToggle();
+            }
+
+            if(gamepad1.dpad_left){
+                Linkages.toggleIndex = Linkages.FAR;
+                turret.extendToToggle();
+            }
+
             // Toggle Linkages
-            if (rightBumperPrev != gamepad1.right_bumper) {
-                if (gamepad1.right_bumper) {
-                    // the mid position is before the close position
-                    if(Linkages.toggleIndex == Linkages.MID){
-                        turret.setHeightShareClose();
-                        //todo vikram
-                        timer.safeDelay(400);
-                        turret.toggleLinkages();
-                    } else{
-                        turret.toggleLinkages();
-                        timer.safeDelay(400);
-                        turret.setHeightShareMidFar();
-                    }
-                }
-            } rightBumperPrev = gamepad1.right_bumper;
+//            if (rightBumperPrev != gamepad1.right_bumper) {
+//                if (gamepad1.right_bumper) {
+//                    // the mid position is before the close position
+//                    if(Linkages.toggleIndex == Linkages.MID){
+//                        turret.setHeightShareClose();
+//                        //todo vikram
+//                        timer.safeDelay(400);
+//                        turret.toggleLinkages();
+//                    } else{
+//                        turret.toggleLinkages();
+//                        timer.safeDelay(400);
+//                        turret.setHeightShareMidFar();
+//                    }
+//                }
+//            } rightBumperPrev = gamepad1.right_bumper;
 
             // Duck _______________________________
             duck.setStop();

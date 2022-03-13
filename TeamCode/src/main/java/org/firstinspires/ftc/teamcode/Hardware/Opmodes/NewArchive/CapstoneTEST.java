@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
+package org.firstinspires.ftc.teamcode.Hardware.Opmodes.NewArchive;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

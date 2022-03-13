@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class BBARedTeleop extends LinearOpMode {
+public class BlueTeleop extends LinearOpMode {
     public static double forwardSpeed = 0.6;
     public static double turnSpeed = 0.6;
 
@@ -47,7 +47,7 @@ public class BBARedTeleop extends LinearOpMode {
             }
         }).start();
 
-        while (opModeIsActive() && !gamepad2.x /*&& !gamepad2.y*/) {
+        while (opModeIsActive() && !gamepad2.x/* && !gamepad2.y*/) {
 //            if (gamepad2.x) {
 //                turret.isShared = true;
 //            }
@@ -59,48 +59,50 @@ public class BBARedTeleop extends LinearOpMode {
         while (opModeIsActive()) {
             // Cycling
             if(gamepad1.right_trigger > 0 && (turret.getHeightInt() < 20)){
+                // manual in override
                 intake.in();
                 if (turret.isShared) {
                     turret.upShared();
                     timer.safeDelay(300);
-                    turret.outputRed();
+                    turret.outputBlue();
                     timer.safeDelay(100);
                     intake.stop();
                 } if (!turret.isShared) {
                     turret.up();
-                    turret.outputRed();
+                    turret.outputBlue();
                     timer.safeDelay(100);
                     intake.stop();
                 }
             } else {
-                intake.smartInAggressiveOutRed(turret, timer);
+                intake.smartInAggressiveOutBlue(turret, timer);
             }
 
             if(gamepad1.right_bumper){
                 intake.in();
             }
+
             if (gamepad1.left_bumper){
                 intake.out();
             }
 
             if (gamepad1.left_trigger > 0){
-                turret.downRed();
+                turret.downBlue();
             }
 
             if (gamepad1.y){
                 turret.up();
-                turret.outputRed();
+                turret.outputBlue();
             }
 
             if(gamepad1.dpad_right){
-                turret.setHeightShareClose();
-                timer.safeDelay(400);
-                Linkages.toggleIndex = Linkages.CLOSE;
+                Linkages.toggleIndex = Linkages.FAR;
                 turret.extendToToggle();
             }
 
             if(gamepad1.dpad_left){
-                Linkages.toggleIndex = Linkages.FAR;
+                turret.setHeightShareClose();
+                timer.safeDelay(400);
+                Linkages.toggleIndex = Linkages.CLOSE;
                 turret.extendToToggle();
             }
 
@@ -124,7 +126,7 @@ public class BBARedTeleop extends LinearOpMode {
             // Duck _______________________________
             duck.setStop();
             if (gamepad1.x){
-                duck.setRed();
+                duck.setBlue();
             } duck.move();
 
             // Scoring Height Changes
@@ -154,15 +156,12 @@ public class BBARedTeleop extends LinearOpMode {
             if(gamepad1.a || gamepad2.a){
                 turret.resetWholeTurret();
             }
-
             if(gamepad2.y != y2){
                 if(gamepad2.y){
                     turret.toggleLinkages();
                 }
             }
             y2 = gamepad2.y;
-
-
 
             // Drivetrain speed increases ______________________
 //            if (leftButton != gamepad1.left_stick_button){

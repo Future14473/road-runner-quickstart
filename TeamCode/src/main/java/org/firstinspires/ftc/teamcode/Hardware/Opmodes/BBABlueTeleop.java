@@ -122,17 +122,17 @@ public class BBABlueTeleop extends LinearOpMode {
             }
 
             // Drivetrain speed increases ______________________
-            if (leftButton != gamepad1.left_stick_button){
-                if (gamepad1.left_stick_button){
-                    forwardSpeed += 0.15;
-                }
-            } leftButton = gamepad1.left_stick_button;
-
-            if (rightButton != gamepad1.right_stick_button){
-                if (gamepad1.right_stick_button){
-                    turnSpeed += 0.15;
-                }
-            } rightButton = gamepad1.right_stick_button;
+//            if (leftButton != gamepad1.left_stick_button){
+//                if (gamepad1.left_stick_button){
+//                    forwardSpeed += 0.15;
+//                }
+//            } leftButton = gamepad1.left_stick_button;
+//
+//            if (rightButton != gamepad1.right_stick_button){
+//                if (gamepad1.right_stick_button){
+//                    turnSpeed += 0.15;
+//                }
+//            } rightButton = gamepad1.right_stick_button;
 
             // Telemetry _______________-
             telemetry.addData("isShared", turret.isShared);

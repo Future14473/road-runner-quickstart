@@ -279,18 +279,18 @@ public class Turret {
     public void down(){
         if (isShared){
             dumper.halfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.moreHalfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.dump();
-            timer.safeDelay(250);
+            timer.safeTurretDelay(250);
         } else {
             dumper.dump();
             timer.safeTurretDelay(500);
         }
         if (isShared){
             slides.preRetract();
-            timer.safeDelay(300);
+            timer.safeTurretDelay(300);
         }
         linkages.retract();
         dumper.intake();
@@ -303,7 +303,7 @@ public class Turret {
 
         }
         if (!isShared){
-            timer.safeDelay(450);
+            timer.safeTurretDelay(450);
         }
         slides.retract();
     }
@@ -311,32 +311,36 @@ public class Turret {
     public void downRed(){
         if (isShared){
             dumper.halfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.moreHalfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.dump();
-            timer.safeDelay(250);
+            timer.safeTurretDelay(250);
         } else {
             dumper.dump();
             timer.safeTurretDelay(500);
         }
         if (isShared){
             slides.preRetract();
-            timer.safeDelay(300);
+            timer.safeTurretDelay(300);
         }
         linkages.retract();
         dumper.intake();
         timer.safeTurretDelay(500);
         firstTimeSeeBlock = true;
         //make the left in position a little off
-        lazySusan.rotateToDegreesRobotCentric(-0.01);
+        if (isShared){
+            lazySusan.rotateToDegreesRobotCentric(0);
+        } else{
+            lazySusan.rotateToDegreesRobotCentric(-0.01);
+        }
 //        timer.safeTurretDelay(isShared ? 475 : 1500);
         // vikram
         while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
 
         }
         if (!isShared){
-            timer.safeDelay(650);
+            timer.safeTurretDelay(650);
         }
         slides.retract();
     }
@@ -344,32 +348,36 @@ public class Turret {
     public void downBlue(){
         if (isShared){
             dumper.halfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.moreHalfDump();
-            timer.safeDelay(200);
+            timer.safeTurretDelay(200);
             dumper.dump();
-            timer.safeDelay(250);
+            timer.safeTurretDelay(250);
         } else {
             dumper.dump();
             timer.safeTurretDelay(500);
         }
         if (isShared){
             slides.preRetract();
-            timer.safeDelay(300);
+            timer.safeTurretDelay(300);
         }
         linkages.retract();
         dumper.intake();
         timer.safeTurretDelay(500);
         firstTimeSeeBlock = true;
         //make the left in position a little off
-        lazySusan.rotateToDegreesRobotCentric(-0.01);
+        if (isShared){
+            lazySusan.rotateToDegreesRobotCentric(0);    
+        } else{
+            lazySusan.rotateToDegreesRobotCentric(0.01);    
+        }
 //        timer.safeTurretDelay(isShared ? 475 : 1500);
         // vikram
         while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
 
         }
         if (!isShared){
-            timer.safeDelay(650);
+            timer.safeTurretDelay(650);
         }
         slides.retract();
     }
@@ -397,7 +405,7 @@ public class Turret {
             upShared();
         } else {
             slides.extendHigh();
-            timer.safeDelay(600);
+            timer.safeTurretDelay(600);
         }
 //        while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
 //        goingUp = false;

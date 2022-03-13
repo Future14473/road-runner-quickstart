@@ -31,7 +31,7 @@ public class BBARedTeleop extends LinearOpMode {
         BoxSensor colorSensor = new BoxSensor(hardwareMap);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        boolean rightBumperPrev = false, aPrevState = false, xPrevState = false,
+        boolean rightBumperPrev = false, bPrevState = false, xPrevState = false,
                 leftButton = false, rightButton = false;
 
         turret.readyToIntake();
@@ -47,21 +47,37 @@ public class BBARedTeleop extends LinearOpMode {
             }
         }).start();
 
-        while (opModeIsActive() && !gamepad2.x && !gamepad2.y){
-        }
-        if (gamepad2.x){
-            turret.isShared = true;
-        }
-        if(gamepad2.y){
-            turret.isShared = false;
+        while (opModeIsActive() && !gamepad2.x /*&& !gamepad2.y*/) {
+//            if (gamepad2.x) {
+//                turret.isShared = true;
+//            }
+//            if (gamepad2.y) {
+//                turret.isShared = false;
+//            }
         }
 
         while (opModeIsActive()) {
             // Cycling
-            if(gamepad1.right_trigger > 0){
-                intake.out();
+            if(gamepad1.right_trigger > 0 && (turret.getHeightInt() < 20)){
+                intake.in();
+                if (turret.isShared) {
+                    turret.upShared();
+                    timer.safeDelay(300);
+                    turret.outputRed();
+                    timer.safeDelay(100);
+                    intake.stop();
+                } if (!turret.isShared) {
+                    turret.up();
+                    turret.outputRed();
+                    timer.safeDelay(100);
+                    intake.stop();
+                }
             } else {
                 intake.smartInAggressiveOutRed(turret, timer);
+            }
+
+            if (gamepad1.left_bumper){
+                intake.out();
             }
 
             if (gamepad1.left_trigger > 0){
@@ -92,33 +108,36 @@ public class BBARedTeleop extends LinearOpMode {
 
             // Duck _______________________________
             duck.setStop();
-            if (gamepad1.left_bumper){
+            if (gamepad1.x){
                 duck.setRed();
             } duck.move();
 
             // Scoring Height Changes
-            if (aPrevState != gamepad1.a){
-                if (gamepad1.a){
+            if (bPrevState != gamepad1.b){
+                if (gamepad1.b){
                     turret.isShared = !turret.isShared;
                 }
-            } aPrevState = gamepad1.a;
+            } bPrevState = gamepad1.b;
 
             // Manual Override Turret
-            if(gamepad1.dpad_left){
+            if(gamepad2.dpad_left){
                turret.lazySusanIncrementLeft();
             }
-            if(gamepad1.dpad_right){
+            if(gamepad2.dpad_right){
                 turret.lazySusanIncrementRight();
             }
-            if(gamepad1.dpad_up){
+            if(gamepad2.dpad_up){
                 turret.slidesIncrementUp();
             }
-            if(gamepad1.dpad_down){
+            if(gamepad2.dpad_down){
                 turret.slidesIncrementDown();
             }
-            if(gamepad1.circle){
+            if(gamepad2.circle){
                 // puts the current turret and lazy susan position to 0
                 turret.resetEncoders();
+            }
+            if(gamepad1.a || gamepad2.a){
+                turret.resetWholeTurret();
             }
 
             // Drivetrain speed increases ______________________

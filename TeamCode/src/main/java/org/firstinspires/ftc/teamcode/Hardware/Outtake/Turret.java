@@ -228,8 +228,8 @@ public class Turret {
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(90);
         timer.safeTurretDelay(300);
+        Linkages.toggleIndex = Linkages.MID;
         linkages.extendToToggle();
-        // vikram
         if(Linkages.toggleIndex != Linkages.CLOSE){
             timer.safeTurretDelay(550);
             setHeightShareMidFar();
@@ -241,8 +241,8 @@ public class Turret {
         timer.safeTurretDelay(300);
         lazySusan.rotateToDegreesRobotCentric(-90);
         timer.safeTurretDelay(300);
+        Linkages.toggleIndex = Linkages.MID;
         linkages.extendToToggle();
-        // vikram
         if(Linkages.toggleIndex != Linkages.CLOSE){
             timer.safeTurretDelay(450);
             setHeightShareMidFar();
@@ -471,6 +471,7 @@ public class Turret {
     public void linkCloseShared(){linkages.extendShareClose();}
 
     public String getHeight() {return String.valueOf(slides.getHeight());}
+    public int getHeightInt() {return slides.getHeight();}
     
     public void resetWholeTurret(){
         RESET = true;

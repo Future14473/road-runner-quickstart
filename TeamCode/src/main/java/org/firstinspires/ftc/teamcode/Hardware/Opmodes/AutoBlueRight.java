@@ -32,7 +32,7 @@ public class AutoBlueRight extends LinearOpMode {
                             scoreDuckX = -23, scoreDuckY = 50, scoreDuckH = 0,
                             alignDuckTurn = -17,
                             preParkX = 10, preParkY = 55, preParkH = 0,
-                            parkX = 55, parkY = 55, parkH = 0;
+                            parkX = 55, parkY = 55+4, parkH = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -42,6 +42,7 @@ public class AutoBlueRight extends LinearOpMode {
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap);
+        turret.isShared = false;
 
         // Computer Vision Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -89,7 +90,7 @@ public class AutoBlueRight extends LinearOpMode {
                 .splineTo(new Vector2d(scoreDuckX, scoreDuckY), Math.toRadians(scoreDuckH))
                 .build();
         Trajectory park = drive.trajectoryBuilder(scoreDuck.end())
-                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
+//                .splineTo(new Vector2d(preParkX, preParkY), Math.toRadians(preParkH))
                 .splineTo(new Vector2d(parkX, parkY), Math.toRadians(parkH))
                 .build();
         Trajectory preParkLeft = drive.trajectoryBuilder(scoreDuck.end())

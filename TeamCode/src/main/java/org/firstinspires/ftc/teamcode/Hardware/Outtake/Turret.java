@@ -112,7 +112,7 @@ public class Turret {
 //        while (slides.isBusy() && opMode.opModeIsActive()){}
         lazySusan.rotateToDegreesRobotCentric(-45);
         linkages.extend();
-        timer.safeTurretDelay(1500);
+        timer.safeTurretDelay(800);
     }
     public void preloadMidBlue(){
         slides.extendMidBlue();

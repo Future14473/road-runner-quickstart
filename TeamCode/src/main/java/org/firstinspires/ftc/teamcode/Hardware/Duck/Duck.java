@@ -21,7 +21,7 @@ public class Duck {
     }
 
     public void autoDuckBlue(Timer timer){
-        duck.setPower(0.7);
+        duck.setPower(0.5);
         timer.safeDelay(1000);
         duck.setPower(0.2);
         timer.safeDelay(3300);

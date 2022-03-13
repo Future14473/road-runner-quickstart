@@ -75,8 +75,14 @@ public class Intake {
             if (turret.isShared && turret.naiveHasBlock()) {
                 turret.upShared();
                 timer.safeDelay(300);
+                turret.outputRed();
+                timer.safeDelay(100);
+                stop();
             } if (!turret.isShared && turret.naiveHasBlock()) {
                 turret.up();
+                turret.outputRed();
+                timer.safeDelay(100);
+                stop();
             }
 //            if(turret.naiveHasBlock()) {
 //                turret.outputRed();
@@ -89,9 +95,7 @@ public class Intake {
 //                timer.safeDelay(100);
 //                turret.letGoEmergency();
 //            }
-            turret.outputRed();
-            timer.safeDelay(100);
-            stop();
+
         }
     }
 

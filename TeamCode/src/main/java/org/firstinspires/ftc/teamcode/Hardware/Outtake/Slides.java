@@ -70,7 +70,9 @@ public class Slides {
     }
     public int getHeight(){return frontSlide.getCurrentPosition();}
 
-    public boolean isBusy(){return frontSlide.isBusy();}
+    public boolean isBusy(){
+        return Math.abs(frontSlide.getCurrentPosition() - frontSlide.getTargetPosition()) < 30;
+    }
 
     public void extendHigh() {
         frontSlide.setTargetPosition(highGoal);

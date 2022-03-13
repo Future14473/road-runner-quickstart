@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleTankDrive;
 
 @Config
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
-public class BBARedTeleop extends LinearOpMode {
+public class BBABlueTeleop extends LinearOpMode {
     public static double forwardSpeed = 0.6;
     public static double turnSpeed = 0.6;
 
@@ -61,16 +61,16 @@ public class BBARedTeleop extends LinearOpMode {
             if(gamepad1.right_trigger > 0){
                 intake.out();
             } else {
-                intake.smartInAggressiveOutRed(turret, timer);
+                intake.smartInAggressiveOutBlue(turret, timer);
             }
 
             if (gamepad1.left_trigger > 0){
-                turret.downRed();
+                turret.downBlue();
             }
 
             if (gamepad1.y){
                 turret.up();
-                turret.outputRed();
+                turret.outputBlue();
             }
 
             // Toggle Linkages
@@ -93,7 +93,7 @@ public class BBARedTeleop extends LinearOpMode {
             // Duck _______________________________
             duck.setStop();
             if (gamepad1.left_bumper){
-                duck.setRed();
+                duck.setBlue();
             } duck.move();
 
             // Scoring Height Changes
@@ -122,17 +122,17 @@ public class BBARedTeleop extends LinearOpMode {
             }
 
             // Drivetrain speed increases ______________________
-//            if (leftButton != gamepad1.left_stick_button){
-//                if (gamepad1.left_stick_button){
-//                    forwardSpeed += 0.15;
-//                }
-//            } leftButton = gamepad1.left_stick_button;
-//
-//            if (rightButton != gamepad1.right_stick_button){
-//                if (gamepad1.right_stick_button){
-//                    turnSpeed += 0.15;
-//                }
-//            } rightButton = gamepad1.right_stick_button;
+            if (leftButton != gamepad1.left_stick_button){
+                if (gamepad1.left_stick_button){
+                    forwardSpeed += 0.15;
+                }
+            } leftButton = gamepad1.left_stick_button;
+
+            if (rightButton != gamepad1.right_stick_button){
+                if (gamepad1.right_stick_button){
+                    turnSpeed += 0.15;
+                }
+            } rightButton = gamepad1.right_stick_button;
 
             // Telemetry _______________-
             telemetry.addData("isShared", turret.isShared);

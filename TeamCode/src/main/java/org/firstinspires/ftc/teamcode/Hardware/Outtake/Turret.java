@@ -75,7 +75,7 @@ public class Turret {
         if(isShared){
             rightSharedHub();
         } else{
-            right();
+            left();
         }
     }
 
@@ -83,7 +83,7 @@ public class Turret {
         if(isShared){
             leftSharedHub();
         } else{
-            left();
+            right();
         }
     }
 
@@ -165,6 +165,7 @@ public class Turret {
         while(opMode.opModeIsActive() && !lazySusan.isHome()){
             // wait
         }
+        // wait a little longer since high goal return has lots of inertia
         slides.retract();
     }
     public void preloadDownLowRed(){
@@ -301,6 +302,75 @@ public class Turret {
         while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
 
         }
+        if (!isShared){
+            timer.safeDelay(450);
+        }
+        slides.retract();
+    }
+
+    public void downRed(){
+        if (isShared){
+            dumper.halfDump();
+            timer.safeDelay(200);
+            dumper.moreHalfDump();
+            timer.safeDelay(200);
+            dumper.dump();
+            timer.safeDelay(250);
+        } else {
+            dumper.dump();
+            timer.safeTurretDelay(500);
+        }
+        if (isShared){
+            slides.preRetract();
+            timer.safeDelay(300);
+        }
+        linkages.retract();
+        dumper.intake();
+        timer.safeTurretDelay(500);
+        firstTimeSeeBlock = true;
+        //make the left in position a little off
+        lazySusan.rotateToDegreesRobotCentric(-0.01);
+//        timer.safeTurretDelay(isShared ? 475 : 1500);
+        // vikram
+        while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
+
+        }
+        if (!isShared){
+            timer.safeDelay(650);
+        }
+        slides.retract();
+    }
+
+    public void downBlue(){
+        if (isShared){
+            dumper.halfDump();
+            timer.safeDelay(200);
+            dumper.moreHalfDump();
+            timer.safeDelay(200);
+            dumper.dump();
+            timer.safeDelay(250);
+        } else {
+            dumper.dump();
+            timer.safeTurretDelay(500);
+        }
+        if (isShared){
+            slides.preRetract();
+            timer.safeDelay(300);
+        }
+        linkages.retract();
+        dumper.intake();
+        timer.safeTurretDelay(500);
+        firstTimeSeeBlock = true;
+        //make the left in position a little off
+        lazySusan.rotateToDegreesRobotCentric(-0.01);
+//        timer.safeTurretDelay(isShared ? 475 : 1500);
+        // vikram
+        while ((Math.abs(lazySusan.getDegrees()) > degreeError) && opMode.opModeIsActive()){
+
+        }
+        if (!isShared){
+            timer.safeDelay(650);
+        }
         slides.retract();
     }
 
@@ -327,8 +397,9 @@ public class Turret {
             upShared();
         } else {
             slides.extendHigh();
+            timer.safeDelay(600);
         }
-        while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
+//        while (slides.isBusy()){} // slides.extend is async so make sure to only go up after it goes up
 //        goingUp = false;
     }
 

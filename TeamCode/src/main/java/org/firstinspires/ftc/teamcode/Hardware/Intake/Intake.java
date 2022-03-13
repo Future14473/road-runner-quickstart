@@ -100,14 +100,27 @@ public class Intake {
             in();
         }
         if(turret.hasBlock() && turret.isDown()){
+            timer.safeDelay(300);
             out();
-            if (turret.isShared) {
+            timer.safeDelay(300);
+            if (turret.isShared && turret.naiveHasBlock()) {
                 turret.upShared();
                 timer.safeDelay(300);
-            } else {
+            } if (!turret.isShared && turret.naiveHasBlock()) {
                 turret.up();
             }
-            turret.leftSharedHub();
+//            if(turret.naiveHasBlock()) {
+//                turret.outputRed();
+//                timer.safeDelay(100);
+//                stop();
+//            } else {
+//                turret.slidesIncrementUp();
+//                timer.safeDelay(100);
+//                dumper.intake();
+//                timer.safeDelay(100);
+//                turret.letGoEmergency();
+//            }
+            turret.outputBlue();
             timer.safeDelay(100);
             stop();
         }

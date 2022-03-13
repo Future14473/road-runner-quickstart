@@ -32,7 +32,7 @@ public class BBABlueTeleop extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         boolean rightBumperPrev = false, bPrevState = false, xPrevState = false,
-                leftButton = false, rightButton = false;
+                leftButton = false, rightButton = false, y2 = false;
 
         turret.readyToIntake();
 
@@ -156,6 +156,12 @@ public class BBABlueTeleop extends LinearOpMode {
             if(gamepad1.a || gamepad2.a){
                 turret.resetWholeTurret();
             }
+            if(gamepad2.y != y2){
+                if(gamepad2.y){
+                    turret.toggleLinkages();
+                }
+            }
+            y2 = gamepad2.y;
 
             // Drivetrain speed increases ______________________
 //            if (leftButton != gamepad1.left_stick_button){

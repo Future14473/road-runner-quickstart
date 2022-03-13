@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Linkages;
 
 @TeleOp
+@Disabled
 public class LinkageTEST extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

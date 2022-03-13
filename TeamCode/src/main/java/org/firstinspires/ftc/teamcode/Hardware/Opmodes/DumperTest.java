@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware.Opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Outtake.Dumper;
 import org.firstinspires.ftc.teamcode.Hardware.Outtake.Turret;
 import org.firstinspires.ftc.teamcode.Hardware.util.Timer;
 @TeleOp
+@Disabled
 public class DumperTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

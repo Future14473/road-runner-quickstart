@@ -23,7 +23,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous
 @Config
-//@Disabled
+@Disabled
 public class AutoBlueDuckFly extends LinearOpMode {
     public static double preloadX = -29, preloadY = 49, preloadH = 270,
                             startX = -35.5, startY = 70, startH = Math.toRadians(270),

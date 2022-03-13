@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.ComputerVision;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -32,7 +33,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @TeleOp
-
+@Disabled
 public class BlueWebcamCapstoneOpMode extends LinearOpMode
 {
     OpenCvWebcam webcam;

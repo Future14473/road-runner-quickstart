@@ -45,6 +45,7 @@ public class AutoRedDuck extends LinearOpMode {
         Duck duck = new Duck(hardwareMap);
         Timer timer = new Timer(this);
         Intake intake = new Intake(hardwareMap);
+        turret.isShared = false;
 
         // Computer Vision Setup
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

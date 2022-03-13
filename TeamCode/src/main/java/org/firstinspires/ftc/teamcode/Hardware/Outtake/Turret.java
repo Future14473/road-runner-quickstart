@@ -24,7 +24,7 @@ public class Turret {
     long start = System.currentTimeMillis();
 
     public static double duckAngleBlue = 55;
-    public static double duckAngleRed = -65;
+    public static double duckAngleRed = -60;
     public static double degreeError = 4;
 
     public Turret(HardwareMap hardwareMap, LinearOpMode linearOpMode) {

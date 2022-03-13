@@ -21,6 +21,8 @@
 
 package org.firstinspires.ftc.teamcode.AprilTag;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -132,14 +134,23 @@ public class AprilBoundBoxPipeline extends OpenCvPipeline
         // Allocate a native context object. See the corresponding deletion in the finalizer
         nativeApriltagPtr = AprilTagDetectorJNI.createApriltagDetector(AprilTagDetectorJNI.TagFamily.TAG_36h11.string, 3, 3);
         previousDrawing = frame;
+        Log.e("AprilTag Pointer", "Initialized");
+        telemetry.addData("AprilTag Pointer", "Initialized");
     }
 
     @Override
     public void finalize()
     {
         // Delete the native context we created in the init() function
+        Log.e("AprilTag Pointer", String.valueOf(nativeApriltagPtr));
         telemetry.addData("AprilTag Pointer", nativeApriltagPtr);
-        AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
+        if (nativeApriltagPtr == 0){
+            Log.e("AprilTag Pointer", "Error because 0, crash avoided");
+        } else {
+            AprilTagDetectorJNI.releaseApriltagDetector(nativeApriltagPtr);
+            Log.e("AprilTag Release", "Success");
+            telemetry.addData("AprilTag Release", "Success");
+        }
     }
 
     @Override

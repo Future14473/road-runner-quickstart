@@ -153,7 +153,7 @@ public class BBABlueTeleop extends LinearOpMode {
                 // puts the current turret and lazy susan position to 0
                 turret.resetEncoders();
             }
-            if(gamepad1.b || gamepad2.b){
+            if(gamepad1.a || gamepad2.a){
                 turret.resetWholeTurret();
             }
 
